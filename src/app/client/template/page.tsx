@@ -23,9 +23,8 @@ export default async function TemplatePage() {
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-4">現有專案模板</h3>
-              <Suspense fallback={<p className="text-gray-500">載入專案模板中...</p>}>
-                <ProjectTemplateList />
-              </Suspense>
+              {/* 直接渲染 Client Component，資料由 React Query hook 處理 */}
+              <ProjectTemplateList />
             </div>
           </section>
 

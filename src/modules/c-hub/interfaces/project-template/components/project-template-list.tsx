@@ -18,6 +18,7 @@ export function ProjectTemplateList({ onDelete }: ProjectTemplateListProps) {
     return <p className="text-red-500">載入專案模板失敗</p>;
   }
 
+  // 型別守衛，確保 templates 為陣列
   if (!Array.isArray(templates) || templates.length === 0) {
     return <p className="text-gray-500">目前沒有專案模板</p>;
   }
@@ -25,13 +26,15 @@ export function ProjectTemplateList({ onDelete }: ProjectTemplateListProps) {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {templates.map((template) => (
-          <ProjectTemplateCard
-            key={template.id}
-            template={template}
-            onDelete={onDelete}
-          />
-        ))}
+        {templates.map((template) =>
+          template && template.id ? (
+            <ProjectTemplateCard
+              key={template.id}
+              template={template}
+              onDelete={onDelete}
+            />
+          ) : null
+        )}
       </div>
     </div>
   );

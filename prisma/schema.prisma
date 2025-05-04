@@ -86,7 +86,6 @@ model TagRelation {
   @@index([targetId, targetType])
 }
 
-
 model Asset {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   type          AssetEnum @unique
