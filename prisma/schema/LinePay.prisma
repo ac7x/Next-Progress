@@ -20,7 +20,6 @@ model LinePay {
   @@index([status])
   @@index([createdAt])
   @@index([userId, createdAt])
-  @@map("line_pays")
 }
 
 enum PaymentEnum {

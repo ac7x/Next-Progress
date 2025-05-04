@@ -99,7 +99,6 @@ model Asset {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  @@map("assets")
 }
 
 model UserAsset {
@@ -114,7 +113,6 @@ model UserAsset {
   
   user         User     @relation(fields: [userId], references: [userId])
 
-  @@map("user_assets")
 }
 
 model AssetMutation {
@@ -131,7 +129,6 @@ model AssetMutation {
 
   @@index([userId, currency, createdAt]) 
   @@index([userId, reason, createdAt])
-  @@map("asset_mutations")
 }
 
 enum AssetEnum {
@@ -395,7 +392,6 @@ model LinePay {
   @@index([status])
   @@index([createdAt])
   @@index([userId, createdAt])
-  @@map("line_pays")
 }
 
 enum PaymentEnum {
