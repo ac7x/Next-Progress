@@ -1,10 +1,9 @@
 'use client';
 
 import { createProject, createProjectFromTemplate } from '@/modules/c-hub/application/project-instance/project-instance-actions';
-import { listProjectTemplates } from '@/modules/c-hub/application/project-template/project-template-actions';
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { useProjectTemplatesQuery } from '@/modules/c-hub/interfaces/project-template/hooks/use-project-templates-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ProjectFormState {
@@ -26,24 +25,11 @@ export function useProjectCreation() {
     endDate: '',
   });
 
-  const [templates, setTemplates] = useState<ProjectTemplate[]>([]);
+  const { data: templates = [] } = useProjectTemplatesQuery();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
-
-  // 載入模板數據
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const data = await listProjectTemplates();
-        setTemplates(data);
-      } catch (err) {
-        console.error('Failed to load templates:', err);
-      }
-    };
-    fetchTemplates();
-  }, []);
 
   // 通用的輸入處理函數
   const handleInputChange = (field: keyof ProjectFormState) => (
@@ -152,7 +138,7 @@ export function useProjectCreation() {
     handleStartDateChange,
     handleEndDateChange,
     handleSubmit,
-    templates,
+    templates, // 直接來自 useProjectTemplatesQuery
     isLoading,
     error,
     success
