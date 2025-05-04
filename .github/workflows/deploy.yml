@@ -1,8 +1,0 @@
-steps:
-  # ...existing code...
-  - name: Deploy to Cloud Run
-    run: |
-      gcloud auth activate-service-account --key-file="$GCP_SA_KEY"
-      gcloud config set project $GCP_PROJECT
-      gcloud run services replace .github/google-run.yaml \
-        --region=asia-east1 --platform=managed
