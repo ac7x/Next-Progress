@@ -1,14 +1,7 @@
-'use client';
-
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
 import { SubTaskInstanceDetails } from './sub-task-instance-details';
 
-export interface SubTaskInstanceListProps {
-  subTaskInstances: SubTaskInstance[];
-}
-
-// 調整元件名稱與 props
-export function SubTaskInstanceList({ subTaskInstances }: SubTaskInstanceListProps) {
+export function SubTaskInstanceList({ subTaskInstances }: { subTaskInstances: SubTaskInstance[] }) {
   if (subTaskInstances.length === 0) {
     return <p className="text-sm text-gray-500">此任務尚無子任務</p>;
   }
