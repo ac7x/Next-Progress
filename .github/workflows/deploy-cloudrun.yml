@@ -58,15 +58,6 @@ jobs:
         with:
           service: next-line-liff-template
           image: ac7x/next-line-liff-template:latest
-          region: asia-east1 # 再次確認這是您 Cloud Run 服務所在的正確區域
-          project_id: ${{ secrets.GCP_PROJECT_ID }} # 明確指定 Project ID
-          # 設定 Cloud Run 服務的環境變數
-          env_vars: |
-            NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            LINE_CHANNEL_ID=${{ secrets.LINE_CHANNEL_ID }}
-            LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}
-            LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-            MEMCACHIER_SERVERS=${{ secrets.MEMCACHIER_SERVERS }}
-            REDIS_URL=${{ secrets.REDIS_URL }}
+          region: asia-east1
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
