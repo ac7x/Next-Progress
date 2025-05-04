@@ -45,6 +45,7 @@ jobs:
             --build-arg NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }} \
             --build-arg NEXT_PUBLIC_LINE_BOT_ID=${{ secrets.NEXT_PUBLIC_LINE_BOT_ID }} \
             --build-arg NEXT_PUBLIC_HOST=${{ secrets.NEXT_PUBLIC_HOST }} \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             -t ac7x/next-line-liff-template:latest .
           echo "Docker image built successfully."
 

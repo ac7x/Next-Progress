@@ -8,6 +8,9 @@ import LiffClient from '../client';
 
 const liffId = process.env.NEXT_PUBLIC_LIFF_ID!;
 
+// --- 環境變數偵錯輸出 ---
+console.log('[LiffContext] NEXT_PUBLIC_LIFF_ID:', process.env.NEXT_PUBLIC_LIFF_ID);
+
 interface LiffContextValue {
   profile: LiffProfileValueObject;
   friendship: { friendFlag: boolean };
@@ -108,6 +111,8 @@ export function LiffContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const initializeLiff = async () => {
       try {
+        // --- 初始化前輸出 liffId 狀態 ---
+        console.log('[LiffContext] Initializing LIFF with liffId:', liffId);
         await LiffClient.init({ liffId });
         setIsInitialized(true);
         setIsLiffLoggedIn(LiffClient.isLoggedIn());
@@ -123,7 +128,8 @@ export function LiffContextProvider({ children }: { children: ReactNode }) {
         const errorMessage =
           err instanceof Error ? err.message : 'Unknown error during LIFF initialization';
         setError(errorMessage);
-        console.error('LIFF initialization error:', errorMessage);
+        // --- 詳細錯誤輸出 ---
+        console.error('[LiffContext] LIFF initialization error:', errorMessage, err);
 
         // 處理特定錯誤
         if (errorMessage.includes('no login bot linked')) {

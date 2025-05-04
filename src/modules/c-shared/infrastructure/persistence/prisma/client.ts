@@ -6,6 +6,8 @@ declare global {
 
 export const prisma = new PrismaClient();
 
+console.log('[prisma/client] DATABASE_URL:', process.env.DATABASE_URL ?? '(undefined)');
+
 if (process.env.NODE_ENV === 'development') {
   global.prisma = prisma;
 }
