@@ -1,9 +1,9 @@
 'use client';
 
 import { createWarehouseItem } from '@/modules/c-stock/application/warehouse-item-actions';
+import { WarehouseItemType } from '@/modules/c-stock/domain/warehouse-item-entity'; // 正確使用本地 enum
 import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
-import { WarehouseItemType } from '@prisma/client'; // 🆕 引入 Prisma 定義的 WarehouseItemType
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +20,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
-  const [type, setType] = useState<WarehouseItemType>(WarehouseItemType.TOOL); // 🆕 使用正確的 WarehouseItemType
+  const [type, setType] = useState<WarehouseItemType>(WarehouseItemType.TOOL); // 使用 domain enum
   const router = useRouter();
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
         <select
           id="type"
           value={type}
-          onChange={(e) => setType(e.target.value as WarehouseItemType)} // 🆕 確保類型正確
+          onChange={(e) => setType(e.target.value as WarehouseItemType)}
           className="w-full p-2 border rounded"
           disabled={isSubmitting}
         >
