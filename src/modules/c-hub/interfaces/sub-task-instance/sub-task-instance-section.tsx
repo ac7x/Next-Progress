@@ -1,5 +1,5 @@
 import { listSubTasksInstanceByTaskId } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-actions';
-import SubTaskInstanceForm from './components/sub-task-instance-form';
+import { SubTaskInstanceForm } from './components/sub-task-instance-form';
 import { SubTaskInstanceList } from './components/sub-task-instance-list';
 
 export default async function SubTaskInstanceSection({ taskInstanceId }: { taskInstanceId: string }) {
