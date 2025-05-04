@@ -23,18 +23,19 @@ jobs:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
           project_id: '${{ secrets.GCP_PROJECT_ID }}'
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
-          docker buildx build \
-            --cache-from=type=registry,ref=ac7x/next-line-liff-template:latest \
-            --cache-to=type=inline \
+          docker pull ac7x/next-line-liff-template:latest || true
+          docker build \
+            --cache-from=ac7x/next-line-liff-template:latest \
             --build-arg NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }} \
-            --tag ac7x/next-line-liff-template:latest \
-            --push .
-          echo "Docker image built and pushed successfully."
+            -t ac7x/next-line-liff-template:latest .
+          echo "Docker image built successfully."
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ac7x/next-line-liff-template:latest
+          echo "Docker image pushed successfully."
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
