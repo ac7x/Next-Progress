@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useCreateEngineeringInstance } from '../hooks/useCreateEngineeringInstance';
+import { useCreateEngineeringInstanceMutation } from '../hooks/useCreateEngineeringInstanceMutation';
 
 export function EngineeringInstanceCreateForm({ projectId }: { projectId: string }) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const { mutateAsync, isPending, error } = useCreateEngineeringInstance();
+    const { mutateAsync, isPending, error } = useCreateEngineeringInstanceMutation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
