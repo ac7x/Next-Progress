@@ -1,6 +1,6 @@
 'use server';
 
-import { CreateTagProps, Tag, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
+import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
 import { revalidatePath } from 'next/cache';
 import { tagService } from './tag-service';
 
@@ -23,11 +23,11 @@ export async function tagQueryById(id: string): Promise<Tag | null> {
   }
 }
 
-export async function tagQueryListByType(type: string): Promise<Tag[]> {
+// 僅接受 TagType，UI 層若為 'ALL' 請直接呼叫 tagQueryList
+export async function tagQueryListByType(type?: TagType): Promise<Tag[]> {
   try {
-    // 若 type 為空或 ALL，回傳全部
-    if (!type || type === 'ALL') return await tagService.listTags();
-    return await tagService.listTagsByType(type as any);
+    if (!type) return await tagService.listTags();
+    return await tagService.listTagsByType(type);
   } catch (error) {
     console.error('依類型獲取標籤列表失敗:', error);
     return [];
