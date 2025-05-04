@@ -10,8 +10,8 @@ export const projectTemplateMappingService = {
       description: prismaModel.description,
       isActive: prismaModel.isActive,
       priority: prismaModel.priority ?? 0, // 新增 priority
-      createdAt: prismaModel.createdAt,
-      updatedAt: prismaModel.updatedAt,
+      createdAt: prismaModel.createdAt instanceof Date ? prismaModel.createdAt : new Date(prismaModel.createdAt),
+      updatedAt: prismaModel.updatedAt instanceof Date ? prismaModel.updatedAt : new Date(prismaModel.updatedAt),
     };
   },
 

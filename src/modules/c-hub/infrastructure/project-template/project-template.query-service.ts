@@ -18,7 +18,7 @@ export const ProjectTemplateQueryService = {
                         updatedAt: t.updatedAt instanceof Date ? t.updatedAt : new Date(t.updatedAt),
                         description: t.description ?? null,
                         isActive: t.isActive ?? true,
-                        priority: typeof t.priority === 'number' ? t.priority : 0, // 新增 priority
+                        priority: typeof t.priority === 'number' ? t.priority : 0,
                     }))
                     .filter(isValidProjectTemplate)
                 : [];

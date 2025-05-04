@@ -17,11 +17,22 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
   }
 
   async list(): Promise<ProjectTemplate[]> {
-    return prisma.projectTemplate.findMany({
+    const templates = await prisma.projectTemplate.findMany({
       where: {
         isActive: true,
       },
     });
+    // 型別安全：確保 createdAt/updatedAt 為 Date
+    return Array.isArray(templates)
+      ? templates.map(t => ({
+        ...t,
+        createdAt: t.createdAt instanceof Date ? t.createdAt : new Date(t.createdAt),
+        updatedAt: t.updatedAt instanceof Date ? t.updatedAt : new Date(t.updatedAt),
+        description: t.description ?? null,
+        isActive: t.isActive ?? true,
+        priority: typeof t.priority === 'number' ? t.priority : 0,
+      }))
+      : [];
   }
 
   async delete(id: string): Promise<void> {
