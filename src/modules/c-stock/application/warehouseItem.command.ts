@@ -4,7 +4,7 @@ import { IWarehouseItemDomainService, WarehouseItemDomainService } from '@/modul
 import { warehouseItemRepository } from '@/modules/c-stock/infrastructure/warehouse-item-repository';
 import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
 
-// 僅保留命令（寫入）操作，無需查詢相關功能
+// 僅保留命令（寫入）操作，無查詢
 const domainService: IWarehouseItemDomainService = new WarehouseItemDomainService(warehouseItemRepository);
 
 export async function createWarehouseItem(data: CreateWarehouseItemProps) {
