@@ -4,6 +4,8 @@ import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps
 import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-service';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
 import { revalidatePath } from 'next/cache';
+// 新增：從 application 層 actions 匯入查詢函式
+import { getSubTaskTemplate } from './sub-task-template-actions';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
@@ -58,20 +60,6 @@ export async function updateSubTaskTemplateCommand(
     } catch (error) {
         console.error('更新子任務模板失敗:', error);
         throw error instanceof Error ? error : new Error('更新子任務模板失敗');
-    }
-}
-
-// 新增查詢方法，供 Command 層內部使用
-export async function getSubTaskTemplate(id: string): Promise<SubTaskTemplate | null> {
-    if (!id?.trim()) {
-        throw new Error('模板 ID 為必填項');
-    }
-
-    try {
-        return await templateService.getTemplateById(id);
-    } catch (error) {
-        console.error('獲取子任務模板失敗:', error);
-        return null;
     }
 }
 

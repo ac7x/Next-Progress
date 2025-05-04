@@ -1,11 +1,12 @@
 'use server';
 
-import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceStatus, UpdateSubTaskInstanceProps, isValidSubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
+import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceStatus, UpdateSubTaskInstanceProps } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
 import { SubTaskInstanceDomainService } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-service';
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
 
 const subTaskInstanceService = new SubTaskInstanceDomainService(subTaskInstanceRepository);
 
+// Command: 建立子任務
 export async function createSubTaskInstanceCommand(data: CreateSubTaskInstanceProps): Promise<SubTaskInstance> {
     try {
         const subTaskInstance = await subTaskInstanceService.createSubTaskInstance(data);
@@ -18,6 +19,7 @@ export async function createSubTaskInstanceCommand(data: CreateSubTaskInstancePr
     }
 }
 
+// Command: 更新子任務
 export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTaskInstanceProps): Promise<SubTaskInstance> {
     try {
         const subTaskInstance = await subTaskInstanceService.updateSubTaskInstance(id, data);
@@ -30,6 +32,7 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
     }
 }
 
+// Command: 刪除子任務
 export async function deleteSubTaskInstanceCommand(id: string): Promise<{ id: string, taskId: string }> {
     try {
         // 先獲取子任務以返回相關資訊
@@ -52,29 +55,12 @@ export async function deleteSubTaskInstanceCommand(id: string): Promise<{ id: st
     }
 }
 
-export async function getSubTaskInstanceQuery(id: string): Promise<SubTaskInstance | null> {
-    try {
-        return await subTaskInstanceService.getSubTaskInstanceById(id);
-    } catch (error) {
-        console.error('獲取子任務失敗:', error);
-        return null;
-    }
-}
-
-export async function listSubTasksInstanceByTaskIdQuery(taskId: string): Promise<SubTaskInstance[]> {
-    try {
-        const subTasks = await subTaskInstanceService.listSubTasksInstanceByTaskId(taskId);
-        return subTasks.filter(isValidSubTaskInstance);
-    } catch (error) {
-        console.error('獲取任務的子任務列表失敗:', error);
-        return [];
-    }
-}
-
+// Command: 更新狀態
 export async function updateSubTaskInstanceStatusCommand(id: string, status: SubTaskInstanceStatus): Promise<SubTaskInstance> {
     return updateSubTaskInstanceCommand(id, { status });
 }
 
+// Command: 更新完成率
 export async function updateSubTaskInstanceCompletionCommand(id: string, completionRate: number): Promise<SubTaskInstance> {
     return updateSubTaskInstanceCommand(id, { completionRate });
 }
