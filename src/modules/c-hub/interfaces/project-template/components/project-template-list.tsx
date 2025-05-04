@@ -8,9 +8,17 @@ interface ProjectTemplateListProps {
 }
 
 export function ProjectTemplateList({ onDelete }: ProjectTemplateListProps) {
-  const { data: templates } = useProjectTemplateQuery();
+  const { data: templates, isLoading, error } = useProjectTemplateQuery();
 
-  if (!templates || templates.length === 0) {
+  if (isLoading) {
+    return <p className="text-gray-500">載入專案模板中...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">載入專案模板失敗</p>;
+  }
+
+  if (!Array.isArray(templates) || templates.length === 0) {
     return <p className="text-gray-500">目前沒有專案模板</p>;
   }
 

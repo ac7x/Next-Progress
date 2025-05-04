@@ -7,5 +7,6 @@ export function useProjectTemplateQuery() {
   return useQuery({
     queryKey: ['projectTemplates'],
     queryFn: getProjectTemplateListHandler,
+    staleTime: 1000 * 60, // 1分鐘快取
   });
 }
