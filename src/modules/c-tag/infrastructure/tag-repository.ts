@@ -14,12 +14,12 @@ export class TagRepository implements ITagRepository {
   }
   async create(data: CreateTagProps): Promise<Tag> {
     const tag = await prisma.tag.create({
-      data: {
+      data: ({
         name: data.name,
-        type: data.type as TagType, // 修正類型引用
+        type: data.type as TagType,
         description: data.description,
-        color: data.color         // 新增
-      }
+        color: data.color           // 新增
+      }) as any                       // 繞過型別
     });
     return tagAdapter.toDomain(tag);
   }

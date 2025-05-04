@@ -6,9 +6,9 @@ export const tagAdapter = {
     return {
       id: prismaTag.id,
       name: prismaTag.name,
-      type: prismaTag.type,
+      type: prismaTag.type as DomainTag['type'],
       description: prismaTag.description,
-      color: prismaTag.color,           // 新增
+      color: prismaTag.color,         // 現在 domain Tag 支援此屬性
       createdAt: prismaTag.createdAt,
       updatedAt: prismaTag.updatedAt
     };

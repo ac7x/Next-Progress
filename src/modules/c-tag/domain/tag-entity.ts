@@ -1,19 +1,32 @@
-import {
-  Tag as PrismaTag,
-  TagRelationType as PrismaTagRelationType,
-  TagType as PrismaTagType,
-} from '@prisma/client';
 import { z } from 'zod';
 
-// 域模型 Tag 对应 PrismaTag
-export type Tag = PrismaTag;
+// 領域層 enum 定義
+export enum TagType {
+  GENERAL = 'GENERAL',
+  PROJECT_INSTANCE = 'PROJECT_INSTANCE',
+  PROJECT_TEMPLATE = 'PROJECT_TEMPLATE',
+  ENGINEERING_INSTANCE = 'ENGINEERING_INSTANCE',
+  ENGINEERING_TEMPLATE = 'ENGINEERING_TEMPLATE',
+  TASK_INSTANCE = 'TASK_INSTANCE',
+  TASK_TEMPLATE = 'TASK_TEMPLATE',
+  SUBTASK_INSTANCE = 'SUBTASK_INSTANCE',
+  SUBTASK_TEMPLATE = 'SUBTASK_TEMPLATE',
+  WAREHOUSE_INSTANCE = 'WAREHOUSE_INSTANCE',
+  WAREHOUSE_ITEM = 'WAREHOUSE_ITEM',
+}
 
-// 同时导出值与类型
-export const TagType = PrismaTagType;
-export type TagType = PrismaTagType;
-
-export const TagRelationType = PrismaTagRelationType;
-export type TagRelationType = PrismaTagRelationType;
+export enum TagRelationType {
+  PROJECT_INSTANCE = 'PROJECT_INSTANCE',
+  PROJECT_TEMPLATE = 'PROJECT_TEMPLATE',
+  ENGINEERING_INSTANCE = 'ENGINEERING_INSTANCE',
+  ENGINEERING_TEMPLATE = 'ENGINEERING_TEMPLATE',
+  TASK_INSTANCE = 'TASK_INSTANCE',
+  TASK_TEMPLATE = 'TASK_TEMPLATE',
+  SUBTASK_INSTANCE = 'SUBTASK_INSTANCE',
+  SUBTASK_TEMPLATE = 'SUBTASK_TEMPLATE',
+  WAREHOUSE_INSTANCE = 'WAREHOUSE_INSTANCE',
+  WAREHOUSE_ITEM = 'WAREHOUSE_ITEM',
+}
 
 export interface TagRelation {
   id: string;
@@ -22,6 +35,16 @@ export interface TagRelation {
   targetType: TagRelationType;
   createdAt: Date;
   priority: number;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  type: TagType;
+  description: string | null;
+  color: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CreateTagProps {
@@ -40,7 +63,7 @@ export interface UpdateTagProps {
   priority?: number;
 }
 
-// Zod schema for input validation
+// Zod schema for validation
 export const createTagSchema = z.object({
   name: z.string().min(1),
   type: z.nativeEnum(TagType).optional(),
@@ -51,12 +74,6 @@ export const createTagSchema = z.object({
 export const updateTagSchema = createTagSchema.partial();
 
 export function isValidTag(tag: unknown): tag is Tag {
-  return typeof tag === 'object' &&
-    tag !== null &&
-    'id' in tag &&
-    'name' in tag &&
-    'type' in tag &&
-    'createdAt' in tag &&
-    'updatedAt' in tag &&
-    'color' in tag;
+  return typeof tag === 'object' && tag !== null
+    && 'id' in tag && 'name' in tag && 'type' in tag && 'color' in tag;
 }

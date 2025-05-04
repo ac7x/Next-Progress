@@ -57,7 +57,7 @@ export function TagList({ tags = [], onDelete }: TagListProps) {
                   </div>
                 </div>
 
-                <div className={`inline-block px-2 py-1 rounded text-xs my-2`} style={{ backgroundColor: tagDisplayUtils.getTagColor(tag) }}>
+                <div className={`inline-block px-2 py-1 rounded text-xs my-2`} style={{ backgroundColor: tagDisplayUtils.getTagTypeColor(tag.type) }}>
                   {tagDisplayUtils.getTagTypeName(tag.type)}
                 </div>
 
