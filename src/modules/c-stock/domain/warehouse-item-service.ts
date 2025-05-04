@@ -1,5 +1,4 @@
-import { WarehouseItemType } from '@prisma/client'; // 直接引用 Prisma enum
-import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from './warehouse-item-entity';
+import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem, WarehouseItemType } from './warehouse-item-entity'; // 直接引用本地 enum
 import { IWarehouseItemRepository } from './warehouse-item-repository';
 
 export interface IWarehouseItemDomainService {
@@ -12,26 +11,26 @@ export interface IWarehouseItemDomainService {
 }
 
 export class WarehouseItemDomainService implements IWarehouseItemDomainService {
-  constructor(private readonly repository: IWarehouseItemRepository) {}
+  constructor(private readonly repository: IWarehouseItemRepository) { }
 
   async createWarehouseItem(data: CreateWarehouseItemProps): Promise<WarehouseItem> {
     // 核心領域驗證邏輯
     if (!data.name?.trim()) {
       throw new Error('物品名稱不能為空');
     }
-    
+
     if (!data.warehouseId?.trim()) {
       throw new Error('必須指定所屬倉庫');
     }
-    
+
     if (data.quantity <= 0) {
       throw new Error('數量必須大於 0');
     }
-    
+
     if (!Object.values(WarehouseItemType).includes(data.type)) { // 🆕 修正引用問題
       throw new Error('無效的物品類型');
     }
-    
+
     return this.repository.create(data);
   }
 
@@ -57,11 +56,11 @@ export class WarehouseItemDomainService implements IWarehouseItemDomainService {
     if (!id?.trim()) {
       throw new Error('物品 ID 不能為空');
     }
-    
+
     if (data.quantity !== undefined && data.quantity <= 0) {
       throw new Error('數量必須大於 0');
     }
-    
+
     return this.repository.update(id, data);
   }
 

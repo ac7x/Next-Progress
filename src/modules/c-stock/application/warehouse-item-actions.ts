@@ -2,78 +2,56 @@
 
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { revalidatePath } from 'next/cache';
-import { warehouseItemService } from './warehouse-item-service';
+import {
+  commandAddTagToItem,
+  commandCreateWarehouseItem,
+  commandDeleteWarehouseItem,
+  commandRemoveTagFromItem,
+  commandUpdateWarehouseItem,
+} from './warehouse-item-command';
+import {
+  queryAllWarehouseItems,
+  queryWarehouseItemById,
+  queryWarehouseItemsByWarehouse,
+} from './warehouse-item-query';
 
+// -- Queries --
 export async function getAllWarehouseItems(): Promise<WarehouseItem[]> {
-  try {
-    return await warehouseItemService.getAllWarehouseItems();
-  } catch (error) {
-    console.error('獲取所有倉庫物品失敗:', error);
-    return [];
-  }
+  return queryAllWarehouseItems();
 }
 
 export async function getWarehouseItemsByWarehouse(warehouseId: string): Promise<WarehouseItem[]> {
-  try {
-    return await warehouseItemService.getWarehouseItemsByWarehouse(warehouseId);
-  } catch (error) {
-    console.error('獲取特定倉庫的物品失敗:', error);
-    return [];
-  }
+  return queryWarehouseItemsByWarehouse(warehouseId);
 }
 
 export async function getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
-  try {
-    return await warehouseItemService.getWarehouseItemById(id);
-  } catch (error) {
-    console.error('獲取倉庫物品詳情失敗:', error);
-    return null;
-  }
+  return queryWarehouseItemById(id);
 }
 
-export async function getWarehouseItemTags(warehouseItemId: string): Promise<string[]> {
-  return warehouseItemService.getWarehouseItemTags(warehouseItemId);
-}
-
-export async function createWarehouseItem(data: CreateWarehouseItemProps): Promise<WarehouseItem> {
-  try {
-    const warehouseItem = await warehouseItemService.createWarehouseItem(data);
-    revalidatePath('/client/warehouse_instance');
-    return warehouseItem;
-  } catch (error) {
-    console.error('建立倉庫物品失敗:', error);
-    throw error instanceof Error ? error : new Error('建立倉庫物品失敗');
-  }
+// -- Commands --
+export async function createWarehouseItem(props: CreateWarehouseItemProps): Promise<WarehouseItem> {
+  const item = await commandCreateWarehouseItem(props);
+  revalidatePath('/client/warehouse_instance');
+  return item;
 }
 
 export async function updateWarehouseItem(id: string, data: UpdateWarehouseItemProps): Promise<WarehouseItem> {
-  try {
-    const warehouseItem = await warehouseItemService.updateWarehouseItem(id, data);
-    revalidatePath('/client/warehouse_instance');
-    return warehouseItem;
-  } catch (error) {
-    console.error('更新倉庫物品失敗:', error);
-    throw error instanceof Error ? error : new Error('更新倉庫物品失敗');
-  }
+  const item = await commandUpdateWarehouseItem(id, data);
+  revalidatePath('/client/warehouse_instance');
+  return item;
 }
 
-export async function deleteWarehouseItem(id: string): Promise<boolean> {
-  try {
-    await warehouseItemService.deleteWarehouseItem(id);
-    revalidatePath('/client/warehouse_instance');
-    return true;
-  } catch (error) {
-    console.error('刪除倉庫物品失敗:', error);
-    throw error instanceof Error ? error : new Error('刪除倉庫物品失敗');
-  }
+export async function deleteWarehouseItem(id: string): Promise<void> {
+  await commandDeleteWarehouseItem(id);
+  revalidatePath('/client/warehouse_instance');
 }
 
 export async function addTagToWarehouseItem(itemId: string, tagId: string): Promise<void> {
-  await warehouseItemService.addTagToItem(itemId, tagId);
+  await commandAddTagToItem(itemId, tagId);
   revalidatePath('/client/warehouse_instance');
 }
 
 export async function deleteTagFromWarehouseItem(itemId: string, tagId: string): Promise<void> {
-  await warehouseItemService.removeTagFromItem(itemId, tagId);
+  await commandRemoveTagFromItem(itemId, tagId);
   revalidatePath('/client/warehouse_instance');
 }
