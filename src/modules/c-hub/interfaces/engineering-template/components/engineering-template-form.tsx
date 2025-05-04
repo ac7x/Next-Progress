@@ -8,6 +8,7 @@ import { useState } from 'react';
 export function EngineeringTemplateForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,10 +30,12 @@ export function EngineeringTemplateForm() {
     try {
       await createEngineeringTemplate({
         name,
-        description: description || null
+        description: description || null,
+        priority
       });
       setName('');
       setDescription('');
+      setPriority(0);
       setSuccess(true);
       // 失效工程模板快取，觸發重新獲取
       queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
@@ -86,6 +89,17 @@ export function EngineeringTemplateForm() {
           placeholder="描述（可選）"
           className="w-full p-2 border rounded"
           disabled={isSubmitting}
+        />
+      </div>
+      <div>
+        <input
+          type="number"
+          value={priority}
+          onChange={(e) => setPriority(Number(e.target.value))}
+          placeholder="優先順序（數字，越小越高）"
+          className="w-full p-2 border rounded"
+          disabled={isSubmitting}
+          min={0}
         />
       </div>
       <button

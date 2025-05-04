@@ -9,7 +9,8 @@ export class EngineeringTemplateRepository implements IEngineeringTemplateReposi
     try {
       const createData: Prisma.EngineeringTemplateCreateInput = {
         name: data.name,
-        description: data.description || null
+        description: data.description || null,
+        priority: data.priority ?? 0 // 新增
       };
 
       const prismaTemplate = await prisma.engineeringTemplate.create({

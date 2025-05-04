@@ -2,6 +2,7 @@ export interface EngineeringTemplate {
   id: string;
   name: string;
   description: string | null;
+  priority?: number | null; // 新增
   createdAt: Date;
   updatedAt: Date;
 }
@@ -9,6 +10,7 @@ export interface EngineeringTemplate {
 export type CreateEngineeringTemplateProps = {
   name: string;  // 必填欄位
   description?: string | null;
+  priority?: number | null; // 新增
 };
 
 export type UpdateEngineeringTemplateProps = Partial<

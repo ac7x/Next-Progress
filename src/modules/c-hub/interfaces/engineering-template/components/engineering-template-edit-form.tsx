@@ -18,6 +18,7 @@ export function EngineeringTemplateEditForm({
 }: EngineeringTemplateEditFormProps) {
   const [name, setName] = useState(template.name);
   const [description, setDescription] = useState(template.description || '');
+  const [priority, setPriority] = useState<number>(template.priority ?? 0);
   const [error, setError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
@@ -36,7 +37,8 @@ export function EngineeringTemplateEditForm({
     try {
       await updateEngineeringTemplate(template.id, {
         name,
-        description: description || null
+        description: description || null,
+        priority
       });
 
       router.refresh();
@@ -87,6 +89,22 @@ export function EngineeringTemplateEditForm({
           placeholder="描述（可選）"
           className="w-full p-2 border rounded"
           disabled={isUpdating}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="priority" className="block text-sm font-medium mb-1">
+          優先順序
+        </label>
+        <input
+          id="priority"
+          type="number"
+          value={priority}
+          onChange={(e) => setPriority(Number(e.target.value))}
+          placeholder="優先順序（數字，越小越高）"
+          className="w-full p-2 border rounded"
+          disabled={isUpdating}
+          min={0}
         />
       </div>
 

@@ -7,6 +7,7 @@ export const engineeringTemplateAdapter = {
       id: prismaModel.id,
       name: prismaModel.name,
       description: prismaModel.description,
+      priority: prismaModel.priority ?? 0, // 新增
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -17,6 +18,7 @@ export const engineeringTemplateAdapter = {
 
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
+    if (domainModel.priority !== undefined) data.priority = domainModel.priority; // 新增
 
     return data;
   }

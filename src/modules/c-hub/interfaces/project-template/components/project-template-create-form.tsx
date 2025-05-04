@@ -50,9 +50,13 @@ export function CreateProjectTemplateForm() {
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        disabled={isCreating}
       >
-        建立專案模板
+        {isCreating ? '建立中...' : '建立專案模板'}
       </button>
+      {error && (
+        <div className="text-red-600 text-sm mt-2">{error}</div>
+      )}
     </form>
   );
 }
