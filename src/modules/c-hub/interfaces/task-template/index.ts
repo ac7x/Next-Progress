@@ -9,6 +9,5 @@ export * from './components/task-template-form';
 // 匯出列表元件
 export * from './components/task-template-list';
 // Query hooks
-export { useTaskTemplatesByEngineering } from './hooks/use-task-templates-by-engineering';
-export { useTaskTemplatesByEngineering as useTaskTemplatesByEngineeringAlias } from './hooks/use-task-templates-by-engineering';
+export { useTaskTemplatesByEngineering, useTaskTemplatesByEngineering as useTaskTemplatesByEngineeringAlias } from './hooks/use-task-templates-by-engineering';
 

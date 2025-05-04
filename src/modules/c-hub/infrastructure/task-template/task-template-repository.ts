@@ -106,6 +106,9 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
   }
 
   async findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
+    // 1. 組裝 Prisma 查詢條件
+    // 2. 查詢資料庫
+    // 3. 包裝為領域模型
     try {
       const taskTemplates = await prisma.taskTemplate.findMany({
         where: {
