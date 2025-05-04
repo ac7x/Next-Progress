@@ -1,6 +1,6 @@
 'use client';
 
-import { addTagToWarehouseItem, deleteTagFromWarehouseItem, deleteWarehouseItem } from '@/modules/c-stock/application/warehouseItem.command';
+import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application/warehouseItem.command';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
@@ -53,7 +53,7 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     setError(null);
 
     try {
-      await deleteTagFromWarehouseItem(itemId, tagId);
+      await removeTagFromWarehouseItem(itemId, tagId); // 修正呼叫
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : '移除標籤失敗');
