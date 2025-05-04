@@ -69,7 +69,7 @@ export function WarehouseInstanceList({ warehouseInstances, onDelete }: Warehous
 
       {selectedWarehouseInstance && (
         <WarehouseItemsModal
-          warehouse={selectedWarehouseInstance}
+          warehouseInstance={selectedWarehouseInstance}
           onCloseAction={() => setSelectedWarehouseInstance(null)}
         />
       )}
