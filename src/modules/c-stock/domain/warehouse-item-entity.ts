@@ -1,8 +1,8 @@
 import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+// 直接引用 Prisma 生成的 enum
 import { WarehouseItemType as PrismaWarehouseItemType } from '@prisma/client';
 
-// 导出值与类型
-export const WarehouseItemType = PrismaWarehouseItemType;
+// 型別 alias，供 domain 層使用
 export type WarehouseItemType = PrismaWarehouseItemType;
 
 export interface WarehouseItem {
@@ -15,7 +15,7 @@ export interface WarehouseItem {
   unit?: string | null;
   createdAt: Date;
   updatedAt: Date;
-  type: PrismaWarehouseItemType;
+  type: WarehouseItemType; // 使用 Prisma 型別
 }
 
 export interface CreateWarehouseItemProps {
@@ -25,7 +25,7 @@ export interface CreateWarehouseItemProps {
   warehouseId: string;
   tags?: string[] | null;
   unit?: string | null;
-  type: PrismaWarehouseItemType;
+  type: WarehouseItemType; // 使用 Prisma 型別
 }
 
 export interface UpdateWarehouseItemProps {
@@ -35,6 +35,7 @@ export interface UpdateWarehouseItemProps {
   warehouseId?: string;
   tags?: string[] | null;
   unit?: string | null;
+  // type 不允許更新（如需允許可加上）
 }
 
 export function isValidWarehouseItem(item: unknown): item is WarehouseItem {

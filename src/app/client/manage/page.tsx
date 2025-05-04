@@ -14,9 +14,16 @@ export default async function ManagePage() {
         <section className="mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-semibold mb-4">專案列表</h2>
-            <Suspense fallback={<p className="text-gray-500">載入專案中...</p>}>
-              <ProjectInstanceList projectInstances={projects} />
-            </Suspense>
+            {/* 空資料處理 */}
+            {projects.length === 0 ? (
+              <div className="text-center py-10">
+                <p className="text-gray-500">目前沒有專案，請建立新專案</p>
+              </div>
+            ) : (
+              <Suspense fallback={<p className="text-gray-500">載入專案中...</p>}>
+                <ProjectInstanceList projectInstances={projects} />
+              </Suspense>
+            )}
           </div>
         </section>
       </div>

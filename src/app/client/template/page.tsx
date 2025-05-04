@@ -44,6 +44,7 @@ export default async function TemplatePage() {
               <Suspense fallback={<p className="text-gray-500">載入工程模板中...</p>}>
                 <EngineeringTemplateList projects={projects} />
               </Suspense>
+              {/* 若 projects 為空，EngineeringTemplateList 內部可根據 props 處理 */}
             </div>
           </section>
         </div>

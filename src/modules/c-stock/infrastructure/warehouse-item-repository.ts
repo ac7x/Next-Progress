@@ -12,7 +12,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
         description: data.description,
         quantity: data.quantity,
         ...(data.unit !== undefined && { unit: data.unit }),
-        type: data.type, // 使用正確的 WarehouseItemType
+        type: data.type, // Prisma enum 型別
         warehouse: {
           connect: { id: data.warehouseId }
         }

@@ -1,4 +1,4 @@
-import { WarehouseItemType } from '@prisma/client'; // 🆕 引入 Prisma 定義的 WarehouseItemType
+import { WarehouseItemType } from '@prisma/client'; // 直接引用 Prisma enum
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from './warehouse-item-entity';
 import { IWarehouseItemRepository } from './warehouse-item-repository';
 

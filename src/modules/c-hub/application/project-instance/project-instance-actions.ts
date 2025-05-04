@@ -66,6 +66,7 @@ export async function listProjects(): Promise<ProjectInstance[]> {
     return await projectInstanceService.list();
   } catch (error) {
     console.error('獲取專案列表失敗:', error);
+    // 發生異常才回傳空陣列，UI 層根據長度判斷是否顯示「目前沒有專案」
     return [];
   }
 }

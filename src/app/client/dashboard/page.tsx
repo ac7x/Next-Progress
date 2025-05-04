@@ -22,8 +22,16 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          <Suspense fallback={<p className="text-gray-500">載入專案中...</p>}>
-            {projects.length > 0 ? (
+          {/* 空資料處理 */}
+          {projects.length === 0 ? (
+            <div className="text-center py-10 bg-gray-50 rounded-lg">
+              <p className="text-gray-500 mb-3">目前沒有專案</p>
+              <Link href="/client/project/new" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                建立新專案
+              </Link>
+            </div>
+          ) : (
+            <Suspense fallback={<p className="text-gray-500">載入專案中...</p>}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {projects.slice(0, 3).map((project) => (
                   <div key={project.id} className="border p-4 rounded-lg bg-gray-50 hover:shadow-md transition-shadow">
@@ -42,15 +50,8 @@ export default async function DashboardPage() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="text-center py-10 bg-gray-50 rounded-lg">
-                <p className="text-gray-500 mb-3">目前沒有專案</p>
-                <Link href="/client/project/new" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                  建立新專案
-                </Link>
-              </div>
-            )}
-          </Suspense>
+            </Suspense>
+          )}
         </section>
       </div>
     );

@@ -1,5 +1,6 @@
 import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
+// 可選：import { WarehouseItemType } from '@prisma/client';
 
 /**
  * 倉庫顯示工具函數集

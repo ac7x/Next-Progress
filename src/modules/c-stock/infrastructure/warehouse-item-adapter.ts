@@ -15,7 +15,7 @@ export const warehouseItemAdapter = {
       description: prismaWarehouseItem.description,
       quantity: prismaWarehouseItem.quantity,
       unit: prismaWarehouseItem.unit,
-      type: prismaWarehouseItem.type, // 使用正確的 WarehouseItemType
+      type: prismaWarehouseItem.type, // Prisma enum 型別
       warehouseId: prismaWarehouseItem.warehouseId,
       tags: tagRelations.map(relation => ({
         id: relation.tagId,

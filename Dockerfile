@@ -11,6 +11,15 @@ RUN \
   elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm install --frozen-lockfile; \
   else npm ci; fi
 
+# 傳遞公開環境變數（供 Next.js build-time 使用）
+ARG NEXT_PUBLIC_LIFF_ID
+ARG NEXT_PUBLIC_LINE_BOT_ID
+ARG NEXT_PUBLIC_HOST
+
+ENV NEXT_PUBLIC_LIFF_ID=$NEXT_PUBLIC_LIFF_ID
+ENV NEXT_PUBLIC_LINE_BOT_ID=$NEXT_PUBLIC_LINE_BOT_ID
+ENV NEXT_PUBLIC_HOST=$NEXT_PUBLIC_HOST
+
 # 複製專案檔案
 COPY . .
 
