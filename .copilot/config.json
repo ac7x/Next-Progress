@@ -39,9 +39,7 @@
         "enableCodeNavigation": true,
         "enableModelDiagramGeneration": true,
         "enableRelationNavigation": true,
-        "enablePrismaClientGeneration": true,
         "enableQueryOptimizationHints": true,
-        "enablePrismaSoftDeleteSupport": true,
         "enableComponentScaffolding": true
     },
     "prompts": {
