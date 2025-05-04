@@ -8,11 +8,11 @@ export const ProjectTemplateQueryService = {
             where: { isActive: true },
             orderBy: { createdAt: 'desc' },
         });
-        // 確保所有日期欄位為 string，避免 SSR 序列化失敗
+        // 保證回傳的 createdAt/updatedAt 為 Date 型別
         return templates.map(t => ({
             ...t,
-            createdAt: t.createdAt instanceof Date ? t.createdAt.toISOString() : t.createdAt,
-            updatedAt: t.updatedAt instanceof Date ? t.updatedAt.toISOString() : t.updatedAt,
-        })) as unknown as ProjectTemplate[];
+            createdAt: t.createdAt instanceof Date ? t.createdAt : new Date(t.createdAt),
+            updatedAt: t.updatedAt instanceof Date ? t.updatedAt : new Date(t.updatedAt),
+        })) as ProjectTemplate[];
     },
 };

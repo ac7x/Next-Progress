@@ -12,14 +12,7 @@ export default async function TemplatePage() {
     // SSR 專案列表
     const projects = await listProjects();
     // SSR 專案模板列表（CQRS Query Handler）
-    let templates: ProjectTemplate[] = await GetProjectTemplateListQueryHandler();
-
-    // 修正：將日期欄位轉回 Date 物件
-    templates = templates.map(t => ({
-      ...t,
-      createdAt: typeof t.createdAt === 'string' ? new Date(t.createdAt) : t.createdAt,
-      updatedAt: typeof t.updatedAt === 'string' ? new Date(t.updatedAt) : t.updatedAt,
-    }));
+    const templates: ProjectTemplate[] = await GetProjectTemplateListQueryHandler();
 
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
