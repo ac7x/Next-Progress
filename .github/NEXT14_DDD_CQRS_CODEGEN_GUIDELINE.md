@@ -1,4 +1,22 @@
 請生成符合 **Next.js 14 + Server Components + DDD + CQRS 架構最佳實踐** 的完整模組代碼。
+# Next.js 14 + Server Components + DDD + CQRS 架構最佳實踐規範
+
+## 核心目標
+
+- ✅ **職責分離** (Separation of Responsibility)  
+  每層只負責單一職責，降低模組耦合
+
+- ✅ **關注點分離** (Separation of Concerns)  
+  清楚拆分 Domain Logic / Application Logic / Infrastructure / UI Concern
+
+- ✅ **最小化客戶端** (Minimal Client — Server-first)  
+  資料存取與邏輯盡可能在 Server Components / Server Action 處理
+
+- ✅ **領域驅動設計 (DDD)** (Domain-Driven Design)  
+  以業務核心為導向設計 Entity / Aggregate / Repository / Domain Service
+
+- ✅ **命令查詢責任分離 (CQRS)** (Command Query Responsibility Segregation)  
+  資料查詢 (Query) 與修改 (Command) 明確分離，提升可維護性與擴展性
 
 ### 架構規範  
 1️⃣ 採用 Next.js 14 App Router，Server Components 優先  

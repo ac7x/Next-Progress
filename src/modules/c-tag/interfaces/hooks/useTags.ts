@@ -1,4 +1,4 @@
-import { listTags } from '@/modules/c-tag/application/tag-actions';
+import { tagQueryList } from '@/modules/c-tag/application/tag-actions';
 import { Tag } from '@/modules/c-tag/domain/tag-entity';
 import { useQuery } from '@tanstack/react-query';
 
@@ -6,6 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 export function useTags() {
   return useQuery<Tag[], Error>({
     queryKey: ['tags'],
-    queryFn: listTags,
+    queryFn: tagQueryList,
   });
 }
