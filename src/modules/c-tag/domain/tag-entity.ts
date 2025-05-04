@@ -52,7 +52,6 @@ export interface CreateTagProps {
   type?: TagType;
   description?: string | null;
   color?: string | null;
-  priority?: number;
 }
 
 export interface UpdateTagProps {
@@ -60,7 +59,6 @@ export interface UpdateTagProps {
   type?: TagType;
   description?: string | null;
   color?: string | null;
-  priority?: number;
 }
 
 // Zod schema for validation
