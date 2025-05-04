@@ -19,15 +19,28 @@ export async function getSubTaskTemplateQuery(id: string): Promise<SubTaskTempla
     }
 }
 
-// Query: 依 TaskTemplateId 取得子任務模板清單
-export async function listSubTaskTemplatesByTaskTemplateId(taskTemplateId: string): Promise<SubTaskTemplate[]> {
-    if (!taskTemplateId?.trim()) {
+// Query DTO
+export interface ListSubTaskTemplatesByTaskTemplateIdQuery {
+    taskTemplateId: string;
+}
+
+// Response DTO
+export interface SubTaskTemplateListResponse {
+    templates: SubTaskTemplate[];
+}
+
+// Query Handler
+export async function listSubTaskTemplatesByTaskTemplateIdHandler(
+    query: ListSubTaskTemplatesByTaskTemplateIdQuery
+): Promise<SubTaskTemplateListResponse> {
+    if (!query.taskTemplateId?.trim()) {
         throw new Error('任務模板 ID 為必填項');
     }
     try {
-        return await templateService.listTemplatesByTaskTemplateId(taskTemplateId);
+        const templates = await templateService.listTemplatesByTaskTemplateId(query.taskTemplateId);
+        return { templates };
     } catch (error) {
         console.error('列出子任務模板失敗:', error);
-        return [];
+        return { templates: [] };
     }
 }

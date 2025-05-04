@@ -3,7 +3,12 @@
 import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
 import { createSubTaskTemplateCommand, deleteSubTaskTemplateCommand, updateSubTaskTemplateCommand } from './sub-taskTemplate.command';
 // 以 Query 結尾作為 CQRS 查詢區分，避免命名衝突
-import { getSubTaskTemplateQuery, listSubTaskTemplatesByTaskTemplateId as listSubTaskTemplatesByTaskTemplateIdQuery } from './sub-taskTemplate.query';
+import {
+  listSubTaskTemplatesByTaskTemplateIdHandler,
+  ListSubTaskTemplatesByTaskTemplateIdQuery,
+  SubTaskTemplateListResponse
+} from './sub-task-template.query';
+import { getSubTaskTemplateQuery } from './sub-taskTemplate.query';
 
 // UI Action: 建立子任務模板
 export async function createSubTaskTemplate(data: CreateSubTaskTemplateProps): Promise<SubTaskTemplate> {
@@ -26,6 +31,8 @@ export async function getSubTaskTemplate(id: string) {
 }
 
 // UI Action: 查詢子任務模板清單（依任務模板）
-export async function listSubTaskTemplatesByTaskTemplateId(taskTemplateId: string) {
-  return listSubTaskTemplatesByTaskTemplateIdQuery(taskTemplateId);
+export async function listSubTaskTemplatesByTaskTemplateId(taskTemplateId: string): Promise<SubTaskTemplate[]> {
+  const query: ListSubTaskTemplatesByTaskTemplateIdQuery = { taskTemplateId };
+  const res: SubTaskTemplateListResponse = await listSubTaskTemplatesByTaskTemplateIdHandler(query);
+  return res.templates;
 }
