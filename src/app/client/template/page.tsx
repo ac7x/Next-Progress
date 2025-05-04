@@ -1,6 +1,6 @@
 import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-actions';
 import { GetProjectTemplateListQueryHandler } from '@/modules/c-hub/application/project-template/project-template.query-handler';
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { EngineeringTemplateForm } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-form';
 import { EngineeringTemplateList } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-list';
 import { CreateProjectTemplateForm } from '@/modules/c-hub/interfaces/project-template/components/project-template-create-form';
@@ -11,8 +11,22 @@ export default async function TemplatePage() {
   try {
     // SSR 專案列表
     const projects = await listProjects();
+
     // SSR 專案模板列表（CQRS Query Handler）
-    const templates: ProjectTemplate[] = await GetProjectTemplateListQueryHandler();
+    // 僅呼叫 Application 層的查詢服務，符合 CQRS
+    let templatesRaw: unknown;
+    try {
+      // 確保這裡呼叫的是 Application Query Handler，並且該 Handler 已正確串接 Infrastructure 層
+      templatesRaw = await GetProjectTemplateListQueryHandler();
+    } catch (err) {
+      // 若 Query Handler 失敗，記錄詳細錯誤
+      console.error('GetProjectTemplateListQueryHandler error:', err);
+      templatesRaw = [];
+    }
+    // 型別守衛，確保為 ProjectTemplate[]
+    const templates: ProjectTemplate[] = Array.isArray(templatesRaw)
+      ? templatesRaw.filter(isValidProjectTemplate)
+      : [];
 
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
@@ -29,6 +43,11 @@ export default async function TemplatePage() {
               <h3 className="text-xl font-semibold mb-4">現有專案模板</h3>
               {/* SSR 傳遞專案模板資料，Client 端僅負責渲染，不會卡在載入中 */}
               <ProjectTemplateList templates={templates} />
+              {templates.length === 0 && (
+                <div className="mt-4 p-2 bg-yellow-50 text-yellow-700 rounded border border-yellow-200">
+                  尚無可用專案模板，請先建立一個。
+                </div>
+              )}
             </div>
           </section>
 
@@ -54,6 +73,7 @@ export default async function TemplatePage() {
       </div>
     );
   } catch (error) {
+    // 捕獲所有 SSR 錯誤，顯示友善訊息
     console.error('模板頁面資料載入失敗', error);
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
