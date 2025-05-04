@@ -1,10 +1,10 @@
-import { listProjectTemplatesQuery } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { useQuery } from '@tanstack/react-query';
+import { getProjectTemplateListHandler } from '../project-template.controller';
 
-// CQRS: Query Hook，僅負責查詢
+// CQRS: Query Controller Hook，僅負責查詢
 export function useProjectTemplateQuery() {
   return useQuery({
     queryKey: ['projectTemplates'],
-    queryFn: listProjectTemplatesQuery,
+    queryFn: getProjectTemplateListHandler,
   });
 }

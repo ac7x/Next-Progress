@@ -20,3 +20,6 @@ export * from './hooks/project-template.create';
 // 更新專案模板的 hook
 export * from './hooks/project-template.update';
 
+// Controller
+export * from './project-template.controller';
+

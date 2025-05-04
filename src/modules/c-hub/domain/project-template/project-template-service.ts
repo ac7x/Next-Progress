@@ -40,24 +40,24 @@ export class ProjectTemplateService {
 }
 
 export class ProjectTemplateDomainService {
-  constructor(private readonly repository: IProjectTemplateRepository) {}
+  constructor(private readonly repository: IProjectTemplateRepository) { }
 
   async createTemplate(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
     if (!data.name.trim()) {
       throw new Error('Template name cannot be empty');
     }
-    
+
     const template = await this.repository.create(data);
-    
+
     // 發布領域事件
     new ProjectTemplateCreatedEvent(template.id, template.name);
-    
+
     return template;
   }
 
   async deleteTemplate(id: string): Promise<void> {
     await this.repository.delete(id);
-    
+
     // 發布領域事件
     new ProjectTemplateDeletedEvent(id);
   }
@@ -71,6 +71,13 @@ export class ProjectTemplateDomainService {
 
   async listTemplates(): Promise<ProjectTemplate[]> {
     return this.repository.list();
+  }
+
+  async updateTemplate(id: string, data: Partial<CreateProjectTemplateProps>): Promise<ProjectTemplate> {
+    if (!id.trim()) throw new Error('Template ID cannot be empty');
+    if (data.name && !data.name.trim()) throw new Error('Template name cannot be empty');
+    // 可加上更多業務規則
+    return this.repository.update(id, data);
   }
 
   validateTemplate(template: Partial<ProjectTemplate>): void {
