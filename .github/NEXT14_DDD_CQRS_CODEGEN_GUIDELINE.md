@@ -45,46 +45,57 @@ A[React Component]
 B[SWR Hook (useSWR)]
 C[React Query Hook (useQuery / useMutation)]
 D[Application Service (API Route / Server Action)]
-E[Domain Service / Entity / Aggregate]
-F[Repository (Prisma)]
-G[Database (MongoDB)]
-H[SWR Cache (in-memory)]
-I[React Query Cache (in-memory)]
-J[Revalidate / Mutate]
+E[Command Service / Write Model (API Route / Server Action)]
+F[Query Service / Read Model (API Route / Server Action)]
+G[Domain Service / Entity / Aggregate]
+H[Repository (Prisma)]
+I[Database (MongoDB)]
+J[SWR Cache (in-memory)]
+K[React Query Cache (in-memory)]
+L[Write Event Store / Command Handler]
+M[Read Event Store / Query Handler]
+N[Revalidate / Mutate]
 
 A -->|render| B
 A -->|render| C
 
-B -->|get cache| H
-C -->|get cache| I
+B -->|get cache| J
+C -->|get cache| K
 
-H -->|hit?| B
-I -->|hit?| C
+J -->|hit?| B
+K -->|hit?| C
 
-H -- cache hit -->|return cached data| B
-I -- cache hit -->|return cached data| C
+J -- cache hit -->|return cached data| B
+K -- cache hit -->|return cached data| C
 
-H -- cache miss -->|call fetcher| D
-I -- cache miss -->|call fetcher| D
+J -- cache miss -->|call fetcher| F
+K -- cache miss -->|call fetcher| F
 
-D -->|orchestrate use case| E
-E -->|domain logic| E
-E -->|query| F
-F -->|query| G
-G -->|return data| F
-F -->|return entity| E
-E -->|return domain result| D
-D -->|return DTO| C
+F -->|query read model| G
+F -->|query database| I
+I -->|return data| G
+G -->|return query result| F
+F -->|return DTO| C
 
-C -->|update React Query cache| I
-B -->|update SWR cache| H
+D -->|orchestrate command| E
+E -->|command logic| E
+E -->|invoke repository| H
+H -->|write to database| I
+I -->|return result| E
+E -->|return DTO| D
+
+C -->|update React Query cache| K
+B -->|update SWR cache| J
 
 C -->|return data| A
 B -->|return data| A
 
-J -->|mutate (invalidate cache)| I
-J -->|mutate (invalidate cache)| H
-J -->|trigger re-fetch| C
+N -->|mutate (invalidate cache)| K
+N -->|mutate (invalidate cache)| J
+N -->|trigger re-fetch| C
+
+L -->|event store| I
+M -->|read model| I
 ```
 
 ### 命名規範
