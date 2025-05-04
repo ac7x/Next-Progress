@@ -43,9 +43,6 @@ jobs:
           docker build \
             --cache-from=ac7x/next-line-liff-template:latest \
             --build-arg NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }} \
-            --build-arg NEXT_PUBLIC_LINE_BOT_ID=${{ secrets.NEXT_PUBLIC_LINE_BOT_ID }} \
-            --build-arg NEXT_PUBLIC_HOST=${{ secrets.NEXT_PUBLIC_HOST }} \
-            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             -t ac7x/next-line-liff-template:latest .
           echo "Docker image built successfully."
 
@@ -57,32 +54,10 @@ jobs:
           echo "Docker image pushed successfully."
 
       # 使用 Docker Hub 上的鏡像進行部署到 Google Cloud Run
-      - name: Generate env_vars for Cloud Run
-        id: env_vars
-        run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> env_vars.txt
-          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> env_vars.txt
-          echo "MEMCACHIER_SERVERS=${{ secrets.MEMCACHIER_SERVERS }}" >> env_vars.txt
-          echo "MEMCACHIER_USERNAME=${{ secrets.MEMCACHIER_USERNAME }}" >> env_vars.txt
-          echo "MEMCACHIER_PASSWORD=${{ secrets.MEMCACHIER_PASSWORD }}" >> env_vars.txt
-          echo "NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }}" >> env_vars.txt
-          echo "LINE_CHANNEL_ID=${{ secrets.LINE_CHANNEL_ID }}" >> env_vars.txt
-          echo "LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}" >> env_vars.txt
-          echo "LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}" >> env_vars.txt
-          echo "NEXT_PUBLIC_LINE_BOT_ID=${{ secrets.NEXT_PUBLIC_LINE_BOT_ID }}" >> env_vars.txt
-          echo "NEXT_PUBLIC_HOST=${{ secrets.NEXT_PUBLIC_HOST }}" >> env_vars.txt
-          echo "LINE_PAY_CHANNEL_ID=${{ secrets.LINE_PAY_CHANNEL_ID }}" >> env_vars.txt
-          echo "LINE_PAY_CHANNEL_SECRET=${{ secrets.LINE_PAY_CHANNEL_SECRET }}" >> env_vars.txt
-          echo "LINE_PAY_API_URL=${{ secrets.LINE_PAY_API_URL }}" >> env_vars.txt
-          echo "env_vars<<EOF" >> $GITHUB_OUTPUT
-          cat env_vars.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: next-line-liff-template
           image: ac7x/next-line-liff-template:latest
           region: asia-east1
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          env_vars: ${{ steps.env_vars.outputs.env_vars }}
 
