@@ -85,3 +85,9 @@ B -->|return data| A
 J -->|mutate (invalidate cache)| I
 J -->|mutate (invalidate cache)| H
 J -->|trigger re-fetch| C
+```
+
+### 命名規範
+- **Query UseCase**: 使用 `get` 或 `list` 作為前綴，明確表示查詢操作。
+- **Command UseCase**: 使用 `create`、`update` 或 `delete` 作為前綴，明確表示修改操作。
+- **React Hook**: 使用 `useQuery` 或 `useMutation` 作為前綴，對應 React Query 的功能。

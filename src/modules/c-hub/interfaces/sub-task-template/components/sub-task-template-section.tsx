@@ -2,7 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useSubTaskTemplatesByTaskTemplate } from '../hooks/use-sub-task-templates-by-task-template';
+import { useQuerySubTaskTemplatesByTaskTemplate } from '../hooks/use-sub-task-templates-by-task-template';
 import { SubTaskTemplateForm } from './sub-task-template-form';
 import { SubTaskTemplateList } from './sub-task-template-list';
 
@@ -15,7 +15,7 @@ export function SubTaskTemplateSection({ taskTemplateId }: SubTaskTemplateSectio
   const queryClient = useQueryClient();
   const [isAddingTemplate, setIsAddingTemplate] = useState(false);
 
-  const { data: templates = [], isLoading, error } = useSubTaskTemplatesByTaskTemplate(taskTemplateId);
+  const { data: templates = [], isLoading, error } = useQuerySubTaskTemplatesByTaskTemplate(taskTemplateId);
 
   const handleAddSuccess = () => {
     setIsAddingTemplate(false);

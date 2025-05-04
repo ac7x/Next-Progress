@@ -4,6 +4,7 @@ import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps
 import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-service';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
 import { revalidatePath } from 'next/cache';
+import { getSubTaskTemplateQuery } from './sub-task-template.query';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
@@ -68,7 +69,7 @@ export async function deleteSubTaskTemplate(id: string): Promise<void> {
 
   try {
     // 先獲取模板以取得任務模板ID
-    const template = await getSubTaskTemplate(id);
+    const template = await getSubTaskTemplateQuery(id);
 
     await templateService.deleteTemplate(id);
 

@@ -40,7 +40,6 @@ jobs:
       - name: Build Docker image
         # if: env.build == 'true' # Temporarily removed condition
         run: |
-          export DOCKER_BUILDKIT=0
           docker build \
             --cache-from=ac7x/next-line-liff-template:latest \
             --build-arg NEXT_PUBLIC_LIFF_ID=${{ secrets.NEXT_PUBLIC_LIFF_ID }} \

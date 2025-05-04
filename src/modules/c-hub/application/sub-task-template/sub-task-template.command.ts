@@ -5,7 +5,7 @@ import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-te
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
 import { revalidatePath } from 'next/cache';
 // 新增：從 application 層 actions 匯入查詢函式
-import { getSubTaskTemplate } from './sub-task-template-actions';
+import { getSubTaskTemplateQuery } from './sub-task-template.query';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
@@ -73,7 +73,7 @@ export async function deleteSubTaskTemplateCommand(id: string): Promise<void> {
 
     try {
         // 先獲取模板以取得任務模板ID
-        const template = await getSubTaskTemplate(id);
+        const template = await getSubTaskTemplateQuery(id);
 
         await templateService.deleteTemplate(id);
 
