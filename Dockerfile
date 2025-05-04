@@ -6,8 +6,8 @@ WORKDIR /app
 # 僅複製必要檔案以利用快取
 COPY package.json package-lock.json ./
 
-# 僅安裝 production 依賴
-RUN npm ci --omit=dev
+# 安裝所有依賴（包括 devDependencies）
+RUN npm ci
 
 # 複製專案檔案
 COPY . .
