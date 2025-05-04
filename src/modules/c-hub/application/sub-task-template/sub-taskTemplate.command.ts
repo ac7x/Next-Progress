@@ -71,7 +71,6 @@ export async function deleteSubTaskTemplateCommand(id: string, taskTemplateId?: 
 
     try {
         await templateService.deleteTemplate(id);
-
         revalidatePath('/client/template');
         if (taskTemplateId) {
             revalidatePath(`/client/template/subtask-template/${taskTemplateId}`);
