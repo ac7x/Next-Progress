@@ -29,7 +29,8 @@ export function TagEditForm({ tagId, onSuccess, onCancel }: TagEditFormProps) {
   useEffect(() => {
     if (tag) {
       setName(tag.name);
-      setType(tag.type);
+      // 將 Prisma enum 轉為本地 TagType
+      setType(tag.type as TagType);
       setDescription(tag.description || '');
     }
   }, [tag]);

@@ -1,35 +1,18 @@
-import { Tag as PrismaTag, TagType as PrismaTagType } from '@prisma/client';
+import {
+  Tag as PrismaTag,
+  TagRelationType as PrismaTagRelationType,
+  TagType as PrismaTagType
+} from '@prisma/client';
 
-export { PrismaTagType };
+// domain 型別
+export type Tag = PrismaTag;
 
-export enum TagType {
-  GENERAL = 'GENERAL',
-  PROJECT_INSTANCE = 'PROJECT_INSTANCE',
-  PROJECT_TEMPLATE = 'PROJECT_TEMPLATE',
-  ENGINEERING_INSTANCE = 'ENGINEERING_INSTANCE',
-  ENGINEERING_TEMPLATE = 'ENGINEERING_TEMPLATE',
-  TASK_INSTANCE = 'TASK_INSTANCE',
-  TASK_TEMPLATE = 'TASK_TEMPLATE',
-  SUBTASK_INSTANCE = 'SUBTASK_INSTANCE',
-  SUBTASK_TEMPLATE = 'SUBTASK_TEMPLATE',
-  WAREHOUSE_INSTANCE = 'WAREHOUSE_INSTANCE',
-  WAREHOUSE_ITEM = 'WAREHOUSE_ITEM',
-}
+// 同時導出值與型別
+export const TagType = PrismaTagType;
+export type TagType = PrismaTagType;
 
-export enum TagRelationType {
-  PROJECT_INSTANCE = 'PROJECT_INSTANCE',
-  PROJECT_TEMPLATE = 'PROJECT_TEMPLATE',
-  ENGINEERING_INSTANCE = 'ENGINEERING_INSTANCE',
-  ENGINEERING_TEMPLATE = 'ENGINEERING_TEMPLATE',
-  TASK_INSTANCE = 'TASK_INSTANCE',
-  TASK_TEMPLATE = 'TASK_TEMPLATE',
-  SUBTASK_INSTANCE = 'SUBTASK_INSTANCE',
-  SUBTASK_TEMPLATE = 'SUBTASK_TEMPLATE',
-  WAREHOUSE_INSTANCE = 'WAREHOUSE_INSTANCE',
-  WAREHOUSE_ITEM = 'WAREHOUSE_ITEM',
-}
-
-export interface Tag extends PrismaTag { }
+export const TagRelationType = PrismaTagRelationType;
+export type TagRelationType = PrismaTagRelationType;
 
 export interface TagRelation {
   id: string;
