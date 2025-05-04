@@ -69,3 +69,4 @@ jobs:
             LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
             MEMCACHIER_SERVERS=${{ secrets.MEMCACHIER_SERVERS }}
             REDIS_URL=${{ secrets.REDIS_URL }}
+
