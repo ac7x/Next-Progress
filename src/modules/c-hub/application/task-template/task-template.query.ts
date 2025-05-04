@@ -4,6 +4,7 @@ import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template
 import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
 
 // Query: 依工程模板ID查詢任務模板
+// 只保留查詢 UseCase
 export async function listTaskTemplatesByEngineeringIdQuery(engineeringTemplateId: string): Promise<TaskTemplate[]> {
     if (!engineeringTemplateId?.trim()) {
         throw new Error('工程模板 ID 為必填項');
