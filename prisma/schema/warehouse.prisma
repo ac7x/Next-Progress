@@ -1,4 +1,4 @@
-model Warehouse {
+model WarehouseInstance {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
@@ -19,7 +19,7 @@ model WarehouseItem {
   type          WarehouseItemType @default(TOOL) // 🆕 物品類別
 
   warehouseId   String            @db.ObjectId
-  warehouse     Warehouse         @relation(fields: [warehouseId], references: [id])
+  warehouse     WarehouseInstance @relation(fields: [warehouseId], references: [id])
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 

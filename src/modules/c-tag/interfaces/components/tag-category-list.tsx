@@ -11,35 +11,19 @@ interface TagCategoryListProps {
   onDelete?: () => void;
 }
 
-// 調整元件名稱與 props
 export function TagCategoryList({ tags = [], onDelete }: TagCategoryListProps) {
   const [selectedType, setSelectedType] = useState<TagType | 'ALL'>('ALL');
 
-  // 依據選擇的類型篩選標籤
   const filteredTags = selectedType === 'ALL'
     ? tags
     : tags.filter(tag => tag.type === selectedType);
 
-  // 如果選擇「全部」，則按類型分組顯示
   const groupedTags = selectedType === 'ALL'
     ? tagDisplayUtils.groupTagsByType(tags)
-    : { [selectedType]: filteredTags };
+    : { [selectedType]: filteredTags } as Partial<Record<TagType, Tag[]>>; // 修正類型
 
-  // 將類型排序為有固定順序
   const orderedTypes = Object.keys(groupedTags).sort((a, b) => {
-    const typeOrder = [
-      TagType.GENERAL,
-      TagType.PROJECT,
-      TagType.PROJECT_TEMPLATE,
-      TagType.ENGINEERING,
-      TagType.ENGINEERING_TEMPLATE,
-      TagType.WAREHOUSE,
-      TagType.ITEM,
-      TagType.TASK,
-      TagType.TASK_TEMPLATE,
-      TagType.SUBTASK,
-      TagType.SUBTASK_TEMPLATE
-    ];
+    const typeOrder = Object.values(TagType);
     return typeOrder.indexOf(a as TagType) - typeOrder.indexOf(b as TagType);
   });
 
@@ -47,7 +31,7 @@ export function TagCategoryList({ tags = [], onDelete }: TagCategoryListProps) {
     <div>
       <TagTypeFilter
         selectedType={selectedType}
-        onChange={(type) => setSelectedType(type)}
+        onChangeAction={(type: TagType | 'ALL') => setSelectedType(type)} // 修正名稱與類型
       />
 
       {orderedTypes.length === 0 ? (

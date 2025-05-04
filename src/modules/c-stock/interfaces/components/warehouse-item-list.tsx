@@ -22,7 +22,7 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const tags = await tagQueryListByType(TagType.ITEM);
+        const tags = await tagQueryListByType(TagType.WAREHOUSE_ITEM);
         setAvailableTags(tags);
       } catch (err) {
         console.error('載入標籤失敗:', err);

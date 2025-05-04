@@ -5,14 +5,13 @@ import { tagDisplayUtils } from '../utils/tag-display-utils';
 
 interface TagTypeFilterProps {
   selectedType: TagType | 'ALL';
-  onChange: (type: TagType | 'ALL') => void;
+  onChangeAction: (type: TagType | 'ALL') => void; // 修改名稱
 }
 
-export function TagTypeFilter({ selectedType, onChange }: TagTypeFilterProps) {
-  // 所有標籤類型 + 全部選項
-  const allTypes = [{ value: 'ALL', label: '全部標籤' } as const, ...Object.entries(TagType).map(([key, value]) => ({
+export function TagTypeFilter({ selectedType, onChangeAction }: TagTypeFilterProps) { // 修改名稱
+  const allTypes = [{ value: 'ALL', label: '全部標籤' } as const, ...Object.values(TagType).map((value) => ({
     value,
-    label: tagDisplayUtils.getTagTypeName(value as TagType)
+    label: tagDisplayUtils.getTagTypeName(value as TagType),
   }))];
 
   return (
@@ -20,10 +19,10 @@ export function TagTypeFilter({ selectedType, onChange }: TagTypeFilterProps) {
       {allTypes.map((type) => (
         <button
           key={type.value}
-          onClick={() => onChange(type.value)}
+          onClick={() => onChangeAction(type.value)} // 修改名稱
           className={`px-3 py-1 rounded-full text-sm border transition-colors ${selectedType === type.value
-              ? 'bg-blue-500 text-white border-blue-500'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+            ? 'bg-blue-500 text-white border-blue-500'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
             }`}
         >
           {type.label}

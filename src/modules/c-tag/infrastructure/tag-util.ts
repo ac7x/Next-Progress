@@ -6,30 +6,30 @@ import { TagType } from '@prisma/client';
  */
 const TAG_TYPE_NAME_MAP: Record<TagType, string> = {
   [TagType.GENERAL]: '通用標籤',
-  [TagType.PROJECT]: '專案相關',
+  [TagType.PROJECT_INSTANCE]: '專案實例',
   [TagType.PROJECT_TEMPLATE]: '專案模板',
-  [TagType.ENGINEERING]: '工程相關',
+  [TagType.ENGINEERING_INSTANCE]: '工程實例',
   [TagType.ENGINEERING_TEMPLATE]: '工程模板',
-  [TagType.WAREHOUSE]: '倉庫相關',
-  [TagType.ITEM]: '物品相關',
-  [TagType.TASK]: '任務相關',
+  [TagType.TASK_INSTANCE]: '任務實例',
   [TagType.TASK_TEMPLATE]: '任務模板',
-  [TagType.SUBTASK]: '子任務相關',
+  [TagType.SUBTASK_INSTANCE]: '子任務實例',
   [TagType.SUBTASK_TEMPLATE]: '子任務模板',
+  [TagType.WAREHOUSE_INSTANCE]: '倉庫實例',
+  [TagType.WAREHOUSE_ITEM]: '倉庫物品' // 修正為 WAREHOUSE_ITEM
 };
 
 const TAG_TYPE_COLOR_MAP: Record<TagType, string> = {
   [TagType.GENERAL]: 'bg-gray-100',
-  [TagType.PROJECT]: 'bg-blue-100',
+  [TagType.PROJECT_INSTANCE]: 'bg-blue-100',
   [TagType.PROJECT_TEMPLATE]: 'bg-blue-200',
-  [TagType.ENGINEERING]: 'bg-green-100',
+  [TagType.ENGINEERING_INSTANCE]: 'bg-green-100',
   [TagType.ENGINEERING_TEMPLATE]: 'bg-green-200',
-  [TagType.WAREHOUSE]: 'bg-yellow-100',
-  [TagType.ITEM]: 'bg-teal-100',
-  [TagType.TASK]: 'bg-purple-100',
+  [TagType.TASK_INSTANCE]: 'bg-purple-100',
   [TagType.TASK_TEMPLATE]: 'bg-purple-200',
-  [TagType.SUBTASK]: 'bg-pink-100',
+  [TagType.SUBTASK_INSTANCE]: 'bg-pink-100',
   [TagType.SUBTASK_TEMPLATE]: 'bg-pink-200',
+  [TagType.WAREHOUSE_INSTANCE]: 'bg-yellow-100',
+  [TagType.WAREHOUSE_ITEM]: 'bg-teal-100' // 修正為 WAREHOUSE_ITEM
 };
 
 export const tagUtil = {

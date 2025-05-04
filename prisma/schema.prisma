@@ -33,29 +33,29 @@ enum RoleEnum {
 
 enum TagType {
   GENERAL
-  PROJECT
+  PROJECT_INSTANCE
   PROJECT_TEMPLATE
-  ENGINEERING
+  ENGINEERING_INSTANCE
   ENGINEERING_TEMPLATE
-  TASK
+  TASK_INSTANCE
   TASK_TEMPLATE
-  SUBTASK
+  SUBTASK_INSTANCE
   SUBTASK_TEMPLATE
-  WAREHOUSE
-  ITEM
+  WAREHOUSE_INSTANCE
+  WAREHOUSE_ITEM
 }
 
 enum TagRelationType {
-  PROJECT
+  PROJECT_INSTANCE
   PROJECT_TEMPLATE
-  ENGINEERING
+  ENGINEERING_INSTANCE
   ENGINEERING_TEMPLATE
-  TASK
+  TASK_INSTANCE
   TASK_TEMPLATE
-  SUBTASK
+  SUBTASK_INSTANCE
   SUBTASK_TEMPLATE
-  WAREHOUSE
-  ITEM
+  WAREHOUSE_INSTANCE
+  WAREHOUSE_ITEM
 }
 
 model Tag {
@@ -339,7 +339,7 @@ model Attachment {
 }
 
 
-model Warehouse {
+model WarehouseInstance {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
@@ -360,7 +360,7 @@ model WarehouseItem {
   type          WarehouseItemType @default(TOOL) // 🆕 物品類別
 
   warehouseId   String            @db.ObjectId
-  warehouse     Warehouse         @relation(fields: [warehouseId], references: [id])
+  warehouse     WarehouseInstance @relation(fields: [warehouseId], references: [id])
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 

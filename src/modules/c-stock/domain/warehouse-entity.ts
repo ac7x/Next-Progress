@@ -1,21 +1,21 @@
-export interface Warehouse {
+export interface WarehouseInstance {
   id: string;
   name: string;
   description: string | null;
   location?: string | null;
-  isActive?: boolean;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface CreateWarehouseProps {
+export interface CreateWarehouseInstanceProps {
   name: string;
   description?: string | null;
   location?: string | null;
   isActive?: boolean;
 }
 
-export interface UpdateWarehouseProps {
+export interface UpdateWarehouseInstanceProps {
   name?: string;
   description?: string | null;
   location?: string | null;
@@ -23,8 +23,8 @@ export interface UpdateWarehouseProps {
 }
 
 // 型別守衛函數
-export function isValidWarehouse(warehouse: unknown): warehouse is Warehouse {
-  return typeof warehouse === 'object' && 
+export function isValidWarehouseInstance(warehouse: unknown): warehouse is WarehouseInstance {
+  return typeof warehouse === 'object' &&
     warehouse !== null &&
     'id' in warehouse &&
     'name' in warehouse &&

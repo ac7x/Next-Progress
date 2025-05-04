@@ -1,6 +1,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { IWarehouseItemRepository } from '@/modules/c-stock/domain/warehouse-item-repository';
+import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
 import { warehouseItemAdapter } from './warehouse-item-adapter';
 
 export class WarehouseItemRepository implements IWarehouseItemRepository {
@@ -11,7 +12,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
         description: data.description,
         quantity: data.quantity,
         ...(data.unit !== undefined && { unit: data.unit }),
-        type: data.type, // 🆕 確保類型正確處理
+        type: data.type, // 使用正確的 WarehouseItemType
         warehouse: {
           connect: { id: data.warehouseId }
         }
@@ -23,7 +24,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
         data: data.tags.map(tagId => ({
           tagId,
           targetId: warehouseItem.id,
-          targetType: 'ITEM'
+          targetType: TagRelationType.WAREHOUSE_ITEM
         }))
       });
     }
@@ -68,7 +69,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
 
     if (data.tags) {
       await prisma.tagRelation.deleteMany({
-        where: { targetId: id, targetType: 'ITEM' }
+        where: { targetId: id, targetType: TagRelationType.WAREHOUSE_ITEM }
       });
 
       if (data.tags.length > 0) {
@@ -76,7 +77,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
           data: data.tags.map(tagId => ({
             tagId,
             targetId: id,
-            targetType: 'ITEM'
+            targetType: TagRelationType.WAREHOUSE_ITEM
           }))
         });
       }
@@ -87,7 +88,7 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
 
   async delete(id: string): Promise<void> {
     await prisma.tagRelation.deleteMany({
-      where: { targetId: id, targetType: 'ITEM' }
+      where: { targetId: id, targetType: TagRelationType.WAREHOUSE_ITEM }
     });
     await prisma.warehouseItem.delete({
       where: { id }

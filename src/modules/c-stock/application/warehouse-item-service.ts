@@ -2,6 +2,7 @@ import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/cli
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { IWarehouseItemDomainService, WarehouseItemDomainService } from '@/modules/c-stock/domain/warehouse-item-service';
 import { warehouseItemRepository } from '@/modules/c-stock/infrastructure/warehouse-item-repository';
+import { TagRelationType } from '@/modules/c-tag/domain/tag-entity'; // 確保引入 TagRelationType
 
 export class WarehouseItemApplicationService {
   constructor(private readonly domainService: IWarehouseItemDomainService) { }
@@ -20,7 +21,7 @@ export class WarehouseItemApplicationService {
 
   async getWarehouseItemTags(warehouseItemId: string): Promise<string[]> {
     const tagRelations = await prisma.tagRelation.findMany({
-      where: { targetId: warehouseItemId, targetType: 'ITEM' },
+      where: { targetId: warehouseItemId, targetType: TagRelationType.WAREHOUSE_ITEM }, // 修正類型
       select: { tagId: true }
     });
     return tagRelations.map(relation => relation.tagId);
@@ -40,13 +41,13 @@ export class WarehouseItemApplicationService {
 
   async addTagToItem(itemId: string, tagId: string): Promise<void> {
     await prisma.tagRelation.create({
-      data: { tagId, targetId: itemId, targetType: 'ITEM' }
+      data: { tagId, targetId: itemId, targetType: TagRelationType.WAREHOUSE_ITEM } // 修正類型
     });
   }
 
   async removeTagFromItem(itemId: string, tagId: string): Promise<void> {
     await prisma.tagRelation.deleteMany({
-      where: { targetId: itemId, tagId, targetType: 'ITEM' }
+      where: { targetId: itemId, tagId, targetType: TagRelationType.WAREHOUSE_ITEM } // 修正類型
     });
   }
 }

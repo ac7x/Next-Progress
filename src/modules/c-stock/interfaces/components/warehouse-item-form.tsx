@@ -26,7 +26,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   useEffect(() => {
     const loadData = async () => {
       try {
-        const itemTags = await tagQueryListByType(TagType.ITEM);
+        const itemTags = await tagQueryListByType(TagType.WAREHOUSE_ITEM); // 修正為 WAREHOUSE_ITEM
         const generalTags = await tagQueryList();
 
         const uniqueTags = [...itemTags];

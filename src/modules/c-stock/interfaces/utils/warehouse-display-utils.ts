@@ -1,4 +1,4 @@
-import { Warehouse } from '@/modules/c-stock/domain/warehouse-entity';
+import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 
 /**
@@ -8,14 +8,14 @@ export const warehouseDisplayUtils = {
   /**
    * 格式化倉庫名稱顯示
    */
-  formatWarehouseName(warehouse: Warehouse): string {
+  formatWarehouseName(warehouse: WarehouseInstance): string {
     return warehouse.name || '未命名倉庫';
   },
 
   /**
    * 生成倉庫標識顯示（ID的一部分）
    */
-  getWarehouseIdBadge(warehouse: Warehouse): string {
+  getWarehouseIdBadge(warehouse: WarehouseInstance): string {
     return warehouse.id.slice(0, 8);
   },
 
@@ -65,7 +65,7 @@ export const warehouseDisplayUtils = {
   /**
    * 獲取倉庫物品完整名稱
    */
-  getItemFullName(item: WarehouseItem, warehouse?: Warehouse | null): string {
+  getItemFullName(item: WarehouseItem, warehouse?: WarehouseInstance | null): string {
     if (warehouse) {
       return `${warehouse.name} - ${item.name}`;
     }

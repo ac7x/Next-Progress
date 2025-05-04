@@ -1,13 +1,13 @@
 'use client';
 
-import { Warehouse } from '@/modules/c-stock/domain/warehouse-entity';
+import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { useState } from 'react';
 import { useWarehouseItems } from '../hooks/useWarehouseItems';
 import { WarehouseItemForm } from './warehouse-item-form';
 import { WarehouseItemList } from './warehouse-item-list';
 
 interface WarehouseItemsModalProps {
-  warehouse: Warehouse;
+  warehouse: WarehouseInstance;
   onCloseAction: () => void;
 }
 

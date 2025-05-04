@@ -1,18 +1,18 @@
 'use client';
 
-import { Warehouse } from '@/modules/c-stock/domain/warehouse-entity';
+import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { useState } from 'react';
 import { useDeleteWarehouse } from '../hooks/useWarehouseMutations';
 import { WarehouseItemsModal } from './warehouse-items-modal';
 
 interface WarehouseListProps {
-  warehouses: Warehouse[];
+  warehouses: WarehouseInstance[];
   onDelete?: () => void;
 }
 
 export function WarehouseList({ warehouses, onDelete }: WarehouseListProps) {
   const [error, setError] = useState<string | null>(null);
-  const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<WarehouseInstance | null>(null);
   const { mutateAsync: deleteMutate, isPending: deleting } = useDeleteWarehouse();
 
   const handleDelete = async (id: string) => {

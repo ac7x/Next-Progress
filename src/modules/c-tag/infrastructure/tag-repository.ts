@@ -16,7 +16,7 @@ export class TagRepository implements ITagRepository {
     const tag = await prisma.tag.create({
       data: {
         name: data.name,
-        type: data.type ? data.type : TagType.GENERAL,
+        type: data.type as TagType, // 修正類型引用
         description: data.description
       }
     });

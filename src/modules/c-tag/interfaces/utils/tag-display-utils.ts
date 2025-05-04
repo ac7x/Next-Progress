@@ -19,14 +19,14 @@ export const tagDisplayUtils = {
   /**
    * 按類型分組標籤
    */
-  groupTagsByType(tags: Tag[]): Record<string, Tag[]> {
-    return tags.reduce((groups: Record<string, Tag[]>, tag) => {
-      const type = tag.type;
+  groupTagsByType(tags: Tag[]): Record<TagType, Tag[]> {
+    return tags.reduce((groups: Record<TagType, Tag[]>, tag) => {
+      const type = tag.type as TagType;
       if (!groups[type]) {
         groups[type] = [];
       }
       groups[type].push(tag);
       return groups;
-    }, {});
+    }, {} as Record<TagType, Tag[]>);
   },
 };
