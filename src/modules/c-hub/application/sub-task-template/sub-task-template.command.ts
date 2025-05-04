@@ -9,6 +9,7 @@ import { getSubTaskTemplate } from './sub-task-template-actions';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
+// Command: 建立子任務模板
 export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplateProps): Promise<SubTaskTemplate> {
     if (!data.name?.trim()) {
         throw new Error('子任務模板名稱為必填項');
@@ -40,6 +41,7 @@ export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplatePr
     }
 }
 
+// Command: 更新子任務模板
 export async function updateSubTaskTemplateCommand(
     id: string,
     data: UpdateSubTaskTemplateProps
@@ -63,6 +65,7 @@ export async function updateSubTaskTemplateCommand(
     }
 }
 
+// Command: 刪除子任務模板
 export async function deleteSubTaskTemplateCommand(id: string): Promise<void> {
     if (!id?.trim()) {
         throw new Error('模板 ID 為必填項');

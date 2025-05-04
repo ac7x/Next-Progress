@@ -94,10 +94,8 @@ export async function listTaskTemplatesByEngineeringId(engineeringId: string): P
   }
 
   try {
-    const allTemplates = await templateService.listTemplates();
-    return allTemplates.filter(template =>
-      isValidTaskTemplate(template) && template.engineeringId === engineeringId
-    );
+    // 直接呼叫 repository 的 CQRS 查詢方法
+    return await taskTemplateRepository.findByEngineeringTemplateId(engineeringId);
   } catch (error) {
     console.error('Failed to list task templates for engineering:', error);
     return [];
