@@ -1,4 +1,4 @@
-import { listTaskTemplatesByEngineeringId } from '@/modules/c-hub/application/task-template/task-template-actions';
+import { listTaskTemplatesByEngineeringIdQuery } from '@/modules/c-hub/application/task-template/task-template.query';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
 import { useQuery } from '@tanstack/react-query';
 
@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 export function useTaskTemplatesByEngineeringTemplate(engineeringTemplateId: string) {
   return useQuery<TaskTemplate[]>({
     queryKey: ['taskTemplates', engineeringTemplateId],
-    queryFn: () => listTaskTemplatesByEngineeringId(engineeringTemplateId),
+    queryFn: () => listTaskTemplatesByEngineeringIdQuery(engineeringTemplateId),
     enabled: !!engineeringTemplateId,
   });
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteSubTaskInstance, updateSubTaskInstanceCompletion, updateSubTaskInstanceStatus } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-actions';
+import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand, updateSubTaskInstanceStatusCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
 import { SubTaskInstance, SubTaskInstanceStatus } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
 import { useState } from 'react';
 import { useSubTaskInstanceUpdate } from '../hooks/use-sub-task-instance-update';
@@ -18,7 +18,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
 
   const handleStatusChange = async (status: SubTaskInstanceStatus) => {
     try {
-      await updateSubTaskInstanceStatus(subTaskInstance.id, status);
+      await updateSubTaskInstanceStatusCommand(subTaskInstance.id, status);
       // React Query 自動同步
     } catch (err) {
       console.error('更新子任務狀態失敗:', err);
@@ -29,7 +29,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
     const newRate = parseInt(e.target.value);
     setCompletionRate(newRate);
     try {
-      await updateSubTaskInstanceCompletion(subTaskInstance.id, newRate);
+      await updateSubTaskInstanceCompletionCommand(subTaskInstance.id, newRate);
       // React Query 自動同步
     } catch (err) {
       console.error('更新完成率失敗:', err);
@@ -40,7 +40,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
     if (!confirm('確定要刪除此子任務嗎？此操作無法復原。')) return;
     setIsDeleting(true);
     try {
-      await deleteSubTaskInstance(subTaskInstance.id);
+      await deleteSubTaskInstanceCommand(subTaskInstance.id);
       // React Query 自動同步
     } catch (err) {
       console.error('刪除子任務失敗:', err);

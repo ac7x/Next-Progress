@@ -1,6 +1,6 @@
 'use client';
 
-import { createSubTaskInstance } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-actions';
+import { createSubTaskInstanceCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
 import { useRouter } from 'next/navigation';
 
 export function SubTaskInstanceForm({ taskInstanceId }: { taskInstanceId: string }) {
@@ -12,7 +12,7 @@ export function SubTaskInstanceForm({ taskInstanceId }: { taskInstanceId: string
     const description = formData.get('description')?.toString() || null;
     const priority = Number(formData.get('priority'));
     const status = formData.get('status')?.toString() as any;
-    await createSubTaskInstance({ name, description, taskId: taskInstanceId, priority, status });
+    await createSubTaskInstanceCommand({ name, description, taskId: taskInstanceId, priority, status });
     router.refresh();
   }
 
