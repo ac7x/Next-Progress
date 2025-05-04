@@ -1,0 +1,41 @@
+import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { IProjectInstanceRepository } from '@/modules/c-hub/domain/project-instance/project-instance-repository';
+import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
+import { projectInstanceAdapter } from './project-instance-adapters';
+
+export class ProjectInstanceRepository implements IProjectInstanceRepository {
+  async create(data: CreateProjectInstanceProps): Promise<ProjectInstance> {
+    const createInput = await projectInstanceAdapter.toCreateInput(data);
+    const result = await prisma.projectInstance.create({
+      data: createInput,
+    });
+    return projectInstanceAdapter.toDomain(result);
+  }
+
+  async list(): Promise<ProjectInstance[]> {
+    const projects = await prisma.projectInstance.findMany();
+    return projects.map(projectInstanceAdapter.toDomain);
+  }
+
+  async getById(id: string): Promise<ProjectInstance | null> {
+    const project = await prisma.projectInstance.findUnique({ where: { id } });
+    return project ? projectInstanceAdapter.toDomain(project) : null;
+  }
+
+  async update(id: string, data: Partial<CreateProjectInstanceProps>): Promise<ProjectInstance> {
+    const result = await prisma.projectInstance.update({
+      where: { id },
+      data: {
+        ...projectInstanceAdapter.toPersistence(data),
+        updatedAt: new Date(),
+      },
+    });
+    return projectInstanceAdapter.toDomain(result);
+  }
+
+  async delete(id: string): Promise<void> {
+    await prisma.projectInstance.delete({ where: { id } });
+  }
+}
+
+export const projectInstanceRepository = new ProjectInstanceRepository();
