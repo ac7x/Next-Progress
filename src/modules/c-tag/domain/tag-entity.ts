@@ -1,13 +1,13 @@
 import {
   Tag as PrismaTag,
   TagRelationType as PrismaTagRelationType,
-  TagType as PrismaTagType
+  TagType as PrismaTagType,
 } from '@prisma/client';
 
-// domain 型別
+// 域模型 Tag 对应 PrismaTag
 export type Tag = PrismaTag;
 
-// 同時導出值與型別
+// 同时导出值与类型
 export const TagType = PrismaTagType;
 export type TagType = PrismaTagType;
 

@@ -1,7 +1,9 @@
 import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
 import { WarehouseItemType as PrismaWarehouseItemType } from '@prisma/client';
 
-export { PrismaWarehouseItemType as WarehouseItemType };
+// 导出值与类型
+export const WarehouseItemType = PrismaWarehouseItemType;
+export type WarehouseItemType = PrismaWarehouseItemType;
 
 export interface WarehouseItem {
   id: string;

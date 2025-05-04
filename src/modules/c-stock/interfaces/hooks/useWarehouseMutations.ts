@@ -2,19 +2,19 @@ import { createWarehouseInstance, deleteWarehouseInstance } from '@/modules/c-st
 import { CreateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export function useCreateWarehouse() {
+export function useCreateWarehouseInstance() {
   const qc = useQueryClient();
   return useMutation<WarehouseInstance, Error, CreateWarehouseInstanceProps>({
-    mutationKey: ['warehouseInstance', 'create'],
+    mutationKey: ['warehouseInstance', 'createInstance'],
     mutationFn: createWarehouseInstance,
     onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouseInstances'] })
   });
 }
 
-export function useDeleteWarehouse() {
+export function useDeleteWarehouseInstance() {
   const qc = useQueryClient();
   return useMutation<void, Error, string>({
-    mutationKey: ['warehouseInstance', 'delete'],
+    mutationKey: ['warehouseInstance', 'deleteInstance'],
     mutationFn: deleteWarehouseInstance,
     onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouseInstances'] })
   });

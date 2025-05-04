@@ -2,11 +2,11 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useCreateWarehouse } from '../hooks/useWarehouseMutations';
+import { useCreateWarehouseInstance } from '../hooks/useWarehouseMutations';
 
-export function WarehouseForm() {
+export function WarehouseInstanceForm() {
   const qc = useQueryClient();
-  const { mutate, isPending, error: mutateError, isError, isSuccess } = useCreateWarehouse();
+  const { mutate, isPending, error: mutateError, isError, isSuccess } = useCreateWarehouseInstance();
   const submitting = isPending;
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');

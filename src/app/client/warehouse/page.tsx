@@ -1,7 +1,7 @@
 'use client';
 
-import { WarehouseForm } from '@/modules/c-stock/interfaces/components/warehouse-form';
-import { WarehouseList } from '@/modules/c-stock/interfaces/components/warehouse-list';
+import { WarehouseInstanceForm } from '@/modules/c-stock/interfaces/components/warehouse-form';
+import { WarehouseInstanceList } from '@/modules/c-stock/interfaces/components/warehouse-list';
 import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouses';
 
 export default function WarehouseInstancePage() {
@@ -17,13 +17,13 @@ export default function WarehouseInstancePage() {
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-6">建立倉庫</h2>
         <div className="max-w-md">
-          <WarehouseForm />
+          <WarehouseInstanceForm />
         </div>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold mb-6">倉庫列表</h2>
-        <WarehouseList warehouses={warehouseInstances} />
+        <WarehouseInstanceList warehouseInstances={warehouseInstances} />
       </section>
     </div>
   );
