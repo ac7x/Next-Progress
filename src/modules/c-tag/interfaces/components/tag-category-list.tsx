@@ -2,7 +2,7 @@
 
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
 import { useState } from 'react';
-import { deleteTagAction } from '../actions';
+import { deleteTagAction } from '../tag-command-actions';
 import { tagDisplayUtils } from '../utils/tag-display-utils';
 
 interface Props { tags: Tag[]; }

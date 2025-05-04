@@ -2,7 +2,7 @@
 
 import { TagType } from '@/modules/c-tag/domain/tag-entity';
 import { FormEvent, useState } from 'react';
-import { createTagAction } from '../actions';
+import { createTagAction } from '../tag-command-actions';
 
 export default function TagFormClient() {
   const [name, setName] = useState('');

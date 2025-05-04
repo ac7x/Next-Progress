@@ -1,10 +1,10 @@
 'use client';
 
 import { TagType } from '@/modules/c-tag/domain/tag-entity';
-import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/actions';
 import TagCategoryListClient from '@/modules/c-tag/interfaces/components/tag-category-list';
 import TagFormClient from '@/modules/c-tag/interfaces/components/tag-form';
 import { TagTypeFilter } from '@/modules/c-tag/interfaces/components/tag-type-filter';
+import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useEffect, useState } from 'react';
 
 export default function TagPage() {
