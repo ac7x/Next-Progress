@@ -22,6 +22,9 @@ export const tagUtil = {
   getTagTypeName: (type: TagType): string =>
     TYPE_META[type]?.label || type,
 
-  getTagTypeColor: (type: TagType): string =>
-    formatHex(hsl({ h: TYPE_META[type]?.hue, s: 0.6, l: 0.7 })),
+  getTagTypeColor: (type: TagType): string => {
+    const meta = TYPE_META[type];
+    const colorObj = hsl({ mode: 'hsl', h: meta?.hue ?? 0, s: 0.6, l: 0.7 });
+    return formatHex(colorObj!);
+  },
 };
