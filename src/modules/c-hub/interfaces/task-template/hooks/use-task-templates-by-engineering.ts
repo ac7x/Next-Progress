@@ -3,14 +3,7 @@ import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template
 import { useQuery } from '@tanstack/react-query';
 
 /**
- * 依工程模板ID查詢任務模板的 React Query hook（別名，與 useTaskTemplatesByEngineering 功能一致）
- * @param engineeringId 工程模板ID
- * @returns { data, isLoading, ... }
- *
- * 使用方式：
- * ```tsx
- * const { data, isLoading } = useTaskTemplatesByEngineering(engineeringId);
- * ```
+ * 依工程模板ID查詢任務模板的 React Query hook
  */
 export function useTaskTemplatesByEngineering(engineeringId: string) {
   return useQuery<TaskTemplate[]>({

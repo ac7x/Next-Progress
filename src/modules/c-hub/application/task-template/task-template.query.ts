@@ -2,17 +2,23 @@
 
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
 import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
+import { TaskTemplateDomainService } from '@/modules/c-hub/domain/task-template/task-template-service';
+
+const templateService = new TaskTemplateDomainService(taskTemplateRepository);
+
+// Query: 取得所有任務模板
+export async function listTaskTemplatesQuery(): Promise<TaskTemplate[]> {
+  return templateService.listTemplates();
+}
+
+// Query: 依ID取得任務模板
+export async function getTaskTemplateQuery(id: string): Promise<TaskTemplate | null> {
+  if (!id?.trim()) throw new Error('模板 ID 為必填項');
+  return templateService.getTemplateById(id);
+}
 
 // Query: 依工程模板ID查詢任務模板
-// 只保留查詢 UseCase
 export async function listTaskTemplatesByEngineeringIdQuery(engineeringTemplateId: string): Promise<TaskTemplate[]> {
-    if (!engineeringTemplateId?.trim()) {
-        throw new Error('工程模板 ID 為必填項');
-    }
-    try {
-        return await taskTemplateRepository.findByEngineeringTemplateId(engineeringTemplateId);
-    } catch (error) {
-        console.error('Failed to list task templates for engineering:', error);
-        return [];
-    }
+  if (!engineeringTemplateId?.trim()) throw new Error('工程模板 ID 為必填項');
+  return taskTemplateRepository.findByEngineeringTemplateId(engineeringTemplateId);
 }

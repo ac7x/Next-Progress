@@ -7,7 +7,7 @@
  * <TaskTemplateList templates={templates} onDelete={refetchFn} />
  */
 
-import { deleteTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
+import { deleteTaskTemplateCommand } from '@/modules/c-hub/application/task-template/task-template.command';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -34,7 +34,7 @@ export function TaskTemplateList({ templates, onDelete }: TaskTemplateListProps)
     setError(null);
 
     try {
-      await deleteTaskTemplate(id);
+      await deleteTaskTemplateCommand(id);
       onDelete?.();
       router.refresh();
     } catch (err) {

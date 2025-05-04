@@ -7,7 +7,7 @@
  * <TaskTemplateForm engineeringTemplates={engineeringTemplates} />
  */
 
-import { createTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
+import { createTaskTemplateCommand } from '@/modules/c-hub/application/task-template/task-template.command';
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -36,7 +36,7 @@ export function TaskTemplateForm({ engineeringTemplates }: TaskTemplateFormProps
         throw new Error('任務名稱不能為空');
       }
 
-      await createTaskTemplate({
+      await createTaskTemplateCommand({
         name,
         description: description || null,
         engineeringId: engineeringId || null,

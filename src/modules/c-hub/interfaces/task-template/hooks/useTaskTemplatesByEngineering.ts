@@ -4,13 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 
 /**
  * 依工程模板ID查詢任務模板的 React Query hook
- * @param engineeringId 工程模板ID
- * @returns { data, isLoading, ... }
- *
- * 使用方式：
- * ```tsx
- * const { data, isLoading } = useTaskTemplatesByEngineering(engineeringId);
- * ```
  */
 export function useTaskTemplatesByEngineering(engineeringId: string) {
     return useQuery<TaskTemplate[]>({
