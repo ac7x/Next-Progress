@@ -1,96 +1,45 @@
 'use client';
 
-import { TagType } from '@/modules/c-tag/domain/tag-entity';
-import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useCreateTag } from '../hooks/useTagMutations';
-import { tagDisplayUtils } from '../utils/tag-display-utils';
+import { FormEvent, useState } from 'react';
+import { createTagAction } from '../actions';
 
-export function TagForm() {
-  const qc = useQueryClient();
-  const { mutate, status, error: mutateError } = useCreateTag();
-  const isLoading = status === 'pending';
-  const isSuccess = status === 'success';
-
+export default function TagFormClient() {
   const [name, setName] = useState('');
-  const [type, setType] = useState<TagType>(TagType.GENERAL);
-  const [description, setDescription] = useState<string>('');
+  const [type, setType] = useState<string>('GENERAL');
+  const [desc, setDesc] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!name.trim()) return;
-
-    mutate(
-      { name: name.trim(), type, description: description.trim() || null },
-      {
-        onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ['tags'] });
-          setName('');
-          setDescription('');
-          setType(TagType.GENERAL);
-        }
-      }
-    );
-  };
+    try {
+      await createTagAction({ name, type: type as any, description: desc || null });
+      setMsg('建立成功');
+      setName(''); setDesc(''); setType('GENERAL');
+    } catch (err) {
+      setMsg('建立失敗');
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {mutateError && <div className="p-2 text-red-600 bg-red-50">{mutateError.message}</div>}
-      {isSuccess && <div className="p-2 text-green-600 bg-green-50">標籤建立成功！</div>}
-
+    <form onSubmit={onSubmit} className="space-y-4">
+      {msg && <div className="p-2 text-green-600 bg-green-50">{msg}</div>}
       <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-1">標籤名稱</label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="輸入標籤名稱"
-          required
-          disabled={isLoading}
-          className="w-full p-2 border rounded"
-        />
+        <label>名稱</label>
+        <input value={name} onChange={e => setName(e.target.value)} required className="w-full" />
       </div>
-
       <div>
-        <label htmlFor="type" className="block text-sm font-medium mb-1">標籤類型</label>
-        <select
-          id="type"
-          value={type}
-          onChange={(e) => setType(e.target.value as TagType)}
-          disabled={isLoading}
-          className="w-full p-2 border rounded"
-        >
-          {Object.values(TagType).map((value) => (
-            <option key={value} value={value}>
-              {tagDisplayUtils.getTagTypeName(value)}
-            </option>
+        <label>類型</label>
+        <select value={type} onChange={e => setType(e.target.value)} className="w-full">
+          {Object.values(['GENERAL', 'PROJECT_INSTANCE', 'PROJECT_TEMPLATE', 'ENGINEERING_INSTANCE', 'ENGINEERING_TEMPLATE', 'TASK_INSTANCE', 'TASK_TEMPLATE', 'SUBTASK_INSTANCE', 'SUBTASK_TEMPLATE', 'WAREHOUSE_INSTANCE', 'WAREHOUSE_ITEM']).map(v => (
+            <option key={v} value={v}>{v}</option>
           ))}
         </select>
       </div>
-
       <div>
-        <label htmlFor="description" className="block text-sm font-medium mb-1">描述（可選）</label>
-        <input
-          id="description"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="輸入標籤描述"
-          disabled={isLoading}
-          className="w-full p-2 border rounded"
-        />
+        <label>描述</label>
+        <input value={desc} onChange={e => setDesc(e.target.value)} className="w-full" />
       </div>
-
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-      >
-        {isLoading ? '建立中...' : '建立標籤'}
-      </button>
+      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">建立標籤</button>
     </form>
   );
 }
-
-export default TagForm;

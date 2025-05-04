@@ -1,58 +1,30 @@
 'use client';
 
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag } from '@/modules/c-tag/domain/tag-entity';
 import { useState } from 'react';
-import { tagDisplayUtils } from '../utils/tag-display-utils';
-import { TagList } from './tag-list';
-import { TagTypeFilter } from './tag-type-filter';
+import { deleteTagAction } from '../actions';
 
-interface TagCategoryListProps {
-  tags: Tag[];
-  onDelete?: () => void;
-}
+interface Props { tags: Tag[]; }
+export default function TagCategoryListClient({ tags }: Props) {
+  const [list, setList] = useState(tags);
 
-export function TagCategoryList({ tags = [], onDelete }: TagCategoryListProps) {
-  const [selectedType, setSelectedType] = useState<TagType | 'ALL'>('ALL');
-
-  const filteredTags = selectedType === 'ALL'
-    ? tags
-    : tags.filter(tag => tag.type === selectedType);
-
-  const groupedTags = selectedType === 'ALL'
-    ? tagDisplayUtils.groupTagsByType(tags)
-    : { [selectedType]: filteredTags } as Partial<Record<TagType, Tag[]>>;
-
-  // 取得所有實際存在的 TagType keys，並轉型為 TagType
-  const orderedTypes = Object.keys(groupedTags)
-    .filter((k): k is TagType => Object.values(TagType).includes(k as TagType))
-    .sort((a, b) => {
-      const typeOrder = Object.values(TagType);
-      return typeOrder.indexOf(a as TagType) - typeOrder.indexOf(b as TagType);
-    });
+  async function onDelete(id: string) {
+    if (!confirm('確定刪除？')) return;
+    await deleteTagAction(id);
+    setList(list.filter(t => t.id !== id));
+  }
 
   return (
-    <div>
-      <TagTypeFilter
-        selectedType={selectedType}
-        onChangeAction={(type: TagType | 'ALL') => setSelectedType(type)}
-      />
-
-      {orderedTypes.length === 0 ? (
-        <p className="text-gray-500">目前沒有標籤</p>
-      ) : (
-        <div className="space-y-8">
-          {orderedTypes.map(type => (
-            <div key={type} className="space-y-2">
-              <h3 className="font-medium text-lg">
-                {tagDisplayUtils.getTagTypeName(type)}
-              </h3>
-              <TagList tags={groupedTags[type]!} onDelete={onDelete} />
-            </div>
-          ))}
+    <div className="grid grid-cols-3 gap-4">
+      {list.map(tag => (
+        <div key={tag.id} className="p-4 border rounded">
+          <h3>{tag.name}</h3>
+          <span className={`inline-block px-2 py-1 text-xs ${tag.type === 'GENERAL' ? 'bg-gray-100' : 'bg-blue-100'}`}>
+            {tag.type}
+          </span>
+          <button onClick={() => onDelete(tag.id)} className="text-red-600">刪除</button>
         </div>
-      )}
+      ))}
     </div>
   );
 }
-
-export default TagCategoryList;
