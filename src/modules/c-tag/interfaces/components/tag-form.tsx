@@ -22,25 +22,27 @@ export default function TagFormClient() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      {msg && <div className="p-2 text-green-600 bg-green-50">{msg}</div>}
+    <form onSubmit={onSubmit} className="space-y-4 bg-white p-6 rounded-xl shadow-md border">
+      {msg && <div className="p-2 text-green-600 bg-green-50 rounded">{msg}</div>}
       <div>
-        <label>名稱</label>
-        <input value={name} onChange={e => setName(e.target.value)} required className="w-full" />
+        <label className="block text-sm font-medium mb-1">名稱</label>
+        <input value={name} onChange={e => setName(e.target.value)} required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200" />
       </div>
       <div>
-        <label>類型</label>
-        <select value={type} onChange={e => setType(e.target.value as TagType)} className="w-full">
+        <label className="block text-sm font-medium mb-1">類型</label>
+        <select value={type} onChange={e => setType(e.target.value as TagType)} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200">
           {Object.values(TagType).map(v => (
             <option key={v} value={v}>{v}</option>
           ))}
         </select>
       </div>
       <div>
-        <label>描述</label>
-        <input value={desc} onChange={e => setDesc(e.target.value)} className="w-full" />
+        <label className="block text-sm font-medium mb-1">描述</label>
+        <input value={desc} onChange={e => setDesc(e.target.value)} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200" />
       </div>
-      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">建立標籤</button>
+      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors font-semibold shadow">
+        建立標籤
+      </button>
     </form>
   );
 }

@@ -1,5 +1,5 @@
 import { TagType } from '@/modules/c-tag/domain/tag-entity';
-import { formatHex, hsl } from 'culori';
+import { formatHex, hsl, wcagContrast } from 'culori';
 
 // 定義每個標籤類型的色相
 const TYPE_META: Record<TagType, { label: string; hue: number }> = {
@@ -16,16 +16,35 @@ const TYPE_META: Record<TagType, { label: string; hue: number }> = {
   WAREHOUSE_ITEM: { label: '倉庫物品', hue: 140 },
 };
 
+function getBgColor(hue: number, s = 0.6, l = 0.85) {
+  return formatHex(hsl({ mode: 'hsl', h: hue, s, l })) ?? '#e5e7eb';
+}
+function getBorderColor(hue: number, s = 0.5, l = 0.7) {
+  return formatHex(hsl({ mode: 'hsl', h: hue, s, l })) ?? '#cbd5e1';
+}
+function getTextColor(bg: string) {
+  // 根據背景色自動選擇深色或白色字
+  return wcagContrast(bg, '#1e293b') > 4.5 ? '#1e293b' : '#fff';
+}
+
 export const tagUtil = {
   formatTagName: (name: string) => name.trim(),
 
   getTagTypeName: (type: TagType): string =>
     TYPE_META[type].label,
 
-  // 型別安全：TagType 必定存在於 TYPE_META
   getTagTypeColor: (type: TagType): string => {
     const meta = TYPE_META[type];
-    const colorObj = hsl({ mode: 'hsl', h: meta.hue, s: 0.6, l: 0.7 });
-    return formatHex(colorObj) ?? '#cccccc';
+    return getBgColor(meta.hue);
   },
+
+  getTagTypeBorderColor: (type: TagType): string => {
+    const meta = TYPE_META[type];
+    return getBorderColor(meta.hue);
+  },
+
+  getTagTypeTextColor: (type: TagType): string => {
+    const bg = tagUtil.getTagTypeColor(type);
+    return getTextColor(bg);
+  }
 };

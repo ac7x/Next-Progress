@@ -16,18 +16,31 @@ export function TagTypeFilter({ selectedType, onChangeAction }: TagTypeFilterPro
 
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      {allTypes.map((type) => (
-        <button
-          key={type.value}
-          onClick={() => onChangeAction(type.value)}
-          className={`px-3 py-1 rounded-full text-sm border transition-colors ${selectedType === type.value
-            ? 'bg-blue-500 text-white border-blue-500'
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-            }`}
-        >
-          {type.label}
-        </button>
-      ))}
+      {allTypes.map((type) => {
+        const isActive = selectedType === type.value;
+        const color = type.value !== 'ALL'
+          ? tagDisplayUtils.getTagTypeColor(type.value as TagType)
+          : '#e5e7eb';
+        const textColor = type.value !== 'ALL'
+          ? tagDisplayUtils.getTagTypeTextColor(type.value as TagType)
+          : '#1e293b';
+        return (
+          <button
+            key={type.value}
+            onClick={() => onChangeAction(type.value)}
+            style={{
+              backgroundColor: isActive ? color : '#fff',
+              color: isActive ? textColor : '#334155',
+              borderColor: isActive ? color : '#cbd5e1',
+              boxShadow: isActive ? '0 2px 8px 0 rgba(0,0,0,0.08)' : undefined,
+              transition: 'all 0.2s'
+            }}
+            className={`px-3 py-1 rounded-full text-sm border font-medium focus:outline-none hover:shadow-md`}
+          >
+            {type.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
