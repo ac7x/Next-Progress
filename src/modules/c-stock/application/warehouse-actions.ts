@@ -14,17 +14,17 @@ export async function getWarehouseInstanceById(id: string): Promise<WarehouseIns
 
 export async function createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
   const warehouse = await warehouseInstanceService.createWarehouseInstance(data);
-  revalidatePath('/client/warehouse');
+  revalidatePath('warehouse_instance');
   return warehouse;
 }
 
 export async function updateWarehouseInstance(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
   const warehouse = await warehouseInstanceService.updateWarehouseInstance(id, data);
-  revalidatePath('/client/warehouse');
+  revalidatePath('warehouse_instance');
   return warehouse;
 }
 
 export async function deleteWarehouseInstance(id: string): Promise<void> {
   await warehouseInstanceService.deleteWarehouseInstance(id);
-  revalidatePath('/client/warehouse');
+  revalidatePath('warehouse_instance');
 }

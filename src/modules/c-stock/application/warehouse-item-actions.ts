@@ -38,7 +38,7 @@ export async function getWarehouseItemTags(warehouseItemId: string): Promise<str
 export async function createWarehouseItem(data: CreateWarehouseItemProps): Promise<WarehouseItem> {
   try {
     const warehouseItem = await warehouseItemService.createWarehouseItem(data);
-    revalidatePath('/client/warehouse');
+    revalidatePath('warehouse_instance');
     return warehouseItem;
   } catch (error) {
     console.error('建立倉庫物品失敗:', error);
@@ -49,7 +49,7 @@ export async function createWarehouseItem(data: CreateWarehouseItemProps): Promi
 export async function updateWarehouseItem(id: string, data: UpdateWarehouseItemProps): Promise<WarehouseItem> {
   try {
     const warehouseItem = await warehouseItemService.updateWarehouseItem(id, data);
-    revalidatePath('/client/warehouse');
+    revalidatePath('warehouse_instance');
     return warehouseItem;
   } catch (error) {
     console.error('更新倉庫物品失敗:', error);
@@ -60,7 +60,7 @@ export async function updateWarehouseItem(id: string, data: UpdateWarehouseItemP
 export async function deleteWarehouseItem(id: string): Promise<boolean> {
   try {
     await warehouseItemService.deleteWarehouseItem(id);
-    revalidatePath('/client/warehouse');
+    revalidatePath('warehouse_instance');
     return true;
   } catch (error) {
     console.error('刪除倉庫物品失敗:', error);
@@ -70,10 +70,10 @@ export async function deleteWarehouseItem(id: string): Promise<boolean> {
 
 export async function addTagToWarehouseItem(itemId: string, tagId: string): Promise<void> {
   await warehouseItemService.addTagToItem(itemId, tagId);
-  revalidatePath('/client/warehouse');
+  revalidatePath('warehouse_instance');
 }
 
 export async function deleteTagFromWarehouseItem(itemId: string, tagId: string): Promise<void> {
   await warehouseItemService.removeTagFromItem(itemId, tagId);
-  revalidatePath('/client/warehouse');
+  revalidatePath('warehouse_instance');
 }

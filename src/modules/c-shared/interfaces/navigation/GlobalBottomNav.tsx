@@ -37,7 +37,7 @@ export const GlobalBottomNav = () => {
 
           <li>
             <Link
-              href="/client/warehouse_instance"
+              href="warehouse_instance"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">🏬</span>
