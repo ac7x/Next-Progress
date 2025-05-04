@@ -1,20 +1,21 @@
 'use client';
 
+import { TagType } from '@/modules/c-tag/domain/tag-entity';
 import { FormEvent, useState } from 'react';
 import { createTagAction } from '../actions';
 
 export default function TagFormClient() {
   const [name, setName] = useState('');
-  const [type, setType] = useState<string>('GENERAL');
+  const [type, setType] = useState<TagType>(TagType.GENERAL);
   const [desc, setDesc] = useState('');
   const [msg, setMsg] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     try {
-      await createTagAction({ name, type: type as any, description: desc || null });
+      await createTagAction({ name, type, description: desc || null });
       setMsg('建立成功');
-      setName(''); setDesc(''); setType('GENERAL');
+      setName(''); setDesc(''); setType(TagType.GENERAL);
     } catch (err) {
       setMsg('建立失敗');
     }
@@ -29,8 +30,8 @@ export default function TagFormClient() {
       </div>
       <div>
         <label>類型</label>
-        <select value={type} onChange={e => setType(e.target.value)} className="w-full">
-          {Object.values(['GENERAL', 'PROJECT_INSTANCE', 'PROJECT_TEMPLATE', 'ENGINEERING_INSTANCE', 'ENGINEERING_TEMPLATE', 'TASK_INSTANCE', 'TASK_TEMPLATE', 'SUBTASK_INSTANCE', 'SUBTASK_TEMPLATE', 'WAREHOUSE_INSTANCE', 'WAREHOUSE_ITEM']).map(v => (
+        <select value={type} onChange={e => setType(e.target.value as TagType)} className="w-full">
+          {Object.values(TagType).map(v => (
             <option key={v} value={v}>{v}</option>
           ))}
         </select>

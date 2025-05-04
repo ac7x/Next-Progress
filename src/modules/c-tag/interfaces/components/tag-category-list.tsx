@@ -1,8 +1,9 @@
 'use client';
 
-import { Tag } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
 import { useState } from 'react';
 import { deleteTagAction } from '../actions';
+import { tagDisplayUtils } from '../utils/tag-display-utils';
 
 interface Props { tags: Tag[]; }
 export default function TagCategoryListClient({ tags }: Props) {
@@ -19,8 +20,11 @@ export default function TagCategoryListClient({ tags }: Props) {
       {list.map(tag => (
         <div key={tag.id} className="p-4 border rounded">
           <h3>{tag.name}</h3>
-          <span className={`inline-block px-2 py-1 text-xs ${tag.type === 'GENERAL' ? 'bg-gray-100' : 'bg-blue-100'}`}>
-            {tag.type}
+          <span
+            className="inline-block px-2 py-1 text-xs rounded"
+            style={{ backgroundColor: tagDisplayUtils.getTagTypeColor(tag.type as TagType) }}
+          >
+            {tagDisplayUtils.getTagTypeName(tag.type as TagType)}
           </span>
           <button onClick={() => onDelete(tag.id)} className="text-red-600">刪除</button>
         </div>

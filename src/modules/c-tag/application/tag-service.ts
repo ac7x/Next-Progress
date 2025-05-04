@@ -16,13 +16,9 @@ export class TagApplicationService {
 
   async createTag(data: CreateTagProps): Promise<Tag> {
     const formattedName = tagUtil.formatTagName(data.name);
-    const tagData = {
-      ...data,
-      name: formattedName,
-      type: data.type || TagType.GENERAL
-    };
-    const color = data.color ?? tagUtil.getTagTypeColor(data.type || TagType.GENERAL); // 新增預設色
-    return this.domainService.createTag({ ...data, color });
+    const type = data.type ?? TagType.GENERAL;
+    const color = data.color ?? tagUtil.getTagTypeColor(type);
+    return this.domainService.createTag({ ...data, name: formattedName, type, color });
   }
 
   async deleteTag(id: string): Promise<void> {
@@ -38,10 +34,12 @@ export class TagApplicationService {
     if (data.name !== undefined) updateData.name = tagUtil.formatTagName(data.name);
     if (data.type !== undefined) updateData.type = data.type;
     if (data.description !== undefined) updateData.description = data.description;
-    if (data.color === undefined && data.type !== undefined) {
-      data.color = tagUtil.getTagTypeColor(data.type);  // 若只改 type，更新色彩
+    if (data.color !== undefined) updateData.color = data.color;
+    // 若 type 有變動但 color 沒有指定，則自動帶入對應色
+    if (data.type !== undefined && data.color === undefined) {
+      updateData.color = tagUtil.getTagTypeColor(data.type);
     }
-    return this.domainService.updateTag(id, data);
+    return this.domainService.updateTag(id, updateData);
   }
 }
 

@@ -20,12 +20,12 @@ export const tagUtil = {
   formatTagName: (name: string) => name.trim(),
 
   getTagTypeName: (type: TagType): string =>
-    TYPE_META[type]?.label || type,
+    TYPE_META[type].label,
 
-  // 使用 culori 正確產生 HSL 顏色並轉 HEX，型別安全
+  // 型別安全：TagType 必定存在於 TYPE_META
   getTagTypeColor: (type: TagType): string => {
     const meta = TYPE_META[type];
-    const colorObj = hsl({ mode: 'hsl', h: meta?.hue ?? 210, s: 0.6, l: 0.7 });
+    const colorObj = hsl({ mode: 'hsl', h: meta.hue, s: 0.6, l: 0.7 });
     return formatHex(colorObj) ?? '#cccccc';
   },
 };

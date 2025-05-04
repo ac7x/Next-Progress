@@ -11,7 +11,10 @@ export function TagCard({ tag }: TagCardProps) {
   return (
     <div className="border p-4 rounded-lg">
       <h3 className="text-lg font-medium mb-2">{tag.name}</h3>
-      <div className={`inline-block px-2 py-1 rounded text-xs mb-3 ${tagDisplayUtils.getTagTypeColor(tag.type as TagType)}`}>
+      <div
+        className="inline-block px-2 py-1 rounded text-xs mb-3"
+        style={{ backgroundColor: tagDisplayUtils.getTagTypeColor(tag.type as TagType) }}
+      >
         {tagDisplayUtils.getTagTypeName(tag.type as TagType)}
       </div>
       {tag.description && (
