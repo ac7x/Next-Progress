@@ -4,6 +4,7 @@ import { tagCommandService } from '@/modules/c-tag/application/tag-command';
 import { CreateTagProps, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
 import { revalidatePath } from 'next/cache';
 
+// Command Server Actions
 export async function createTagAction(data: CreateTagProps) {
     const tag = await tagCommandService.createTag(data);
     revalidatePath('/client/dashboard');

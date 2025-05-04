@@ -1,4 +1,4 @@
-import { createWarehouseInstance, deleteWarehouseInstance } from '@/modules/c-stock/application/warehouse-actions';
+import { createWarehouseInstance, deleteWarehouseInstance } from '@/modules/c-stock/application/warehouse.command';
 import { CreateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

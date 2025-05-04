@@ -3,6 +3,7 @@ import { ITagDomainService, TagDomainService } from '@/modules/c-tag/domain/tag-
 import { tagRepository } from '@/modules/c-tag/infrastructure/tag-repository';
 import { tagUtil } from '@/modules/c-tag/infrastructure/tag-util';
 
+// Command UseCase: 只負責資料修改
 export class TagCommandService {
     constructor(private readonly domainService: ITagDomainService) { }
 

@@ -4,6 +4,9 @@ import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseIn
 import { revalidatePath } from 'next/cache';
 import { warehouseInstanceService } from './warehouse-service';
 
+// 此檔案將被拆分為 warehouse.command.ts 與 warehouse.query.ts
+// 請參考下方新檔案內容
+
 export async function getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
   return warehouseInstanceService.getAllWarehouseInstances();
 }

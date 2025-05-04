@@ -2,6 +2,7 @@ import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
 import { ITagDomainService, TagDomainService } from '@/modules/c-tag/domain/tag-service';
 import { tagRepository } from '@/modules/c-tag/infrastructure/tag-repository';
 
+// Query UseCase: 只負責查詢
 export class TagQueryService {
     constructor(private readonly domainService: ITagDomainService) { }
 

@@ -3,6 +3,7 @@
 import { tagQueryService } from '@/modules/c-tag/application/tag-query';
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
 
+// Query Server Actions
 export async function getTags(): Promise<Tag[]> {
     return tagQueryService.listTags();
 }
