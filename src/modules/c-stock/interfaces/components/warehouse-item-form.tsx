@@ -1,7 +1,7 @@
 'use client';
 
 import { createWarehouseItem } from '@/modules/c-stock/application/warehouse-item-actions';
-import { listTags, listTagsByType } from '@/modules/c-tag/application/tag-actions';
+import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
 import { WarehouseItemType } from '@prisma/client'; // 🆕 引入 Prisma 定義的 WarehouseItemType
 import { useRouter } from 'next/navigation';
@@ -26,8 +26,8 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   useEffect(() => {
     const loadData = async () => {
       try {
-        const itemTags = await listTagsByType(TagType.ITEM);
-        const generalTags = await listTags();
+        const itemTags = await tagQueryListByType(TagType.ITEM);
+        const generalTags = await tagQueryList();
 
         const uniqueTags = [...itemTags];
         generalTags.forEach(tag => {
