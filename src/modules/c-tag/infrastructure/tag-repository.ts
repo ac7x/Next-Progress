@@ -17,7 +17,9 @@ export class TagRepository implements ITagRepository {
       data: {
         name: data.name,
         type: data.type as TagType, // 修正類型引用
-        description: data.description
+        description: data.description,
+        color: data.color,
+        priority: data.priority
       }
     });
     return tagAdapter.toDomain(tag);
@@ -30,6 +32,8 @@ export class TagRepository implements ITagRepository {
     if (data.name !== undefined) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.type !== undefined) updateData.type = data.type;
+    if (data.color !== undefined) updateData.color = data.color;
+    if (data.priority !== undefined) updateData.priority = data.priority;
     const tag = await prisma.tag.update({ where: { id }, data: updateData });
     return tagAdapter.toDomain(tag);
   }

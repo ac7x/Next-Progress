@@ -1,81 +1,27 @@
-import { TagType } from '@prisma/client';
+import { TagType } from '@/modules/c-tag/domain/tag-entity';
+import { formatHex, hsl } from 'culori';
 
-/**
- * 標籤處理工具類
- * 提供標籤的格式化和處理方法
- */
-const TAG_TYPE_NAME_MAP: Record<TagType, string> = {
-  [TagType.GENERAL]: '通用標籤',
-  [TagType.PROJECT_INSTANCE]: '專案實例',
-  [TagType.PROJECT_TEMPLATE]: '專案模板',
-  [TagType.ENGINEERING_INSTANCE]: '工程實例',
-  [TagType.ENGINEERING_TEMPLATE]: '工程模板',
-  [TagType.TASK_INSTANCE]: '任務實例',
-  [TagType.TASK_TEMPLATE]: '任務模板',
-  [TagType.SUBTASK_INSTANCE]: '子任務實例',
-  [TagType.SUBTASK_TEMPLATE]: '子任務模板',
-  [TagType.WAREHOUSE_INSTANCE]: '倉庫實例',
-  [TagType.WAREHOUSE_ITEM]: '倉庫物品' // 修正為 WAREHOUSE_ITEM
-};
-
-const TAG_TYPE_COLOR_MAP: Record<TagType, string> = {
-  [TagType.GENERAL]: 'bg-gray-100',
-  [TagType.PROJECT_INSTANCE]: 'bg-blue-100',
-  [TagType.PROJECT_TEMPLATE]: 'bg-blue-200',
-  [TagType.ENGINEERING_INSTANCE]: 'bg-green-100',
-  [TagType.ENGINEERING_TEMPLATE]: 'bg-green-200',
-  [TagType.TASK_INSTANCE]: 'bg-purple-100',
-  [TagType.TASK_TEMPLATE]: 'bg-purple-200',
-  [TagType.SUBTASK_INSTANCE]: 'bg-pink-100',
-  [TagType.SUBTASK_TEMPLATE]: 'bg-pink-200',
-  [TagType.WAREHOUSE_INSTANCE]: 'bg-yellow-100',
-  [TagType.WAREHOUSE_ITEM]: 'bg-teal-100' // 修正為 WAREHOUSE_ITEM
+// 各類型顯示名稱與對應色相（Hue）
+const TYPE_META: Record<TagType, { label: string; hue: number }> = {
+  GENERAL: { label: '一般', hue: 210 },
+  PROJECT_INSTANCE: { label: '專案實例', hue: 10 },
+  PROJECT_TEMPLATE: { label: '專案範本', hue: 20 },
+  ENGINEERING_INSTANCE: { label: '工程實例', hue: 30 },
+  ENGINEERING_TEMPLATE: { label: '工程範本', hue: 40 },
+  TASK_INSTANCE: { label: '任務實例', hue: 50 },
+  TASK_TEMPLATE: { label: '任務範本', hue: 60 },
+  SUBTASK_INSTANCE: { label: '子任務實例', hue: 70 },
+  SUBTASK_TEMPLATE: { label: '子任務範本', hue: 80 },
+  WAREHOUSE_INSTANCE: { label: '倉庫實例', hue: 110 },
+  WAREHOUSE_ITEM: { label: '倉庫物品', hue: 140 },
 };
 
 export const tagUtil = {
-  /**
-   * 格式化標籤名稱 - 移除前後空白
-   */
-  formatTagName(name: string): string {
-    return name.trim();
-  },
+  formatTagName: (name: string) => name.trim(),
 
-  /**
-   * 將標籤字串轉換為標籤數組
-   */
-  parseTagsString(tagsStr: string): string[] {
-    if (!tagsStr || !tagsStr.trim()) {
-      return [];
-    }
+  getTagTypeName: (type: TagType): string =>
+    TYPE_META[type]?.label || type,
 
-    return tagsStr
-      .split(',')
-      .map(tag => tag.trim())
-      .filter(tag => tag.length > 0);
-  },
-
-  /**
-   * 將標籤數組轉換為標籤字串
-   */
-  stringifyTags(tags: string[]): string {
-    if (!tags || tags.length === 0) {
-      return '';
-    }
-
-    return tags.join(', ');
-  },
-
-  /**
-   * 獲取標籤類型名稱
-   */
-  getTagTypeName(type: TagType): string {
-    return TAG_TYPE_NAME_MAP[type] || '未知類型';
-  },
-
-  /**
-   * 獲取標籤類型顯示顏色
-   */
-  getTagTypeColor(type: TagType): string {
-    return TAG_TYPE_COLOR_MAP[type] || 'bg-gray-100';
-  },
+  getTagTypeColor: (type: TagType): string =>
+    formatHex(hsl({ h: TYPE_META[type]?.hue, s: 0.6, l: 0.7 })),
 };
