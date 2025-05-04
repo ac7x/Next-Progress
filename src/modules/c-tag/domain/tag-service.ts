@@ -1,9 +1,6 @@
 import { CreateTagProps, Tag, TagType, UpdateTagProps, isValidTag } from './tag-entity';
 import { ITagRepository } from './tag-repository';
 
-/**
- * 標籤領域服務接口
- */
 export interface ITagDomainService {
   listTags(): Promise<Tag[]>;
   listTagsByType(type: TagType): Promise<Tag[]>;
@@ -13,11 +10,8 @@ export interface ITagDomainService {
   updateTag(id: string, data: UpdateTagProps): Promise<Tag>;
 }
 
-/**
- * 標籤領域服務實現
- */
 export class TagDomainService implements ITagDomainService {
-  constructor(private readonly repository: ITagRepository) {}
+  constructor(private readonly repository: ITagRepository) { }
 
   async listTags(): Promise<Tag[]> {
     return this.repository.list();
@@ -34,17 +28,14 @@ export class TagDomainService implements ITagDomainService {
     if (!data.name?.trim()) {
       throw new Error('標籤名稱不能為空');
     }
-    
     const tag = await this.repository.create({
       ...data,
       type: data.type || TagType.GENERAL,
       description: data.description || null
     });
-    
     if (!isValidTag(tag)) {
       throw new Error('無效的標籤數據');
     }
-    
     return tag;
   }
 
@@ -52,7 +43,6 @@ export class TagDomainService implements ITagDomainService {
     if (!id?.trim()) {
       throw new Error('標籤ID不能為空');
     }
-    
     return this.repository.delete(id);
   }
 
@@ -60,7 +50,6 @@ export class TagDomainService implements ITagDomainService {
     if (!id?.trim()) {
       throw new Error('標籤ID不能為空');
     }
-    
     return this.repository.getById(id);
   }
 
@@ -68,16 +57,12 @@ export class TagDomainService implements ITagDomainService {
     if (!id?.trim()) {
       throw new Error('標籤ID不能為空');
     }
-    
     if (Object.keys(data).length === 0) {
       throw new Error('沒有提供需要更新的屬性');
     }
-    
-    // 如果嘗試更新標籤名稱，確保它不為空
     if (data.name !== undefined && !data.name.trim()) {
       throw new Error('標籤名稱不能為空');
     }
-    
     return this.repository.update(id, data);
   }
 }

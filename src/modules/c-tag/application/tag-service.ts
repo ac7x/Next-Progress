@@ -34,19 +34,12 @@ export class TagApplicationService {
 
   async updateTag(id: string, data: UpdateTagProps): Promise<Tag> {
     const updateData: UpdateTagProps = {};
-    if (data.name !== undefined) {
-      updateData.name = tagUtil.formatTagName(data.name);
-    }
-    if (data.type !== undefined) {
-      updateData.type = data.type;
-    }
-    if (data.description !== undefined) {
-      updateData.description = data.description;
-    }
+    if (data.name !== undefined) updateData.name = tagUtil.formatTagName(data.name);
+    if (data.type !== undefined) updateData.type = data.type;
+    if (data.description !== undefined) updateData.description = data.description;
     return this.domainService.updateTag(id, updateData);
   }
 }
 
-// 注入依賴
 const domainService = new TagDomainService(tagRepository);
 export const tagService = new TagApplicationService(domainService);
