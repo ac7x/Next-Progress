@@ -1,6 +1,6 @@
 'use client';
 
-import { createWarehouseItem } from '@/modules/c-stock/application/warehouse-item-actions';
+import { createWarehouseItem } from '@/modules/c-stock/application/warehouseItem.command';
 import { WarehouseItemType } from '@/modules/c-stock/domain/warehouse-item-entity'; // 正確使用本地 enum
 import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
