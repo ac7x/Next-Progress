@@ -12,6 +12,7 @@ export class ProjectTemplateService {
       createdAt: now,
       updatedAt: now,
       ...data,
+      priority: data.priority ?? 0, // 新增 priority
     };
     new ProjectTemplateCreatedEvent(id, data.name); // 發佈事件
     return projectTemplate;
@@ -20,7 +21,8 @@ export class ProjectTemplateService {
   update(
     id: string,
     name: string,
-    description: string | null = null
+    description: string | null = null,
+    priority: number | null = 0 // 新增 priority
   ): ProjectTemplate {
     const now = new Date();
     const updatedTemplate: ProjectTemplate = {
@@ -28,6 +30,7 @@ export class ProjectTemplateService {
       name,
       description,
       isActive: true,
+      priority: priority ?? 0, // 新增 priority
       createdAt: now,
       updatedAt: now,
     };
@@ -49,7 +52,10 @@ export class ProjectTemplateDomainService {
       throw new Error('Template name cannot be empty');
     }
 
-    const template = await this.repository.create(data);
+    const template = await this.repository.create({
+      ...data,
+      priority: data.priority ?? 0, // 新增 priority
+    });
 
     // 發布領域事件
     new ProjectTemplateCreatedEvent(template.id, template.name);
@@ -79,7 +85,10 @@ export class ProjectTemplateDomainService {
     if (!id.trim()) throw new Error('Template ID cannot be empty');
     if (data.name && !data.name.trim()) throw new Error('Template name cannot be empty');
     // 可加上更多業務規則
-    return this.repository.update(id, data);
+    return this.repository.update(id, {
+      ...data,
+      priority: data.priority ?? 0, // 新增 priority
+    });
   }
 
   validateTemplate(template: Partial<ProjectTemplate>): void {

@@ -9,6 +9,7 @@ export const projectTemplateMappingService = {
       name: prismaModel.name,
       description: prismaModel.description,
       isActive: prismaModel.isActive,
+      priority: prismaModel.priority ?? 0, // 新增 priority
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
     };
@@ -20,6 +21,7 @@ export const projectTemplateMappingService = {
       name: domainModel.name,
       description: domainModel.description,
       isActive: domainModel.isActive,
+      priority: domainModel.priority ?? 0, // 新增 priority
     };
   }
 };

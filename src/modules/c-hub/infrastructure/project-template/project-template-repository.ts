@@ -11,6 +11,7 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
         name: data.name,
         description: data.description,
         isActive: data.isActive ?? true,
+        priority: data.priority ?? 0, // 新增 priority
       },
     });
   }
@@ -50,6 +51,7 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
       data: {
         ...data,
         updatedAt: new Date(),
+        // priority: data.priority, // 已包含在 ...data
       },
     });
   }

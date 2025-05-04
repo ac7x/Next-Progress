@@ -17,6 +17,7 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     const template = await templateService.createTemplate({
       ...data,
       isActive: data.isActive ?? true,
+      priority: data.priority ?? 0, // 新增 priority
     });
     if (!isValidProjectTemplate(template)) {
       throw new Error('無效的專案模板數據');
@@ -47,7 +48,10 @@ export async function updateProjectTemplateCommand(
 ): Promise<ProjectTemplate> {
   if (!id.trim()) throw new Error('Template ID is required');
   try {
-    const template = await projectTemplateRepository.update(id, data);
+    const template = await projectTemplateRepository.update(id, {
+      ...data,
+      priority: data.priority ?? 0, // 新增 priority
+    });
     revalidatePath('/client/template');
     return template;
   } catch (error) {
