@@ -5,6 +5,7 @@ export class LiffSdkService implements ILiffSdkService {
   private _isInitialized = false;
 
   async initialize(options: LiffInitOptions): Promise<void> {
+    // options.liffId 應由外部傳入，確保動態
     await LiffClientBase.init(options);
     this._isInitialized = true;
   }

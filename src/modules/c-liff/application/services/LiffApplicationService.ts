@@ -10,6 +10,7 @@ export class LiffApplicationService {
   ) { }
 
   async initializeLiff(options: LiffInitOptions): Promise<void> {
+    // options.liffId 由外部傳入
     await this.liffSdkService.initialize(options);
   }
 

@@ -6,10 +6,14 @@ import { ProfileServerDTO } from '@/modules/c-liff/infrastructure/dtos/LiffProfi
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import LiffClient from '../client';
 
-const liffId = process.env.NEXT_PUBLIC_LIFF_ID!;
+// 動態取得 liffId，優先取 NEXT_PUBLIC_LIFF_ID，否則 fallback 到 LINE_LIFF_ID
+const liffId =
+  process.env.NEXT_PUBLIC_LIFF_ID ||
+  process.env.LINE_LIFF_ID ||
+  '';
 
 // --- 環境變數偵錯輸出 ---
-console.log('[LiffContext] NEXT_PUBLIC_LIFF_ID:', process.env.NEXT_PUBLIC_LIFF_ID);
+console.log('[LiffContext] 使用的 LIFF ID:', liffId);
 
 interface LiffContextValue {
   profile: LiffProfileValueObject;
@@ -147,7 +151,7 @@ export function LiffContextProvider({ children }: { children: ReactNode }) {
     };
 
     initializeLiff();
-  }, [refreshProfile]);
+  }, [refreshProfile, liffId]);
 
   const contextValue: LiffContextValue = {
     profile,
