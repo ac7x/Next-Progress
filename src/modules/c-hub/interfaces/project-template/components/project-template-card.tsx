@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-actions';
+import { deleteProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -39,7 +39,7 @@ export function ProjectTemplateCard({ template, onDelete }: ProjectTemplateCardP
     setError(null);
 
     try {
-      await deleteProjectTemplate(template.id);
+      await deleteProjectTemplateCommand(template.id);
       if (onDelete) {
         onDelete();
       }

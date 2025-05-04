@@ -1,6 +1,6 @@
 'use client';
 
-import { createProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-actions';
+import { createProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ export function CreateProjectTemplateForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createProjectTemplate({
+      await createProjectTemplateCommand({
         name,
         description: description || null,
       });

@@ -1,6 +1,6 @@
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
 import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/project-instance-repository';
-import { getProjectTemplate } from '../project-template/project-template-actions';
+import { getProjectTemplateQuery } from '../project-template/project-template-actions'; // 修正 import
 
 export const projectInstanceService = {
   async create(data: CreateProjectInstanceProps): Promise<ProjectInstance> {
@@ -28,7 +28,7 @@ export const projectInstanceService = {
     projectData: Omit<CreateProjectInstanceProps, 'templateId'>
   ): Promise<ProjectInstance> {
     // 獲取模板詳情
-    const template = await getProjectTemplate(templateId);
+    const template = await getProjectTemplateQuery(templateId); // 修正名稱
     if (!template) {
       throw new Error('找不到指定的專案模板');
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { createProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-actions';
+import { createProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ export function useCreateProjectTemplate() {
     setError(null);
 
     try {
-      await createProjectTemplate(data);
+      await createProjectTemplateCommand(data);
       router.refresh();
       return true;
     } catch (err) {

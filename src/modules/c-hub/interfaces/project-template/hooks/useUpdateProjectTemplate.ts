@@ -1,6 +1,6 @@
 'use client';
 
-import { updateProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-actions';
+import { updateProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ export function useUpdateProjectTemplate() {
     setError(null);
 
     try {
-      await updateProjectTemplate(id, data);
+      await updateProjectTemplateCommand(id, data);
       router.refresh();
       return true;
     } catch (err) {
