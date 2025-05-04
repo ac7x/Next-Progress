@@ -1,7 +1,7 @@
 import { UpdateProjectTemplateCommandHandler } from '@/modules/c-hub/application/project-template/project-template.command-handler';
 import { GetProjectTemplateListQueryHandler } from '@/modules/c-hub/application/project-template/project-template.query-handler';
 
-// Controller: 對外暴露查詢專案模板列表
+// 只負責對外暴露查詢/更新專案模板
 export async function getProjectTemplateListHandler() {
     return GetProjectTemplateListQueryHandler();
 }

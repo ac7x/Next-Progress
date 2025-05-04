@@ -1,3 +1,4 @@
+// 只定義 Entity 與型別守衛
 export interface ProjectTemplate {
   id: string;
   name: string;

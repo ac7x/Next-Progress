@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { updateProjectTemplateHandler } from '../project-template.controller';
 
 // CQRS: Command Controller Hook，僅負責更新
+// 只負責更新專案模板
 export function useProjectTemplateUpdate() {
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);

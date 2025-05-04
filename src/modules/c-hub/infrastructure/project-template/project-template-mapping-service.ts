@@ -1,6 +1,7 @@
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import type { Prisma } from '@prisma/client';
 
+// 只負責 Prisma <-> Domain 的映射
 export const projectTemplateMappingService = {
   toDomain(prismaModel: any): ProjectTemplate {
     return {

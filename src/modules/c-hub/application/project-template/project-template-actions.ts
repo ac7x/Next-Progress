@@ -5,6 +5,8 @@ import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-tem
 import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
 import { revalidatePath } from 'next/cache';
 
+// 只負責 Application UseCase（Command/Query）
+
 // CQRS: Command UseCases
 export async function createProjectTemplateCommand(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
   try {

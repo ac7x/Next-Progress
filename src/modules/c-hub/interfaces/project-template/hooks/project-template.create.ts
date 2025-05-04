@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 // CQRS: Command Hook，僅負責建立
+// 只負責建立專案模板
 export function useProjectTemplateCreate() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);

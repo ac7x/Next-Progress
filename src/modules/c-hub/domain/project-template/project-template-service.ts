@@ -2,6 +2,7 @@ import { CreateProjectTemplateProps, ProjectTemplate } from './project-template-
 import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from './project-template-events';
 import { IProjectTemplateRepository } from './project-template-repository';
 
+// 只負責領域邏輯與驗證
 export class ProjectTemplateService {
   create(data: Omit<ProjectTemplate, 'id' | 'createdAt' | 'updatedAt'>): ProjectTemplate {
     const id = crypto.randomUUID();
@@ -39,6 +40,7 @@ export class ProjectTemplateService {
   }
 }
 
+// 只負責領域邏輯與驗證
 export class ProjectTemplateDomainService {
   constructor(private readonly repository: IProjectTemplateRepository) { }
 

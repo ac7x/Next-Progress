@@ -3,6 +3,7 @@ import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-tem
 import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
 
 // Application CommandHandler: 更新專案模板
+// 只負責 Application Command Handler（更新）
 export async function UpdateProjectTemplateCommandHandler(
     id: string,
     data: Partial<CreateProjectTemplateProps>

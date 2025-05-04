@@ -3,6 +3,7 @@ import { IProjectTemplateRepository } from '@/modules/c-hub/domain/project-templ
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
 
+// 只負責專案模板的 CRUD 資料存取
 export class ProjectTemplateRepository implements IProjectTemplateRepository {
   async create(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
     return prisma.projectTemplate.create({
