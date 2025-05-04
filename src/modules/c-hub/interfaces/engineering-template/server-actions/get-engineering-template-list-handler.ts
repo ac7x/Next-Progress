@@ -1,7 +1,7 @@
 'use server';
 
-import { getEngineeringTemplateListQueryHandler } from '@/modules/c-hub/application/engineering-template/get-engineering-template-list-query-handler';
+import { listEngineeringTemplates } from '@/modules/c-hub/application/engineering-template/engineering-template.query';
 
 export async function getEngineeringTemplateListHandler() {
-    return getEngineeringTemplateListQueryHandler.execute();
+    return listEngineeringTemplates();
 }

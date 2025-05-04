@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template-actions';
+import { deleteEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template.command';
 import { listTaskTemplatesByEngineeringId } from '@/modules/c-hub/application/task-template/task-template-actions';
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
