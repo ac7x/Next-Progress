@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 任務實體詳細資訊元件
+ * 功能：展示單一任務的詳細資料，支援展開子任務區塊
+ * 使用方式：
+ * <TaskInstanceDetails taskInstance={taskInstance} />
+ */
+
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
 import { useState } from 'react';
 // 修正匯入方式，改為預設匯入

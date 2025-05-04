@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 任務模板列表元件
+ * 功能：展示任務模板清單，支援刪除操作
+ * 使用方式：
+ * <TaskTemplateList templates={templates} onDelete={refetchFn} />
+ */
+
 import { deleteTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
 import { useRouter } from 'next/navigation';

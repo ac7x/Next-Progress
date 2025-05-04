@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 任務模板建立表單元件
+ * 功能：用於建立新的任務模板，支援選擇所屬工程模板
+ * 使用方式：
+ * <TaskTemplateForm engineeringTemplates={engineeringTemplates} />
+ */
+
 import { createTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { useRouter } from 'next/navigation';
