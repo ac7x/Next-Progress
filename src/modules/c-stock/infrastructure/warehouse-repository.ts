@@ -1,8 +1,8 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
-import { IWarehouseRepository } from '@/modules/c-stock/domain/warehouse-repository';
+import { IWarehouseInstanceRepository } from '@/modules/c-stock/domain/warehouse-repository';
 
-export class WarehouseInstanceRepository implements IWarehouseRepository {
+export class WarehouseInstanceRepository implements IWarehouseInstanceRepository {
   async create(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
     return prisma.warehouseInstance.create({ data });
   }

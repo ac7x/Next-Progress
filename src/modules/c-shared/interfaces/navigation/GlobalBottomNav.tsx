@@ -6,38 +6,38 @@ export const GlobalBottomNav = () => {
       <div className="max-w-7xl mx-auto">
         <ul className="flex justify-around items-center h-16">
           <li>
-            <Link 
-              href="/client/dashboard" 
+            <Link
+              href="/client/dashboard"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">📊</span>
               <span className="text-xs mt-1">儀表板</span>
             </Link>
           </li>
-          
+
           <li>
-            <Link 
-              href="/client/manage" 
+            <Link
+              href="/client/manage"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">📋</span>
               <span className="text-xs mt-1">管理</span>
             </Link>
           </li>
-          
+
           <li>
-            <Link 
-              href="/client/template" 
+            <Link
+              href="/client/template"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">🧩</span>
               <span className="text-xs mt-1">模板</span>
             </Link>
           </li>
-          
+
           <li>
-            <Link 
-              href="/client/warehouse" 
+            <Link
+              href="/client/warehouse_instance"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">🏬</span>
@@ -46,8 +46,8 @@ export const GlobalBottomNav = () => {
           </li>
 
           <li>
-            <Link 
-              href="/client/tag" 
+            <Link
+              href="/client/tag"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">🏷️</span>
@@ -56,8 +56,8 @@ export const GlobalBottomNav = () => {
           </li>
 
           <li>
-            <Link 
-              href="/client/profile" 
+            <Link
+              href="/client/profile"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">👤</span>

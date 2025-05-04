@@ -1,9 +1,9 @@
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
-import { IWarehouseDomainService, WarehouseDomainService } from '@/modules/c-stock/domain/warehouse-service';
+import { IWarehouseInstanceDomainService, WarehouseInstanceDomainService } from '@/modules/c-stock/domain/warehouse-service';
 import { warehouseInstanceRepository } from '@/modules/c-stock/infrastructure/warehouse-repository';
 
 export class WarehouseInstanceApplicationService {
-  constructor(private readonly domainService: IWarehouseDomainService) { }
+  constructor(private readonly domainService: IWarehouseInstanceDomainService) { }
 
   async getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
     return this.domainService.getAllWarehouseInstances();
@@ -26,5 +26,5 @@ export class WarehouseInstanceApplicationService {
   }
 }
 
-const domainService = new WarehouseDomainService(warehouseInstanceRepository);
+const domainService = new WarehouseInstanceDomainService(warehouseInstanceRepository);
 export const warehouseInstanceService = new WarehouseInstanceApplicationService(domainService);

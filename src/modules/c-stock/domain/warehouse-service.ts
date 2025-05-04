@@ -1,7 +1,7 @@
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from './warehouse-entity';
-import { IWarehouseRepository } from './warehouse-repository';
+import { IWarehouseInstanceRepository } from './warehouse-repository';
 
-export interface IWarehouseDomainService {
+export interface IWarehouseInstanceDomainService {
   getAllWarehouseInstances(): Promise<WarehouseInstance[]>;
   getWarehouseInstanceById(id: string): Promise<WarehouseInstance | null>;
   createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance>;
@@ -9,8 +9,8 @@ export interface IWarehouseDomainService {
   deleteWarehouseInstance(id: string): Promise<void>;
 }
 
-export class WarehouseDomainService implements IWarehouseDomainService {
-  constructor(private readonly repository: IWarehouseRepository) { }
+export class WarehouseInstanceDomainService implements IWarehouseInstanceDomainService {
+  constructor(private readonly repository: IWarehouseInstanceRepository) { }
 
   async getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
     return this.repository.list();
