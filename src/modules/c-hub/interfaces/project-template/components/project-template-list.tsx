@@ -1,24 +1,15 @@
 'use client';
 
-import { useProjectTemplateQuery } from '../hooks/project-template.query';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { ProjectTemplateCard } from './project-template-card';
 
 interface ProjectTemplateListProps {
+  templates: ProjectTemplate[];
   onDelete?: () => void;
 }
 
-export function ProjectTemplateList({ onDelete }: ProjectTemplateListProps) {
-  const { data: templates, isLoading, error } = useProjectTemplateQuery();
-
-  if (isLoading) {
-    return <p className="text-gray-500">載入專案模板中...</p>;
-  }
-
-  if (error) {
-    return <p className="text-red-500">載入專案模板失敗</p>;
-  }
-
-  // 型別守衛，確保 templates 為陣列
+export function ProjectTemplateList({ templates, onDelete }: ProjectTemplateListProps) {
+  // 型別守衛，確保 templates 為陣列且每個元素有 id
   if (!Array.isArray(templates) || templates.length === 0) {
     return <p className="text-gray-500">目前沒有專案模板</p>;
   }

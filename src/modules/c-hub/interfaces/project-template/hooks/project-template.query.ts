@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProjectTemplateListHandler } from '../project-template.controller';
 
 // CQRS: Query Controller Hook，僅負責查詢
-// 只負責查詢專案模板列表
+// 僅於需要 Client 端 re-fetch 時使用
 export function useProjectTemplateQuery() {
   return useQuery({
     queryKey: ['projectTemplates'],

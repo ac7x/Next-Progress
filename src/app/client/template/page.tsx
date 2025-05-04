@@ -1,4 +1,6 @@
 import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-actions';
+import { GetProjectTemplateListQueryHandler } from '@/modules/c-hub/application/project-template/project-template.query-handler';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { EngineeringTemplateForm } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-form';
 import { EngineeringTemplateList } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-list';
 import { CreateProjectTemplateForm } from '@/modules/c-hub/interfaces/project-template/components/project-template-create-form';
@@ -7,8 +9,17 @@ import { Suspense } from 'react';
 
 export default async function TemplatePage() {
   try {
-    // 只 SSR 專案列表，模板資料交由 Client 端 React Query 處理
+    // SSR 專案列表
     const projects = await listProjects();
+    // SSR 專案模板列表（CQRS Query Handler）
+    let templates: ProjectTemplate[] = await GetProjectTemplateListQueryHandler();
+
+    // 修正：將日期欄位轉回 Date 物件
+    templates = templates.map(t => ({
+      ...t,
+      createdAt: typeof t.createdAt === 'string' ? new Date(t.createdAt) : t.createdAt,
+      updatedAt: typeof t.updatedAt === 'string' ? new Date(t.updatedAt) : t.updatedAt,
+    }));
 
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
@@ -23,8 +34,8 @@ export default async function TemplatePage() {
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-4">現有專案模板</h3>
-              {/* 直接渲染 Client Component，資料由 React Query hook 處理 */}
-              <ProjectTemplateList />
+              {/* SSR 傳遞專案模板資料，Client 端僅負責渲染，不會卡在載入中 */}
+              <ProjectTemplateList templates={templates} />
             </div>
           </section>
 
