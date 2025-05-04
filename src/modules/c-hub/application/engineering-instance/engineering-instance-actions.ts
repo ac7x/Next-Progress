@@ -11,12 +11,8 @@ import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-inst
 import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
-// 創建工程領域服務實例，注入任務模板資源庫
-const engineeringService = new EngineeringInstanceDomainService(
-  engineeringInstanceRepository,
-  engineeringTemplateRepository,
-  taskTemplateRepository
-);
+// 僅注入單一 repository，符合 DDD 原則
+const engineeringService = new EngineeringInstanceDomainService(engineeringInstanceRepository);
 
 export async function listEngineerings(): Promise<EngineeringInstance[]> {
   return engineeringService.list();
@@ -61,6 +57,7 @@ export async function createEngineering(data: CreateEngineeringInstanceProps): P
   }
 }
 
+// 從模板創建工程（聚合協調應在 UseCase 層）
 export async function createEngineeringFromTemplate(
   data: CreateEngineeringFromTemplateProps
 ): Promise<EngineeringInstance> {
@@ -72,13 +69,22 @@ export async function createEngineeringFromTemplate(
       throw new Error('專案ID不能為空');
     }
 
-    // 步驟1: 創建工程
-    const engineering = await engineeringService.createFromTemplate(data);
+    // 1. 取得模板
+    const template = await engineeringTemplateRepository.getById(data.engineeringTemplateId);
+    if (!template) throw new Error('找不到指定的工程模板');
 
-    // 步驟2: 獲取該工程模板相關的所有任務模板
+    // 2. 建立工程
+    const engineering = await engineeringService.create({
+      name: data.name || template.name,
+      description: data.description || template.description,
+      projectId: data.projectId,
+      userId: data.userId || 'system'
+    });
+
+    // 3. 取得任務模板
     const taskTemplates = await taskTemplateRepository.findByEngineeringTemplateId(data.engineeringTemplateId);
 
-    // 步驟2.5: 批量查詢所有子任務模板，減少 DB 請求
+    // 4. 預查所有子任務模板
     const allSubTaskTemplatesMap: Record<string, any[]> = {};
     await Promise.all(
       taskTemplates.map(async (taskTemplate) => {
@@ -86,7 +92,7 @@ export async function createEngineeringFromTemplate(
       })
     );
 
-    // 步驟3: 根據前端傳來的數量資訊建立任務（只產生一筆，equipmentCount 設為數量）
+    // 5. 根據前端傳來的數量資訊建立任務
     const taskCountMap: Record<string, number> = {};
     if (Array.isArray(data.tasks)) {
       data.tasks.forEach(t => {
@@ -96,7 +102,6 @@ export async function createEngineeringFromTemplate(
       });
     }
 
-    // 只產生一筆 Task，equipmentCount 設為數量
     await Promise.all(
       taskTemplates.map(async (taskTemplate) => {
         const count = taskCountMap[taskTemplate.id] ?? 1;
@@ -107,10 +112,10 @@ export async function createEngineeringFromTemplate(
           projectId: data.projectId,
           status: 'TODO',
           priority: taskTemplate.priority ?? 0,
-          equipmentCount: count // 關鍵：堆疊數量
+          equipmentCount: count
         });
 
-        // 使用預先查詢的子任務模板
+        // 建立子任務
         const subTaskTemplates = allSubTaskTemplatesMap[taskTemplate.id] || [];
         if (subTaskTemplates.length > 0) {
           await Promise.all(

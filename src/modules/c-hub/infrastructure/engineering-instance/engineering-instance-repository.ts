@@ -13,7 +13,6 @@ export class EngineeringInstanceRepository implements IEngineeringInstanceReposi
     const engineering = await prisma.engineeringInstance.findUnique({
       where: { id }
     });
-
     return engineering ? engineeringInstanceAdapter.toDomain(engineering) : null;
   }
 
@@ -58,7 +57,6 @@ export class EngineeringInstanceRepository implements IEngineeringInstanceReposi
     const engineerings = await prisma.engineeringInstance.findMany({
       where: { projectId }
     });
-
     return engineerings.map(engineeringInstanceAdapter.toDomain);
   }
 }
