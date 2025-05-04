@@ -4,7 +4,7 @@ export interface ProjectTemplate {
   name: string;
   description: string | null;
   isActive: boolean;
-  priority?: number | null; // 新增 priority 欄位
+  priority: number; // 必為 number，不可 null
   createdAt: Date;
   updatedAt: Date;
 }
@@ -13,10 +13,10 @@ export interface CreateProjectTemplateProps {
   name: string;
   description?: string | null;
   isActive?: boolean;
-  priority?: number | null; // 新增 priority 欄位
+  priority?: number; // 可選，預設 0
 }
 
-// 添加型別守衛函數確保型別安全
+// 型別守衛函數確保型別安全
 export function isValidProjectTemplate(template: unknown): template is ProjectTemplate {
   return (
     typeof template === 'object' &&
@@ -24,7 +24,8 @@ export function isValidProjectTemplate(template: unknown): template is ProjectTe
     typeof (template as any).id === 'string' &&
     typeof (template as any).name === 'string' &&
     typeof (template as any).isActive === 'boolean' &&
-    ((template as any).priority === undefined || typeof (template as any).priority === 'number' || (template as any).priority === null) && // 新增 priority 型別守衛
+    typeof (template as any).priority === 'number' && // 必須是 number
+    (typeof (template as any).description === 'string' || (template as any).description === null) &&
     (template as any).createdAt instanceof Date &&
     (template as any).updatedAt instanceof Date
   );

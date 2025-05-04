@@ -6,33 +6,25 @@ import { Prisma } from '@prisma/client';
 // 只負責專案模板的 CRUD 資料存取
 export class ProjectTemplateRepository implements IProjectTemplateRepository {
   async create(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
+    // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
     return prisma.projectTemplate.create({
       data: {
         name: data.name,
-        description: data.description,
+        description: data.description ?? null,
         isActive: data.isActive ?? true,
-        priority: data.priority ?? 0, // 新增 priority
+        priority: data.priority ?? 0,
       },
-    });
+    }) as unknown as ProjectTemplate;
   }
 
   async list(): Promise<ProjectTemplate[]> {
-    const templates = await prisma.projectTemplate.findMany({
+    // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
+    return prisma.projectTemplate.findMany({
       where: {
         isActive: true,
       },
-    });
-    // 型別安全：確保 createdAt/updatedAt 為 Date
-    return Array.isArray(templates)
-      ? templates.map(t => ({
-        ...t,
-        createdAt: t.createdAt instanceof Date ? t.createdAt : new Date(t.createdAt),
-        updatedAt: t.updatedAt instanceof Date ? t.updatedAt : new Date(t.updatedAt),
-        description: t.description ?? null,
-        isActive: t.isActive ?? true,
-        priority: typeof t.priority === 'number' ? t.priority : 0,
-      }))
-      : [];
+      orderBy: { createdAt: 'desc' },
+    }) as unknown as ProjectTemplate[];
   }
 
   async delete(id: string): Promise<void> {
@@ -62,18 +54,18 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
       data: {
         ...data,
         updatedAt: new Date(),
-        // priority: data.priority, // 已包含在 ...data
       },
-    });
+    }) as unknown as ProjectTemplate;
   }
 
   async getById(id: string): Promise<ProjectTemplate | null> {
+    // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
     return prisma.projectTemplate.findFirst({
       where: {
         id,
         isActive: true,
       },
-    });
+    }) as unknown as ProjectTemplate | null;
   }
 }
 
