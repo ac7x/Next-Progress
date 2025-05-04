@@ -3,14 +3,14 @@ import { warehouseItemRepository } from '@/modules/c-stock/infrastructure/wareho
 
 const domainService: IWarehouseItemDomainService = new WarehouseItemDomainService(warehouseItemRepository);
 
-export async function queryAllWarehouseItems() {
+export async function getAllWarehouseItems() {
     return domainService.getAllWarehouseItems();
 }
 
-export async function queryWarehouseItemsByWarehouse(warehouseId: string) {
+export async function getWarehouseItemsByWarehouse(warehouseId: string) {
     return domainService.getWarehouseItemsByWarehouse(warehouseId);
 }
 
-export async function queryWarehouseItemById(id: string) {
+export async function getWarehouseItemById(id: string) {
     return domainService.getWarehouseItemById(id);
 }

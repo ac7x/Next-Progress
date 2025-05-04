@@ -2,7 +2,7 @@
 
 import { WarehouseInstanceForm } from '@/modules/c-stock/interfaces/components/warehouse-form';
 import { WarehouseInstanceList } from '@/modules/c-stock/interfaces/components/warehouse-list';
-import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouses';
+import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouseInstances';
 
 export default function WarehouseInstancePage() {
   const { data: warehouseInstances = [], isLoading, error } = useWarehouseInstances();
