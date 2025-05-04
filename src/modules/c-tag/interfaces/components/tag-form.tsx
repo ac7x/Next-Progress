@@ -3,6 +3,7 @@
 import { TagType } from '@/modules/c-tag/domain/tag-entity';
 import { FormEvent, useState } from 'react';
 import { useCreateTag } from '../hooks/useTagMutations';
+import { tagDisplayUtils } from '../utils/tag-display-utils';
 
 export default function TagFormClient() {
   const [name, setName] = useState('');
@@ -34,9 +35,15 @@ export default function TagFormClient() {
       </div>
       <div>
         <label className="block text-sm font-medium mb-1">類型</label>
-        <select value={type} onChange={e => setType(e.target.value as TagType)} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200">
+        <select
+          value={type}
+          onChange={e => setType(e.target.value as TagType)}
+          className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200"
+        >
           {Object.values(TagType).map(v => (
-            <option key={v} value={v}>{v}</option>
+            <option key={v} value={v}>
+              {tagDisplayUtils.getTagTypeName(v as TagType)}
+            </option>
           ))}
         </select>
       </div>
