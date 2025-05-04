@@ -19,7 +19,7 @@ export type UpdateEngineeringTemplateProps = Partial<
 
 // 改進型別守衛函數
 export function isValidEngineeringTemplate(template: unknown): template is EngineeringTemplate {
-  return typeof template === 'object' && 
+  return typeof template === 'object' &&
     template !== null &&
     'id' in template &&
     'name' in template &&
