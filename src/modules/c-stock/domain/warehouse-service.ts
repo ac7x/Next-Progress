@@ -1,43 +1,43 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from './warehouse-entity';
+import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from './warehouse-entity';
 import { IWarehouseRepository } from './warehouse-repository';
 
 export interface IWarehouseDomainService {
-  getAllWarehouses(): Promise<Warehouse[]>;
-  getWarehouseById(id: string): Promise<Warehouse | null>;
-  createWarehouse(data: CreateWarehouseProps): Promise<Warehouse>;
-  updateWarehouse(id: string, data: UpdateWarehouseProps): Promise<Warehouse>;
-  deleteWarehouse(id: string): Promise<void>;
+  getAllWarehouseInstances(): Promise<WarehouseInstance[]>;
+  getWarehouseInstanceById(id: string): Promise<WarehouseInstance | null>;
+  createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance>;
+  updateWarehouseInstance(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance>;
+  deleteWarehouseInstance(id: string): Promise<void>;
 }
 
 export class WarehouseDomainService implements IWarehouseDomainService {
-  constructor(private readonly repository: IWarehouseRepository) {}
+  constructor(private readonly repository: IWarehouseRepository) { }
 
-  async getAllWarehouses(): Promise<Warehouse[]> {
+  async getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
     return this.repository.list();
   }
 
-  async getWarehouseById(id: string): Promise<Warehouse | null> {
+  async getWarehouseInstanceById(id: string): Promise<WarehouseInstance | null> {
     if (!id?.trim()) {
       throw new Error('倉庫 ID 不能為空');
     }
     return this.repository.getById(id);
   }
 
-  async createWarehouse(data: CreateWarehouseProps): Promise<Warehouse> {
+  async createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
     if (!data.name?.trim()) {
       throw new Error('倉庫名稱不能為空');
     }
     return this.repository.create(data);
   }
 
-  async updateWarehouse(id: string, data: UpdateWarehouseProps): Promise<Warehouse> {
+  async updateWarehouseInstance(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
     if (!id?.trim()) {
       throw new Error('倉庫 ID 不能為空');
     }
     return this.repository.update(id, data);
   }
 
-  async deleteWarehouse(id: string): Promise<void> {
+  async deleteWarehouseInstance(id: string): Promise<void> {
     if (!id?.trim()) {
       throw new Error('倉庫 ID 不能為空');
     }

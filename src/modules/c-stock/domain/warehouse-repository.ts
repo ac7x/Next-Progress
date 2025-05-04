@@ -1,9 +1,9 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from './warehouse-entity';
+import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from './warehouse-entity';
 
 export interface IWarehouseRepository {
-  create(data: CreateWarehouseProps): Promise<Warehouse>;
-  list(): Promise<Warehouse[]>;
-  getById(id: string): Promise<Warehouse | null>;
-  update(id: string, data: UpdateWarehouseProps): Promise<Warehouse>;
+  create(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance>;
+  list(): Promise<WarehouseInstance[]>;
+  getById(id: string): Promise<WarehouseInstance | null>;
+  update(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance>;
   delete(id: string): Promise<void>;
 }

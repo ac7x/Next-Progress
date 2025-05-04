@@ -1,21 +1,21 @@
-import { createWarehouse, deleteWarehouse } from '@/modules/c-stock/application/warehouse-actions';
-import { CreateWarehouseProps, Warehouse } from '@/modules/c-stock/domain/warehouse-entity';
+import { createWarehouseInstance, deleteWarehouseInstance } from '@/modules/c-stock/application/warehouse-actions';
+import { CreateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useCreateWarehouse() {
   const qc = useQueryClient();
-  return useMutation<Warehouse | null, Error, CreateWarehouseProps>({
-    mutationKey: ['warehouse', 'create'],
-    mutationFn: createWarehouse,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouses'] })
+  return useMutation<WarehouseInstance, Error, CreateWarehouseInstanceProps>({
+    mutationKey: ['warehouseInstance', 'create'],
+    mutationFn: createWarehouseInstance,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouseInstances'] })
   });
 }
 
 export function useDeleteWarehouse() {
   const qc = useQueryClient();
   return useMutation<void, Error, string>({
-    mutationKey: ['warehouse', 'delete'],
-    mutationFn: deleteWarehouse,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouses'] })
+    mutationKey: ['warehouseInstance', 'delete'],
+    mutationFn: deleteWarehouseInstance,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['warehouseInstances'] })
   });
 }

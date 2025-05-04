@@ -2,29 +2,29 @@
 
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { revalidatePath } from 'next/cache';
-import { warehouseService } from './warehouse-service';
+import { warehouseInstanceService } from './warehouse-service';
 
-export async function getAllWarehouses(): Promise<WarehouseInstance[]> {
-  return warehouseService.getAllWarehouses();
+export async function getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
+  return warehouseInstanceService.getAllWarehouseInstances();
 }
 
-export async function getWarehouseById(id: string): Promise<WarehouseInstance | null> {
-  return warehouseService.getWarehouseById(id);
+export async function getWarehouseInstanceById(id: string): Promise<WarehouseInstance | null> {
+  return warehouseInstanceService.getWarehouseInstanceById(id);
 }
 
-export async function createWarehouse(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
-  const warehouse = await warehouseService.createWarehouse(data);
+export async function createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
+  const warehouse = await warehouseInstanceService.createWarehouseInstance(data);
   revalidatePath('/client/warehouse');
   return warehouse;
 }
 
-export async function updateWarehouse(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
-  const warehouse = await warehouseService.updateWarehouse(id, data);
+export async function updateWarehouseInstance(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
+  const warehouse = await warehouseInstanceService.updateWarehouseInstance(id, data);
   revalidatePath('/client/warehouse');
   return warehouse;
 }
 
-export async function deleteWarehouse(id: string): Promise<void> {
-  await warehouseService.deleteWarehouse(id);
+export async function deleteWarehouseInstance(id: string): Promise<void> {
+  await warehouseInstanceService.deleteWarehouseInstance(id);
   revalidatePath('/client/warehouse');
 }

@@ -2,10 +2,10 @@
 
 import { WarehouseForm } from '@/modules/c-stock/interfaces/components/warehouse-form';
 import { WarehouseList } from '@/modules/c-stock/interfaces/components/warehouse-list';
-import { useWarehouses } from '@/modules/c-stock/interfaces/hooks/useWarehouses';
+import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouses';
 
-export default function WarehousePage() {
-  const { data: warehouses = [], isLoading, error } = useWarehouses();
+export default function WarehouseInstancePage() {
+  const { data: warehouseInstances = [], isLoading, error } = useWarehouseInstances();
 
   if (isLoading) return null;
   if (error) return <p className="text-red-500">{error.message}</p>;
@@ -23,7 +23,7 @@ export default function WarehousePage() {
 
       <section>
         <h2 className="text-2xl font-bold mb-6">倉庫列表</h2>
-        <WarehouseList warehouses={warehouses} />
+        <WarehouseList warehouses={warehouseInstances} />
       </section>
     </div>
   );

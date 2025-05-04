@@ -20,18 +20,21 @@ export function TagCategoryList({ tags = [], onDelete }: TagCategoryListProps) {
 
   const groupedTags = selectedType === 'ALL'
     ? tagDisplayUtils.groupTagsByType(tags)
-    : { [selectedType]: filteredTags } as Partial<Record<TagType, Tag[]>>; // 修正類型
+    : { [selectedType]: filteredTags } as Partial<Record<TagType, Tag[]>>;
 
-  const orderedTypes = Object.keys(groupedTags).sort((a, b) => {
-    const typeOrder = Object.values(TagType);
-    return typeOrder.indexOf(a as TagType) - typeOrder.indexOf(b as TagType);
-  });
+  // 取得所有實際存在的 TagType keys，並轉型為 TagType
+  const orderedTypes = Object.keys(groupedTags)
+    .filter((k): k is TagType => Object.values(TagType).includes(k as TagType))
+    .sort((a, b) => {
+      const typeOrder = Object.values(TagType);
+      return typeOrder.indexOf(a as TagType) - typeOrder.indexOf(b as TagType);
+    });
 
   return (
     <div>
       <TagTypeFilter
         selectedType={selectedType}
-        onChangeAction={(type: TagType | 'ALL') => setSelectedType(type)} // 修正名稱與類型
+        onChangeAction={(type: TagType | 'ALL') => setSelectedType(type)}
       />
 
       {orderedTypes.length === 0 ? (
@@ -41,9 +44,9 @@ export function TagCategoryList({ tags = [], onDelete }: TagCategoryListProps) {
           {orderedTypes.map(type => (
             <div key={type} className="space-y-2">
               <h3 className="font-medium text-lg">
-                {tagDisplayUtils.getTagTypeName(type as TagType)}
+                {tagDisplayUtils.getTagTypeName(type)}
               </h3>
-              <TagList tags={groupedTags[type]} onDelete={onDelete} />
+              <TagList tags={groupedTags[type]!} onDelete={onDelete} />
             </div>
           ))}
         </div>

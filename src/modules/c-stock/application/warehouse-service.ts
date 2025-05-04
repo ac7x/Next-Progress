@@ -1,31 +1,30 @@
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { IWarehouseDomainService, WarehouseDomainService } from '@/modules/c-stock/domain/warehouse-service';
-import { warehouseRepository } from '@/modules/c-stock/infrastructure/warehouse-repository';
+import { warehouseInstanceRepository } from '@/modules/c-stock/infrastructure/warehouse-repository';
 
-export class WarehouseApplicationService {
+export class WarehouseInstanceApplicationService {
   constructor(private readonly domainService: IWarehouseDomainService) { }
 
-  async getAllWarehouses(): Promise<WarehouseInstance[]> {
-    return this.domainService.getAllWarehouses();
+  async getAllWarehouseInstances(): Promise<WarehouseInstance[]> {
+    return this.domainService.getAllWarehouseInstances();
   }
 
-  async getWarehouseById(id: string): Promise<WarehouseInstance | null> {
-    return this.domainService.getWarehouseById(id);
+  async getWarehouseInstanceById(id: string): Promise<WarehouseInstance | null> {
+    return this.domainService.getWarehouseInstanceById(id);
   }
 
-  async createWarehouse(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
-    return this.domainService.createWarehouse(data);
+  async createWarehouseInstance(data: CreateWarehouseInstanceProps): Promise<WarehouseInstance> {
+    return this.domainService.createWarehouseInstance(data);
   }
 
-  async updateWarehouse(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
-    return this.domainService.updateWarehouse(id, data);
+  async updateWarehouseInstance(id: string, data: UpdateWarehouseInstanceProps): Promise<WarehouseInstance> {
+    return this.domainService.updateWarehouseInstance(id, data);
   }
 
-  async deleteWarehouse(id: string): Promise<void> {
-    return this.domainService.deleteWarehouse(id);
+  async deleteWarehouseInstance(id: string): Promise<void> {
+    return this.domainService.deleteWarehouseInstance(id);
   }
 }
 
-// 注入依賴
-const domainService = new WarehouseDomainService(warehouseRepository);
-export const warehouseService = new WarehouseApplicationService(domainService);
+const domainService = new WarehouseDomainService(warehouseInstanceRepository);
+export const warehouseInstanceService = new WarehouseInstanceApplicationService(domainService);

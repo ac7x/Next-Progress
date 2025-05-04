@@ -24,7 +24,7 @@ export function WarehouseForm() {
       { name, description: description || null },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ['warehouses'] });
+          qc.invalidateQueries({ queryKey: ['warehouseInstances'] });
           setName('');
           setDescription('');
           setSuccess(true);
@@ -44,13 +44,13 @@ export function WarehouseForm() {
           {error}
         </div>
       )}
-      
+
       {success && (
         <div className="p-2 text-green-600 bg-green-50 rounded border border-green-200">
           倉庫建立成功！
         </div>
       )}
-      
+
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1">
           倉庫名稱
@@ -66,7 +66,7 @@ export function WarehouseForm() {
           required
         />
       </div>
-      
+
       <div>
         <label htmlFor="description" className="block text-sm font-medium mb-1">
           描述（選填）
@@ -81,7 +81,7 @@ export function WarehouseForm() {
           disabled={submitting}
         ></textarea>
       </div>
-      
+
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
