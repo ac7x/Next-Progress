@@ -1,4 +1,4 @@
-import { Tag as DomainTag } from '@/modules/c-tag/domain/tag-entity';
+import { Tag as DomainTag, TagType } from '@/modules/c-tag/domain/tag-entity';
 import { Tag as PrismaTag } from '@prisma/client';
 
 export const tagAdapter = {
@@ -6,9 +6,9 @@ export const tagAdapter = {
     return {
       id: prismaTag.id,
       name: prismaTag.name,
-      type: prismaTag.type as DomainTag['type'],
+      type: prismaTag.type as TagType,      // 明確轉為領域層 TagType
       description: prismaTag.description,
-      color: prismaTag.color,         // 現在 domain Tag 支援此屬性
+      color: prismaTag.color,               // 現在 DomainTag 已含 color
       createdAt: prismaTag.createdAt,
       updatedAt: prismaTag.updatedAt
     };
