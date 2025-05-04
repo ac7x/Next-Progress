@@ -30,6 +30,8 @@ try {
     'Attachment.prisma',     // 附件模型
     'Warehouse.prisma',      // 倉庫相關模型
     'Linepay.prisma',        // 支付相關模型
+    'Template.prisma',        // 支付相關模型
+    'Instance.prisma',        // 支付相關模型
   ];
 
   // 檢查檔案是否存在並顯示警告
