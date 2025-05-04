@@ -2,28 +2,32 @@
 
 import { TagType } from '@/modules/c-tag/domain/tag-entity';
 import { FormEvent, useState } from 'react';
-import { createTagAction } from '../tag-command-actions';
+import { useCreateTag } from '../hooks/useTagMutations';
 
 export default function TagFormClient() {
   const [name, setName] = useState('');
   const [type, setType] = useState<TagType>(TagType.GENERAL);
   const [desc, setDesc] = useState('');
-  const [msg, setMsg] = useState<string | null>(null);
+  const { mutate, isPending, isSuccess, isError, error, reset } = useCreateTag();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    try {
-      await createTagAction({ name, type, description: desc || null });
-      setMsg('建立成功');
-      setName(''); setDesc(''); setType(TagType.GENERAL);
-    } catch (err) {
-      setMsg('建立失敗');
-    }
+    mutate(
+      { name, type, description: desc || null },
+      {
+        onSuccess: () => {
+          setName('');
+          setDesc('');
+          setType(TagType.GENERAL);
+        }
+      }
+    );
   }
 
   return (
     <form onSubmit={onSubmit} className="space-y-4 bg-white p-6 rounded-xl shadow-md border">
-      {msg && <div className="p-2 text-green-600 bg-green-50 rounded">{msg}</div>}
+      {isSuccess && <div className="p-2 text-green-600 bg-green-50 rounded">建立成功</div>}
+      {isError && <div className="p-2 text-red-600 bg-red-50 rounded">{error?.message || '建立失敗'}</div>}
       <div>
         <label className="block text-sm font-medium mb-1">名稱</label>
         <input value={name} onChange={e => setName(e.target.value)} required className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200" />
@@ -40,8 +44,8 @@ export default function TagFormClient() {
         <label className="block text-sm font-medium mb-1">描述</label>
         <input value={desc} onChange={e => setDesc(e.target.value)} className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200" />
       </div>
-      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors font-semibold shadow">
-        建立標籤
+      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors font-semibold shadow" disabled={isPending}>
+        {isPending ? '建立中...' : '建立標籤'}
       </button>
     </form>
   );

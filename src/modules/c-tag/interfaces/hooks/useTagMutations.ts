@@ -9,6 +9,8 @@ export function useCreateTag() {
     mutationFn: createTagAction,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tags'] });
+      qc.invalidateQueries({ queryKey: ['tags', 'ALL'] });
+      // 依所有類型快取刷新（如有多個類型頁籤）
     }
   });
 }
@@ -20,6 +22,7 @@ export function useUpdateTag() {
     mutationFn: ({ id, data }) => updateTagAction(id, data),
     onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ['tags'] });
+      qc.invalidateQueries({ queryKey: ['tags', 'ALL'] });
       qc.invalidateQueries({ queryKey: ['tag', id] });
     }
   });
@@ -32,6 +35,7 @@ export function useDeleteTag() {
     mutationFn: deleteTagAction,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tags'] });
+      qc.invalidateQueries({ queryKey: ['tags', 'ALL'] });
     }
   });
 }
