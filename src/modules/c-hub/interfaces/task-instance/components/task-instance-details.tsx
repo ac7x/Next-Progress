@@ -2,7 +2,8 @@
 
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
 import { useState } from 'react';
-import { TaskInstanceSubTaskInstancesSection } from './task-instance-sub-task-instances-section';
+// 修正匯入方式，改為預設匯入
+import TaskInstanceSubTaskInstancesSection from './task-instance-sub-task-instances-section';
 
 interface TaskInstanceDetailsProps {
   taskInstance: TaskInstance;
