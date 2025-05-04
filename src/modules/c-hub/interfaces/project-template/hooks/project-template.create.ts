@@ -5,7 +5,8 @@ import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-templ
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export function useCreateProjectTemplate() {
+// CQRS: Command Hook，僅負責建立
+export function useProjectTemplateCreate() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();

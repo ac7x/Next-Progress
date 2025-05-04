@@ -2,7 +2,7 @@
 
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useState } from 'react';
-import { useUpdateProjectTemplate } from '../hooks/useUpdateProjectTemplate';
+import { useProjectTemplateUpdate } from '../hooks/project-template.update';
 
 interface ProjectTemplateEditFormProps {
   template: ProjectTemplate;
@@ -17,7 +17,7 @@ export function ProjectTemplateEditForm({
 }: ProjectTemplateEditFormProps) {
   const [name, setName] = useState(template.name);
   const [description, setDescription] = useState(template.description || '');
-  const { updateTemplate, isUpdating, error } = useUpdateProjectTemplate();
+  const { updateTemplate, isUpdating, error } = useProjectTemplateUpdate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

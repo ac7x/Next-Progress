@@ -1,7 +1,7 @@
 'use client';
 
 import { createProject, createProjectFromTemplate } from '@/modules/c-hub/application/project-instance/project-instance-actions';
-import { useProjectTemplatesQuery } from '@/modules/c-hub/interfaces/project-template/hooks/use-project-templates-query';
+import { useProjectTemplateQuery } from '@/modules/c-hub/interfaces/project-template/hooks/project-template.query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,7 +25,7 @@ export function useProjectCreation() {
     endDate: '',
   });
 
-  const { data: templates = [] } = useProjectTemplatesQuery();
+  const { data: templates = [] } = useProjectTemplateQuery();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -138,7 +138,7 @@ export function useProjectCreation() {
     handleStartDateChange,
     handleEndDateChange,
     handleSubmit,
-    templates, // 直接來自 useProjectTemplatesQuery
+    templates, // 直接來自 useProjectTemplateQuery
     isLoading,
     error,
     success
