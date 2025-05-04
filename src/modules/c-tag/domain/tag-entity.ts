@@ -57,5 +57,6 @@ export function isValidTag(tag: unknown): tag is Tag {
     'name' in tag &&
     'type' in tag &&
     'createdAt' in tag &&
-    'updatedAt' in tag;
+    'updatedAt' in tag &&
+    'color' in tag;
 }

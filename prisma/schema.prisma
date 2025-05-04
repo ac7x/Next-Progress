@@ -63,8 +63,7 @@ model Tag {
   name         String        @unique
   type         TagType       @default(GENERAL)
   description  String?
-  color        String?
-
+  color        String?    
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @default(now()) @updatedAt
 
