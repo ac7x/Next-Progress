@@ -77,7 +77,22 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
     }
   }
 
-  // 移除 findByEngineeringTemplateId 方法，因為不再需要
+  // 更新方法：根據工程模板ID查詢任務模板
+  async findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
+    try {
+      // 使用新的關聯字段 engineeringTemplateId 進行查詢
+      const prismaTemplates = await prisma.taskTemplate.findMany({
+        where: {
+          engineeringTemplateId: engineeringTemplateId
+        }
+      });
+
+      return prismaTemplates.map(template => taskTemplateAdapter.toDomain(template));
+    } catch (error) {
+      console.error(`Failed to find task templates by engineering template ID ${engineeringTemplateId}:`, error);
+      throw error;
+    }
+  }
 }
 
 export const taskTemplateRepository = new TaskTemplateRepository();

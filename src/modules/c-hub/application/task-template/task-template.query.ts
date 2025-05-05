@@ -16,3 +16,9 @@ export async function getTaskTemplateQuery(id: string): Promise<TaskTemplate | n
     if (!id?.trim()) throw new Error('模板 ID 為必填項');
     return templateService.getTemplateById(id);
 }
+
+// 新增 Query: 依工程模板ID取得任務模板
+export async function listTaskTemplatesByEngineeringIdQuery(engineeringTemplateId: string): Promise<TaskTemplate[]> {
+    if (!engineeringTemplateId?.trim()) throw new Error('工程模板 ID 為必填項');
+    return templateService.findTaskTemplatesByEngineeringTemplateId(engineeringTemplateId);
+}

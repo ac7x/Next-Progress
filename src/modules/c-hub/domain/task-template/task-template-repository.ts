@@ -6,4 +6,5 @@ export interface ITaskTemplateRepository {
   getById(id: string): Promise<TaskTemplate | null>;
   update(id: string, data: Partial<CreateTaskTemplateProps>): Promise<TaskTemplate>;
   delete(id: string): Promise<void>;
+  findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]>; // 新增方法
 }

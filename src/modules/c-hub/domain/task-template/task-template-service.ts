@@ -68,4 +68,12 @@ export class TaskTemplateDomainService {
   async listTemplates(): Promise<TaskTemplate[]> {
     return this.repository.list();
   }
+
+  // 新增方法：根據工程模板ID查詢任務模板
+  async findTaskTemplatesByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
+    if (!engineeringTemplateId?.trim()) {
+      throw new Error('工程模板ID不能為空');
+    }
+    return this.repository.findByEngineeringTemplateId(engineeringTemplateId);
+  }
 }

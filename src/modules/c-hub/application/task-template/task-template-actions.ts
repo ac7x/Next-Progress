@@ -92,3 +92,18 @@ export async function getTaskTemplate(id: string): Promise<TaskTemplate | null> 
     return null;
   }
 }
+
+export async function listTaskTemplatesByEngineeringId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
+  if (!engineeringTemplateId?.trim()) {
+    console.error('工程模板ID不能為空');
+    return [];
+  }
+
+  try {
+    const templates = await templateService.findTaskTemplatesByEngineeringTemplateId(engineeringTemplateId);
+    return templates.filter(isValidTaskTemplate);
+  } catch (error) {
+    console.error(`無法根據工程模板ID查詢任務模板: ${engineeringTemplateId}`, error);
+    return [];
+  }
+}

@@ -149,6 +149,137 @@ enum TransactionEnum {
 
 
 
+/// 附件模型，定義可以掛在專案或任務下的檔案附件
+model Attachment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name String /// 附件名稱
+  url String /// 附件檔案網址
+  uploadedBy String @db.ObjectId /// 上傳者的使用者 ID（外鍵）
+  projectId String? @db.ObjectId /// 所屬專案 ID，可為空（外鍵）
+  taskId String? @db.ObjectId /// 所屬任務 ID，可為空（外鍵）
+  project ProjectInstance? @relation(fields: [projectId], references: [id]) /// 關聯到的專案（選填）
+  task TaskInstance? @relation(fields: [taskId], references: [id]) /// 關聯到的任務（選填）
+  createdAt DateTime @default(now()) /// 建立時間
+}
+
+
+model WarehouseInstance {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  location    String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  items       WarehouseItem[] // 保留，因為這是內部物品 (一對多)
+}
+
+model WarehouseItem {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String?
+  quantity      Int               @default(0)
+  unit          String?
+  type          WarehouseItemType @default(TOOL) // 🆕 物品類別
+
+  warehouseId   String            @db.ObjectId
+  warehouse     WarehouseInstance @relation(fields: [warehouseId], references: [id])
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([type])
+}
+
+enum WarehouseItemType {
+  TOOL      // 工具
+  EQUIPMENT // 設備
+  CONSUMABLE // 耗材
+}
+
+model LinePay {
+  id                 String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String      
+  transactionId      String?
+  order_id           String      @unique
+  currency           String
+  amount             Int
+  status             PaymentEnum
+  packages           Json
+  redirectUrls       Json?
+  options            Json?
+  paymentUrl         Json?
+  paymentAccessToken String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  
+  user               User        @relation(fields: [userId], references: [userId])
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+}
+
+enum PaymentEnum {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+
+/// 專案模板，定義一個完整工程專案的基礎結構
+model ProjectTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name        String /// 專案模板名稱，必填
+  description String? /// 專案模板描述，選填
+  priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
+  updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間
+}
+/// 工程模板，定義工程層級資料
+model EngineeringTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name        String /// 工程模板名稱
+  description String? /// 工程模板描述
+  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間
+  updatedAt   DateTime             @default(now()) /// 更新時間
+  
+  // 添加與 TaskTemplate 的關聯
+  taskTemplates TaskTemplate[] // 該工程模板擁有的任務模板
+}
+/// 任務模板，隸屬於某個工程模板，定義工程內的任務
+model TaskTemplate {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String?
+  priority      Int?               @default(0) /// 優先順序
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @default(now())
+  
+  // 添加與 EngineeringTemplate 的關聯 
+  engineeringTemplateId String?    @db.ObjectId // 所屬工程模板 ID
+  engineeringTemplate   EngineeringTemplate?  @relation(fields: [engineeringTemplateId], references: [id]) // 所屬工程模板
+}
+/// 子任務模板模型，定義任務模板中的子任務結構
+model SubTaskTemplate {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name            String         /// 子任務模板名稱
+  description     String?        /// 子任務模板描述
+  plannedStart    DateTime?      /// 預計開始時間
+  plannedEnd      DateTime?      /// 預計結束時間
+  equipmentCount  Int?           /// 預計設備數量
+  priority        Int?           @default(0) /// 優先順序，數字越小優先度越高
+  status          String?        @default("pending") /// 預設子任務模板狀態
+  completionRate  Float?         @default(0) /// 預設完成率，0～100%
+  isMandatory     Boolean        @default(true) /// 是否為必須任務，預設為必須
+  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
+  parentTemplateId String?       @db.ObjectId /// 來源模板 ID，用於記錄複製來源
+  createdAt       DateTime       @default(now()) /// 建立時間
+  updatedAt       DateTime       @default(now()) /// 更新時間
+}
+
+
 /// 專案成員模型，定義專案的成員及其角色
 model ProjectMember {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
@@ -248,17 +379,6 @@ model SubTaskInstance {
   createdAt            DateTime     @default(now()) /// 建立時間
   updatedAt            DateTime     @default(now()) /// 更新時間
 }
-/// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
-model TaskTemplateSubTaskTemplate {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskTemplateId  String         @db.ObjectId /// 任務模板 ID（外鍵）
-  subTaskTemplateId String       @db.ObjectId /// 子任務模板 ID（外鍵）
-  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
-  taskTemplate    TaskTemplate   @relation(fields: [taskTemplateId], references: [id]) /// 關聯到的任務模板
-  subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
-
-  @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
-}
 /// 任務間依賴關係模型
 model TaskDependency {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
@@ -267,135 +387,3 @@ model TaskDependency {
   task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
   dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
 }
-
-
-/// 附件模型，定義可以掛在專案或任務下的檔案附件
-model Attachment {
-  id String @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name String /// 附件名稱
-  url String /// 附件檔案網址
-  uploadedBy String @db.ObjectId /// 上傳者的使用者 ID（外鍵）
-  projectId String? @db.ObjectId /// 所屬專案 ID，可為空（外鍵）
-  taskId String? @db.ObjectId /// 所屬任務 ID，可為空（外鍵）
-  project ProjectInstance? @relation(fields: [projectId], references: [id]) /// 關聯到的專案（選填）
-  task TaskInstance? @relation(fields: [taskId], references: [id]) /// 關聯到的任務（選填）
-  createdAt DateTime @default(now()) /// 建立時間
-}
-
-
-model WarehouseInstance {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  location    String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-
-  items       WarehouseItem[] // 保留，因為這是內部物品 (一對多)
-}
-
-model WarehouseItem {
-  id            String            @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description   String?
-  quantity      Int               @default(0)
-  unit          String?
-  type          WarehouseItemType @default(TOOL) // 🆕 物品類別
-
-  warehouseId   String            @db.ObjectId
-  warehouse     WarehouseInstance @relation(fields: [warehouseId], references: [id])
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-
-  @@index([type])
-}
-
-enum WarehouseItemType {
-  TOOL      // 工具
-  EQUIPMENT // 設備
-  CONSUMABLE // 耗材
-}
-
-model LinePay {
-  id                 String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String      
-  transactionId      String?
-  order_id           String      @unique
-  currency           String
-  amount             Int
-  status             PaymentEnum
-  packages           Json
-  redirectUrls       Json?
-  options            Json?
-  paymentUrl         Json?
-  paymentAccessToken String?
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-  
-  user               User        @relation(fields: [userId], references: [userId])
-
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-  @@index([userId, createdAt])
-}
-
-enum PaymentEnum {
-  PENDING
-  SUCCESS
-  FAILED
-}
-
-
-/// 專案模板，定義一個完整工程專案的基礎結構
-model ProjectTemplate {
-  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name        String /// 專案模板名稱，必填
-  description String? /// 專案模板描述，選填
-  priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
-  createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
-  updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間
-}
-/// 工程模板，定義工程層級資料
-model EngineeringTemplate {
-  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  name        String /// 工程模板名稱
-  description String? /// 工程模板描述
-  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
-  createdAt   DateTime             @default(now()) /// 建立時間
-  updatedAt   DateTime             @default(now()) /// 更新時間
-}
-/// 任務模板，隸屬於某個工程模板，定義工程內的任務
-model TaskTemplate {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description   String?
-  priority      Int?               @default(0) /// 優先順序
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @default(now())
-
-  subTaskRelations      TaskTemplateSubTaskTemplate[] /// 關聯到的子任務模板關聯
-}
-/// 子任務模板模型，定義任務模板中的子任務結構
-model SubTaskTemplate {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name            String         /// 子任務模板名稱
-  description     String?        /// 子任務模板描述
-  plannedStart    DateTime?      /// 預計開始時間
-  plannedEnd      DateTime?      /// 預計結束時間
-  equipmentCount  Int?           /// 預計設備數量
-  priority        Int?           @default(0) /// 優先順序，數字越小優先度越高
-  status          String?        @default("pending") /// 預設子任務模板狀態
-  completionRate  Float?         @default(0) /// 預設完成率，0～100%
-  isMandatory     Boolean        @default(true) /// 是否為必須任務，預設為必須
-  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
-  parentTemplateId String?       @db.ObjectId /// 來源模板 ID，用於記錄複製來源
-  createdAt       DateTime       @default(now()) /// 建立時間
-  updatedAt       DateTime       @default(now()) /// 更新時間
-
-  // 新增反向關聯
-  taskTemplateRelations TaskTemplateSubTaskTemplate[] /// 關聯到的任務模板關聯
-}
-
-
-//

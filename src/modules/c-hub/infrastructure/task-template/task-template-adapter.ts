@@ -13,6 +13,7 @@ export const taskTemplateAdapter = {
       name: prismaModel.name,
       description: prismaModel.description,
       priority: prismaModel.priority ?? additionalData?.priority ?? 0,
+      engineeringTemplateId: prismaModel.engineeringTemplateId ?? null,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -23,6 +24,7 @@ export const taskTemplateAdapter = {
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
     if (domainModel.priority !== undefined) data.priority = domainModel.priority;
+    if (domainModel.engineeringTemplateId !== undefined) data.engineeringTemplateId = domainModel.engineeringTemplateId;
     return data;
   }
 };

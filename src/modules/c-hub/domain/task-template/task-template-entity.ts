@@ -3,6 +3,7 @@ export interface TaskTemplate {
   name: string;
   description: string | null;
   priority: number; // 改為數字類型
+  engineeringTemplateId: string | null; // 添加工程模板ID欄位
   createdAt: Date;
   updatedAt: Date;
 }
@@ -11,6 +12,7 @@ export interface CreateTaskTemplateProps {
   name: string;
   description?: string | null;
   priority?: number; // 改為數字類型
+  engineeringTemplateId?: string | null; // 添加工程模板ID欄位
 }
 
 export type UpdateTaskTemplateProps = Partial<CreateTaskTemplateProps>;
