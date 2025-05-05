@@ -77,19 +77,27 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
     }
   }
 
-  // 更新方法：根據工程模板ID查詢任務模板
+  // 透過 TemplateRelation 查詢工程模板下的任務模板
   async findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
     try {
-      // 使用新的關聯字段 engineeringTemplateId 進行查詢
-      const prismaTemplates = await prisma.taskTemplate.findMany({
+      // 先查出所有關聯的 TaskTemplate id
+      const relations = await prisma.templateRelation.findMany({
         where: {
-          engineeringTemplate: {
-            id: engineeringTemplateId
-          }
-        }
+          parentType: 'EngineeringTemplate',
+          parentId: engineeringTemplateId,
+          childType: 'TaskTemplate',
+        },
+        orderBy: { orderIndex: 'asc' }
       });
-
-      return prismaTemplates.map(template => taskTemplateAdapter.toDomain(template));
+      const taskTemplateIds = relations.map(r => r.childId);
+      if (taskTemplateIds.length === 0) return [];
+      // 查詢所有對應的 TaskTemplate
+      const prismaTemplates = await prisma.taskTemplate.findMany({
+        where: { id: { in: taskTemplateIds } }
+      });
+      // 依照關聯順序排序
+      const idToTemplate = Object.fromEntries(prismaTemplates.map(t => [t.id, t]));
+      return taskTemplateIds.map(id => idToTemplate[id]).filter(Boolean).map(template => taskTemplateAdapter.toDomain(template));
     } catch (error) {
       console.error(`Failed to find task templates by engineering template ID ${engineeringTemplateId}:`, error);
       throw error;

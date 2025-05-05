@@ -244,9 +244,6 @@ model EngineeringTemplate {
   priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間
   updatedAt   DateTime             @default(now()) /// 更新時間
-  
-  // 添加與 TaskTemplate 的關聯
-  taskTemplates TaskTemplate[] // 該工程模板擁有的任務模板
 }
 /// 任務模板，隸屬於某個工程模板，定義工程內的任務
 model TaskTemplate {
@@ -256,10 +253,6 @@ model TaskTemplate {
   priority      Int?               @default(0) /// 優先順序
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @default(now())
-  
-  // 添加與 EngineeringTemplate 的關聯 
-  engineeringTemplateId String?    @db.ObjectId // 所屬工程模板 ID
-  engineeringTemplate   EngineeringTemplate?  @relation(fields: [engineeringTemplateId], references: [id]) // 所屬工程模板
 }
 /// 子任務模板模型，定義任務模板中的子任務結構
 model SubTaskTemplate {
@@ -278,7 +271,19 @@ model SubTaskTemplate {
   createdAt       DateTime       @default(now()) /// 建立時間
   updatedAt       DateTime       @default(now()) /// 更新時間
 }
+model TemplateRelation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  parentType    String   // e.g. "ProjectTemplate"、"EngineeringTemplate"、"TaskTemplate"
+  parentId      String   @db.ObjectId
+  childType     String   // e.g. "EngineeringTemplate"、"TaskTemplate"、"SubTaskTemplate"
+  childId       String   @db.ObjectId
+  orderIndex    Int?     @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
+  @@index([parentType, parentId])
+  @@index([childType, childId])
+}
 
 /// 專案成員模型，定義專案的成員及其角色
 model ProjectMember {

@@ -13,7 +13,6 @@ export const taskTemplateAdapter = {
       name: prismaModel.name,
       description: prismaModel.description,
       priority: prismaModel.priority ?? additionalData?.priority ?? 0,
-      engineeringTemplateId: prismaModel.engineeringTemplateId, // 修正這裡，不用再加 ?? null
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -24,12 +23,6 @@ export const taskTemplateAdapter = {
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
     if (domainModel.priority !== undefined) data.priority = domainModel.priority;
-    // 使用正確的欄位類型
-    if (domainModel.engineeringTemplateId !== undefined) {
-      data.engineeringTemplate = domainModel.engineeringTemplateId
-        ? { connect: { id: domainModel.engineeringTemplateId } }
-        : { disconnect: true };
-    }
     return data;
   }
 };
