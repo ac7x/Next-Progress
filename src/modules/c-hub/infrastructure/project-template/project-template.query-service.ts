@@ -7,7 +7,6 @@ export const ProjectTemplateQueryService = {
         try {
             // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
             return prisma.projectTemplate.findMany({
-                where: { isActive: true },
                 orderBy: { createdAt: 'desc' },
             }) as unknown as ProjectTemplate[];
         } catch (err) {

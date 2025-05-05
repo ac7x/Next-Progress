@@ -20,7 +20,6 @@ export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplatePr
     try {
         const template = await templateService.createTemplate({
             ...data,
-            isActive: data.isActive ?? true,
         });
 
         if (!isValidSubTaskTemplate(template)) {

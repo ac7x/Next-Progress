@@ -3,7 +3,6 @@ export interface WarehouseInstance {
   name: string;
   description: string | null;
   location?: string | null;
-  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -12,14 +11,12 @@ export interface CreateWarehouseInstanceProps {
   name: string;
   description?: string | null;
   location?: string | null;
-  isActive?: boolean;
 }
 
 export interface UpdateWarehouseInstanceProps {
   name?: string;
   description?: string | null;
   location?: string | null;
-  isActive?: boolean;
 }
 
 // 型別守衛函數

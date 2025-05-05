@@ -36,8 +36,7 @@ export function EngineeringTemplateAddTaskForm({
       await createTaskTemplate({
         name,
         description: description || null,
-        engineeringId: engineeringTemplate.id,
-        isActive: true
+        engineeringId: engineeringTemplate.id
       });
 
       setName('');

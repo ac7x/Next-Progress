@@ -1,1 +1,18 @@
-//
+/// 專案模板，定義一個完整工程專案的基礎結構
+model ProjectTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name        String /// 專案模板名稱，必填
+  description String? /// 專案模板描述，選填
+  priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
+  updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間
+}
+/// 工程模板，定義工程層級資料
+model EngineeringTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name        String /// 工程模板名稱
+  description String? /// 工程模板描述
+  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間
+  updatedAt   DateTime             @default(now()) /// 更新時間
+}

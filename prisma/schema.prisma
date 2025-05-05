@@ -177,7 +177,6 @@ model ProjectInstance {
   priority    Int?          @default(0) /// 模板優先順序，數字越小優先度越高
   startDate   DateTime /// 專案開始日期
   endDate     DateTime? /// 專案結束日期，選填
-  isActive    Boolean       @default(true) /// 專案是否啟用，預設為啟用
   progress    Float         @default(0.0) /// 專案整體進度百分比，預設 0
   minQuantity Int           @default(1) /// 最低設備數量，預設為 1
   maxQuantity Int? /// 最高設備數量，選填
@@ -190,16 +189,6 @@ model ProjectInstance {
   tasks       TaskInstance[]        @relation("ProjectTasks") /// 專案底下的任務清單
   members     ProjectMember[] /// 專案成員清單
   attachments Attachment[] /// 附件清單
-}
-/// 專案模板，定義一個完整工程專案的基礎結構
-model ProjectTemplate {
-  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name        String /// 專案模板名稱，必填
-  description String? /// 專案模板描述，選填
-  isActive    Boolean              @default(true) /// 模板是否啟用，預設為啟用
-  priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
-  createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
-  updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間
 }
 /// 工程模型，專案內的工程細分單位
 model EngineeringInstance {
@@ -214,16 +203,6 @@ model EngineeringInstance {
   priority    Int?        @default(0) /// 工程優先順序，數字越小優先度越高
   createdAt   DateTime    @default(now()) /// 建立時間
   updatedAt   DateTime    @updatedAt /// 更新時間
-}
-/// 工程模板，定義工程層級資料
-model EngineeringTemplate {
-  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  name        String /// 工程模板名稱
-  description String? /// 工程模板描述
-  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
-  createdAt   DateTime             @default(now()) /// 建立時間
-  updatedAt   DateTime             @default(now()) /// 更新時間
-  tasks       TaskTemplate[]       /// 關聯的任務模板清單
 }
 /// 任務間依賴關係模型
 model TaskDependency {
@@ -262,7 +241,6 @@ model TaskTemplate {
   name          String
   description   String?
   engineeringId String?            @db.ObjectId
-  engineering   EngineeringTemplate? @relation(fields: [engineeringId], references: [id])
   priority      Int?               @default(0) /// 優先順序
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @default(now())
@@ -341,7 +319,6 @@ model WarehouseInstance {
   name        String
   description String?
   location    String?
-  isActive    Boolean         @default(true)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -399,3 +376,26 @@ enum PaymentEnum {
   SUCCESS
   FAILED
 }
+
+
+/// 專案模板，定義一個完整工程專案的基礎結構
+model ProjectTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name        String /// 專案模板名稱，必填
+  description String? /// 專案模板描述，選填
+  priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
+  updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間
+}
+/// 工程模板，定義工程層級資料
+model EngineeringTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name        String /// 工程模板名稱
+  description String? /// 工程模板描述
+  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間
+  updatedAt   DateTime             @default(now()) /// 更新時間
+}
+
+
+//
