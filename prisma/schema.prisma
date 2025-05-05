@@ -204,6 +204,17 @@ model EngineeringInstance {
   createdAt   DateTime    @default(now()) /// 建立時間
   updatedAt   DateTime    @updatedAt /// 更新時間
 }
+/// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
+model TaskTemplateSubTaskTemplate {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  taskTemplateId  String         @db.ObjectId /// 任務模板 ID（外鍵）
+  subTaskTemplateId String       @db.ObjectId /// 子任務模板 ID（外鍵）
+  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
+  taskTemplate    TaskTemplate   @relation(fields: [taskTemplateId], references: [id]) /// 關聯到的任務模板
+  subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
+
+  @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
+}
 /// 任務間依賴關係模型
 model TaskDependency {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
@@ -235,18 +246,6 @@ model TaskInstance {
   dependencies         TaskDependency[] @relation("TaskAsDependency") /// 被依賴的清單
   dependents           TaskDependency[] @relation("TaskAsDependentOn") /// 依賴他人的清單
 }
-/// 任務模板，隸屬於某個工程模板，定義工程內的任務
-model TaskTemplate {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description   String?
-  engineeringId String?            @db.ObjectId
-  priority      Int?               @default(0) /// 優先順序
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @default(now())
-
-  subTaskRelations      TaskTemplateSubTaskTemplate[] /// 關聯到的子任務模板關聯
-}
 /// 子任務實例模型，細分任務的更小步驟
 model SubTaskInstance {
   id                   String       @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
@@ -267,37 +266,6 @@ model SubTaskInstance {
   task                 TaskInstance @relation(fields: [taskId], references: [id]) /// 所屬任務關聯
   createdAt            DateTime     @default(now()) /// 建立時間
   updatedAt            DateTime     @default(now()) /// 更新時間
-}
-/// 子任務模板模型，定義任務模板中的子任務結構
-model SubTaskTemplate {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name            String         /// 子任務模板名稱
-  description     String?        /// 子任務模板描述
-  plannedStart    DateTime?      /// 預計開始時間
-  plannedEnd      DateTime?      /// 預計結束時間
-  equipmentCount  Int?           /// 預計設備數量
-  priority        Int?           @default(0) /// 優先順序，數字越小優先度越高
-  status          String?        @default("pending") /// 預設子任務模板狀態
-  completionRate  Float?         @default(0) /// 預設完成率，0～100%
-  isMandatory     Boolean        @default(true) /// 是否為必須任務，預設為必須
-  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
-  parentTemplateId String?       @db.ObjectId /// 來源模板 ID，用於記錄複製來源
-  createdAt       DateTime       @default(now()) /// 建立時間
-  updatedAt       DateTime       @default(now()) /// 更新時間
-
-  // 新增反向關聯
-  taskTemplateRelations TaskTemplateSubTaskTemplate[] /// 關聯到的任務模板關聯
-}
-/// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
-model TaskTemplateSubTaskTemplate {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskTemplateId  String         @db.ObjectId /// 任務模板 ID（外鍵）
-  subTaskTemplateId String       @db.ObjectId /// 子任務模板 ID（外鍵）
-  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
-  taskTemplate    TaskTemplate   @relation(fields: [taskTemplateId], references: [id]) /// 關聯到的任務模板
-  subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
-
-  @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
 }
 
 /// 附件模型，定義可以掛在專案或任務下的檔案附件
@@ -395,6 +363,40 @@ model EngineeringTemplate {
   priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間
   updatedAt   DateTime             @default(now()) /// 更新時間
+  tasks       TaskTemplate[]       /// 關聯的任務模板清單
+}
+/// 任務模板，隸屬於某個工程模板，定義工程內的任務
+model TaskTemplate {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String?
+  engineeringId String?            @db.ObjectId
+  engineering   EngineeringTemplate? @relation(fields: [engineeringId], references: [id])
+  priority      Int?               @default(0) /// 優先順序
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @default(now())
+
+  subTaskRelations      TaskTemplateSubTaskTemplate[] /// 關聯到的子任務模板關聯
+}
+/// 子任務模板模型，定義任務模板中的子任務結構
+model SubTaskTemplate {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
+  name            String         /// 子任務模板名稱
+  description     String?        /// 子任務模板描述
+  plannedStart    DateTime?      /// 預計開始時間
+  plannedEnd      DateTime?      /// 預計結束時間
+  equipmentCount  Int?           /// 預計設備數量
+  priority        Int?           @default(0) /// 優先順序，數字越小優先度越高
+  status          String?        @default("pending") /// 預設子任務模板狀態
+  completionRate  Float?         @default(0) /// 預設完成率，0～100%
+  isMandatory     Boolean        @default(true) /// 是否為必須任務，預設為必須
+  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
+  parentTemplateId String?       @db.ObjectId /// 來源模板 ID，用於記錄複製來源
+  createdAt       DateTime       @default(now()) /// 建立時間
+  updatedAt       DateTime       @default(now()) /// 更新時間
+
+  // 新增反向關聯
+  taskTemplateRelations TaskTemplateSubTaskTemplate[] /// 關聯到的任務模板關聯
 }
 
 
