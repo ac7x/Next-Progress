@@ -1,7 +1,8 @@
 import { CreateTaskTemplateProps, TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
 import { ITaskTemplateRepository } from '@/modules/c-hub/domain/task-template/task-template-repository';
+import { TemplateTypes } from '@/modules/c-hub/domain/template-relation/template-relation-entity';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, TemplateRelation } from '@prisma/client';
 import { taskTemplateAdapter } from './task-template-adapter';
 
 export class TaskTemplateRepository implements ITaskTemplateRepository {
@@ -80,24 +81,31 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
   // 透過 TemplateRelation 查詢工程模板下的任務模板
   async findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
     try {
-      // 先查出所有關聯的 TaskTemplate id
+      // 查詢關聯關係
       const relations = await prisma.templateRelation.findMany({
         where: {
-          parentType: 'EngineeringTemplate',
+          parentType: TemplateTypes.ENGINEERING_TEMPLATE,
           parentId: engineeringTemplateId,
-          childType: 'TaskTemplate',
+          childType: TemplateTypes.TASK_TEMPLATE
         },
         orderBy: { orderIndex: 'asc' }
-      });
-      const taskTemplateIds = relations.map(r => r.childId);
+      }) as TemplateRelation[];
+
+      // 獲取所有任務模板ID
+      const taskTemplateIds = relations.map((r: TemplateRelation) => r.childId);
       if (taskTemplateIds.length === 0) return [];
-      // 查詢所有對應的 TaskTemplate
+
+      // 查詢所有任務模板詳情
       const prismaTemplates = await prisma.taskTemplate.findMany({
         where: { id: { in: taskTemplateIds } }
       });
-      // 依照關聯順序排序
-      const idToTemplate = Object.fromEntries(prismaTemplates.map(t => [t.id, t]));
-      return taskTemplateIds.map(id => idToTemplate[id]).filter(Boolean).map(template => taskTemplateAdapter.toDomain(template));
+
+      // 按關聯中的順序排序並返回
+      const idToTemplate = new Map(prismaTemplates.map(t => [t.id, t]));
+      return taskTemplateIds
+        .map((id: string) => idToTemplate.get(id))
+        .filter((template): template is NonNullable<typeof template> => template !== undefined)
+        .map(template => taskTemplateAdapter.toDomain(template));
     } catch (error) {
       console.error(`Failed to find task templates by engineering template ID ${engineeringTemplateId}:`, error);
       throw error;
