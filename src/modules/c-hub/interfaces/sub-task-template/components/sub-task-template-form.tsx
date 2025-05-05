@@ -14,43 +14,33 @@ interface SubTaskTemplateFormProps {
 export function SubTaskTemplateForm({ taskTemplateId, onSuccess, onCancel }: SubTaskTemplateFormProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!name.trim()) {
-      setError('子任務模板名稱不能為空');
-      return;
-    }
-
-    setIsSubmitting(true);
     setError(null);
+    setIsSubmitting(true);
 
     try {
+      if (!name.trim()) {
+        throw new Error('子任務名稱不能為空');
+      }
+
       await createSubTaskTemplate({
         name,
         description: description || null,
-        taskTemplateId,
-        priority,
-        isActive: true
+        taskTemplateId
       });
 
       setName('');
       setDescription('');
-      setPriority(0);
 
-      if (onSuccess) {
-        onSuccess();
-      }
-
+      if (onSuccess) onSuccess();
       router.refresh();
-    } catch (error) {
-      setError(error instanceof Error ? error.message : '建立子任務模板失敗');
-      console.error('建立子任務模板失敗:', error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '建立子任務模板失敗');
     } finally {
       setIsSubmitting(false);
     }
@@ -59,24 +49,24 @@ export function SubTaskTemplateForm({ taskTemplateId, onSuccess, onCancel }: Sub
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-2 text-red-600 bg-red-50 rounded border border-red-200">
+        <div className="p-2 text-red-600 bg-red-50 rounded border border-red-200 text-sm">
           {error}
         </div>
       )}
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1">
-          子任務模板名稱
+          子任務名稱
         </label>
         <input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="輸入子任務模板名稱"
+          placeholder="子任務名稱"
           required
           disabled={isSubmitting}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-sm"
         />
       </div>
 
@@ -89,44 +79,26 @@ export function SubTaskTemplateForm({ taskTemplateId, onSuccess, onCancel }: Sub
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="輸入描述（可選）"
+          placeholder="描述（可選）"
           disabled={isSubmitting}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-sm"
         />
       </div>
 
-      <div>
-        <label htmlFor="priority" className="block text-sm font-medium mb-1">
-          優先級
-        </label>
-        <select
-          id="priority"
-          value={priority}
-          onChange={(e) => setPriority(Number(e.target.value))}
-          className="w-full p-2 border rounded"
-          disabled={isSubmitting}
-        >
-          <option value="0">高</option>
-          <option value="1">中</option>
-          <option value="2">低</option>
-        </select>
-      </div>
-
-      <div className="flex justify-end space-x-2">
+      <div className="flex justify-end gap-2">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-gray-700 border rounded hover:bg-gray-50"
+            className="px-3 py-1 border rounded hover:bg-gray-100 text-sm"
             disabled={isSubmitting}
           >
             取消
           </button>
         )}
-
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
           disabled={isSubmitting}
         >
           {isSubmitting ? '處理中...' : '新增子任務模板'}

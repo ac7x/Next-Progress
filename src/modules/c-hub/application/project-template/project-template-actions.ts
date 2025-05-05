@@ -16,7 +16,6 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     const templateService = new ProjectTemplateDomainService(projectTemplateRepository);
     const template = await templateService.createTemplate({
       ...data,
-      isActive: data.isActive ?? true,
       priority: data.priority ?? 0, // 新增 priority
     });
     if (!isValidProjectTemplate(template)) {

@@ -10,7 +10,7 @@ const templateService = new TaskTemplateDomainService(taskTemplateRepository);
 // Command: 建立任務模板
 export async function createTaskTemplateCommand(data: CreateTaskTemplateProps): Promise<TaskTemplate> {
     if (!data.name?.trim()) throw new Error('任務模板名稱為必填項');
-    const template = await templateService.createTemplate({ ...data, isActive: data.isActive ?? true });
+    const template = await templateService.createTemplate(data);
     if (!isValidTaskTemplate(template)) throw new Error('無效的任務模板數據');
     revalidatePath('/client/template');
     return template;

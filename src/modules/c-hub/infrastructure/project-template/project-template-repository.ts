@@ -11,7 +11,6 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
       data: {
         name: data.name,
         description: data.description ?? null,
-        isActive: data.isActive ?? true,
         priority: data.priority ?? 0,
       },
     }) as unknown as ProjectTemplate;
@@ -20,24 +19,15 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
   async list(): Promise<ProjectTemplate[]> {
     // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
     return prisma.projectTemplate.findMany({
-      where: {
-        isActive: true,
-      },
       orderBy: { createdAt: 'desc' },
     }) as unknown as ProjectTemplate[];
   }
 
   async delete(id: string): Promise<void> {
     try {
-      // 使用邏輯刪除而非物理刪除
-      const result = await prisma.projectTemplate.updateMany({
+      await prisma.projectTemplate.delete({
         where: { id },
-        data: { isActive: false },
       });
-
-      if (result.count === 0) {
-        console.warn(`ID為 ${id} 的專案模板不存在或已被刪除`);
-      }
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         console.warn(`ID為 ${id} 的專案模板不存在或已被刪除`);
@@ -63,7 +53,6 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
     return prisma.projectTemplate.findFirst({
       where: {
         id,
-        isActive: true,
       },
     }) as unknown as ProjectTemplate | null;
   }

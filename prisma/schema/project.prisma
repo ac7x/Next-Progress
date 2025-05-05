@@ -26,7 +26,6 @@ model ProjectInstance {
   priority    Int?          @default(0) /// 模板優先順序，數字越小優先度越高
   startDate   DateTime /// 專案開始日期
   endDate     DateTime? /// 專案結束日期，選填
-  isActive    Boolean       @default(true) /// 專案是否啟用，預設為啟用
   progress    Float         @default(0.0) /// 專案整體進度百分比，預設 0
   minQuantity Int           @default(1) /// 最低設備數量，預設為 1
   maxQuantity Int? /// 最高設備數量，選填
@@ -45,7 +44,6 @@ model ProjectTemplate {
   id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
   name        String /// 專案模板名稱，必填
   description String? /// 專案模板描述，選填
-  isActive    Boolean              @default(true) /// 模板是否啟用，預設為啟用
   priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
   updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間

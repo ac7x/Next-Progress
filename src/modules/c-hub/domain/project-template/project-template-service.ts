@@ -29,7 +29,6 @@ export class ProjectTemplateService {
       id,
       name,
       description,
-      isActive: true,
       priority: priority ?? 0, // 新增 priority
       createdAt: now,
       updatedAt: now,

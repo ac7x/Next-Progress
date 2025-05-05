@@ -31,7 +31,6 @@ export const subTaskTemplateAdapter = {
       orderIndex: prismaModel.orderIndex ?? 0,
       parentTemplateId: prismaModel.parentTemplateId,
       taskTemplateId, // 從關聯表或附加數據中獲取
-      isActive: additionalData?.isActive ?? true,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -39,7 +38,6 @@ export const subTaskTemplateAdapter = {
 
   toPersistence(domainModel: Partial<SubTaskTemplate>): Prisma.SubTaskTemplateUpdateInput {
     const data: Prisma.SubTaskTemplateUpdateInput = {};
-
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
     if (domainModel.plannedStart !== undefined) data.plannedStart = domainModel.plannedStart;

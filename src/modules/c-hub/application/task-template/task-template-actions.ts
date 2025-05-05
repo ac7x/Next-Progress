@@ -25,7 +25,6 @@ export async function createTaskTemplate(data: CreateTaskTemplateProps): Promise
   try {
     const template = await templateService.createTemplate({
       ...data,
-      isActive: data.isActive ?? true,
     });
 
     if (!isValidTaskTemplate(template)) {
@@ -53,11 +52,15 @@ export async function updateTaskTemplate(
 
   try {
     const template = await templateService.updateTemplate(id, data);
+
     revalidatePath('/client/template');
+
     return template;
   } catch (error) {
-    console.error('Failed to update task template:', error);
-    throw error instanceof Error ? error : new Error('Failed to update task template');
+    console.error('更新任務模板失敗:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('更新任務模板失敗: ' + String(error));
   }
 }
 
@@ -70,8 +73,10 @@ export async function deleteTaskTemplate(id: string): Promise<void> {
     await templateService.deleteTemplate(id);
     revalidatePath('/client/template');
   } catch (error) {
-    console.error('Failed to delete task template:', error);
-    throw error instanceof Error ? error : new Error('Failed to delete task template');
+    console.error('刪除任務模板失敗:', error);
+    throw error instanceof Error
+      ? error
+      : new Error('刪除任務模板失敗: ' + String(error));
   }
 }
 

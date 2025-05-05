@@ -39,8 +39,7 @@ export function TaskTemplateForm({ engineeringTemplates }: TaskTemplateFormProps
       await createTaskTemplateCommand({
         name,
         description: description || null,
-        engineeringId: engineeringId || null,
-        isActive: true
+        engineeringId: engineeringId || null
       });
 
       setName('');

@@ -20,7 +20,6 @@ export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplatePr
     try {
         const template = await templateService.createTemplate({
             ...data,
-            isActive: data.isActive ?? true,
         });
 
         if (!isValidSubTaskTemplate(template)) {
@@ -50,8 +49,8 @@ export async function updateSubTaskTemplateCommand(
 
     try {
         const template = await templateService.updateTemplate(id, data);
-        revalidatePath('/client/template');
 
+        revalidatePath('/client/template');
         if (data.taskTemplateId) {
             revalidatePath(`/client/template/subtask-template/${data.taskTemplateId}`);
         }
@@ -59,7 +58,9 @@ export async function updateSubTaskTemplateCommand(
         return template;
     } catch (error) {
         console.error('更新子任務模板失敗:', error);
-        throw error instanceof Error ? error : new Error('更新子任務模板失敗');
+        throw error instanceof Error
+            ? error
+            : new Error('更新子任務模板失敗: ' + String(error));
     }
 }
 
@@ -71,6 +72,7 @@ export async function deleteSubTaskTemplateCommand(id: string, taskTemplateId?: 
 
     try {
         await templateService.deleteTemplate(id);
+
         revalidatePath('/client/template');
         if (taskTemplateId) {
             revalidatePath(`/client/template/subtask-template/${taskTemplateId}`);

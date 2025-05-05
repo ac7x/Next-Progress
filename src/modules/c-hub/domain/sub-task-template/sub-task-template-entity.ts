@@ -12,7 +12,6 @@ export interface SubTaskTemplate {
   orderIndex: number; // 添加必要字段
   parentTemplateId: string | null;
   taskTemplateId: string; // 存储关联的任务模板ID
-  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,19 +29,17 @@ export interface CreateSubTaskTemplateProps {
   isMandatory?: boolean; // 添加必要字段
   orderIndex?: number; // 添加必要字段
   parentTemplateId?: string | null;
-  isActive?: boolean;
 }
 
 export type UpdateSubTaskTemplateProps = Partial<CreateSubTaskTemplateProps>;
 
 // 型別守衛函數
 export function isValidSubTaskTemplate(template: unknown): template is SubTaskTemplate {
-  return typeof template === 'object' && 
+  return typeof template === 'object' &&
     template !== null &&
     'id' in template &&
     'name' in template &&
     'taskTemplateId' in template &&
-    'isActive' in template &&
     'isMandatory' in template && // 添加检查
     'orderIndex' in template && // 添加检查
     'createdAt' in template &&
