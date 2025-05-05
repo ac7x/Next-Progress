@@ -52,10 +52,7 @@ export async function createTaskTemplate(data: CreateTaskTemplateProps): Promise
     }
 
     try {
-        const template = await templateService.createTemplate({
-            ...data,
-            isActive: data.isActive ?? true,
-        });
+        const template = await templateService.createTemplate(data);
 
         if (!isValidTaskTemplate(template)) {
             throw new Error('無效的任務模板數據');
