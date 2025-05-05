@@ -15,15 +15,12 @@ model EngineeringTemplate {
   priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間
   updatedAt   DateTime             @default(now()) /// 更新時間
-  tasks       TaskTemplate[]       /// 關聯的任務模板清單
 }
 /// 任務模板，隸屬於某個工程模板，定義工程內的任務
 model TaskTemplate {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   description   String?
-  engineeringId String?            @db.ObjectId
-  engineering   EngineeringTemplate? @relation(fields: [engineeringId], references: [id])
   priority      Int?               @default(0) /// 優先順序
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @default(now())

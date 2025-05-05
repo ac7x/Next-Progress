@@ -204,25 +204,6 @@ model EngineeringInstance {
   createdAt   DateTime    @default(now()) /// 建立時間
   updatedAt   DateTime    @updatedAt /// 更新時間
 }
-/// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
-model TaskTemplateSubTaskTemplate {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskTemplateId  String         @db.ObjectId /// 任務模板 ID（外鍵）
-  subTaskTemplateId String       @db.ObjectId /// 子任務模板 ID（外鍵）
-  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
-  taskTemplate    TaskTemplate   @relation(fields: [taskTemplateId], references: [id]) /// 關聯到的任務模板
-  subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
-
-  @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
-}
-/// 任務間依賴關係模型
-model TaskDependency {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskId        String     @db.ObjectId /// 任務 ID（被依賴者）
-  dependentOnId String     @db.ObjectId /// 依賴的任務 ID
-  task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
-  dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
-}
 /// 任務模型，定義一個工程內的單一任務
 model TaskInstance {
   id                   String        @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
@@ -267,6 +248,26 @@ model SubTaskInstance {
   createdAt            DateTime     @default(now()) /// 建立時間
   updatedAt            DateTime     @default(now()) /// 更新時間
 }
+/// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
+model TaskTemplateSubTaskTemplate {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  taskTemplateId  String         @db.ObjectId /// 任務模板 ID（外鍵）
+  subTaskTemplateId String       @db.ObjectId /// 子任務模板 ID（外鍵）
+  orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
+  taskTemplate    TaskTemplate   @relation(fields: [taskTemplateId], references: [id]) /// 關聯到的任務模板
+  subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
+
+  @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
+}
+/// 任務間依賴關係模型
+model TaskDependency {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  taskId        String     @db.ObjectId /// 任務 ID（被依賴者）
+  dependentOnId String     @db.ObjectId /// 依賴的任務 ID
+  task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
+  dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
+}
+
 
 /// 附件模型，定義可以掛在專案或任務下的檔案附件
 model Attachment {
@@ -363,15 +364,12 @@ model EngineeringTemplate {
   priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間
   updatedAt   DateTime             @default(now()) /// 更新時間
-  tasks       TaskTemplate[]       /// 關聯的任務模板清單
 }
 /// 任務模板，隸屬於某個工程模板，定義工程內的任務
 model TaskTemplate {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   description   String?
-  engineeringId String?            @db.ObjectId
-  engineering   EngineeringTemplate? @relation(fields: [engineeringId], references: [id])
   priority      Int?               @default(0) /// 優先順序
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @default(now())

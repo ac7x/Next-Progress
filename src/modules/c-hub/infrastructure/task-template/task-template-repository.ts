@@ -11,20 +11,11 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
       const createData: Prisma.TaskTemplateCreateInput = {
         name: data.name,
         description: data.description,
+        priority: data.priority ?? 0
       };
 
-      // 只在存在時添加 engineeringId
-      if (data.engineeringId) {
-        createData.engineering = {
-          connect: { id: data.engineeringId }
-        };
-      }
-
       const prismaTemplate = await prisma.taskTemplate.create({
-        data: createData,
-        include: {
-          engineering: true
-        }
+        data: createData
       });
 
       // 使用適配器將 Prisma 模型映射到領域實體
@@ -36,21 +27,13 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
   }
 
   async list(): Promise<TaskTemplate[]> {
-    const prismaTemplates = await prisma.taskTemplate.findMany({
-      include: {
-        engineering: true
-      }
-    });
-
+    const prismaTemplates = await prisma.taskTemplate.findMany();
     return prismaTemplates.map(template => taskTemplateAdapter.toDomain(template));
   }
 
   async getById(id: string): Promise<TaskTemplate | null> {
     const template = await prisma.taskTemplate.findUnique({
-      where: { id },
-      include: {
-        engineering: true
-      }
+      where: { id }
     });
 
     if (!template) return null;
@@ -64,22 +47,11 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
 
     if (data.name !== undefined) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
-
-    // 條件性地添加 engineeringId
-    if (data.engineeringId !== undefined) {
-      if (data.engineeringId) {
-        updateData.engineering = { connect: { id: data.engineeringId } };
-      } else {
-        updateData.engineering = { disconnect: true };
-      }
-    }
+    if (data.priority !== undefined) updateData.priority = data.priority;
 
     const prismaTemplate = await prisma.taskTemplate.update({
       where: { id },
-      data: updateData,
-      include: {
-        engineering: true
-      }
+      data: updateData
     });
 
     return taskTemplateAdapter.toDomain(prismaTemplate, data);
@@ -105,26 +77,7 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
     }
   }
 
-  async findByEngineeringTemplateId(engineeringTemplateId: string): Promise<TaskTemplate[]> {
-    // 1. 組裝 Prisma 查詢條件
-    // 2. 查詢資料庫
-    // 3. 包裝為領域模型
-    try {
-      const taskTemplates = await prisma.taskTemplate.findMany({
-        where: {
-          engineeringId: engineeringTemplateId
-        },
-        include: {
-          engineering: true
-        }
-      });
-
-      return taskTemplates.map(template => taskTemplateAdapter.toDomain(template));
-    } catch (error) {
-      console.error('Failed to find task templates by engineering template ID:', error);
-      return [];
-    }
-  }
+  // 移除 findByEngineeringTemplateId 方法，因為不再需要
 }
 
 export const taskTemplateRepository = new TaskTemplateRepository();

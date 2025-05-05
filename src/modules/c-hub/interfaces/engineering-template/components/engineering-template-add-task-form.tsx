@@ -35,8 +35,7 @@ export function EngineeringTemplateAddTaskForm({
 
       await createTaskTemplate({
         name,
-        description: description || null,
-        engineeringId: engineeringTemplate.id
+        description: description || null
       });
 
       setName('');
@@ -94,7 +93,7 @@ export function EngineeringTemplateAddTaskForm({
 
       <div>
         <label className="block text-sm font-medium mb-1">
-          所屬工程模板
+          建立於工程模板
         </label>
         <div className="p-2 border rounded bg-gray-50">
           {engineeringTemplate.name}

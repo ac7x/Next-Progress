@@ -2,24 +2,20 @@
 
 /**
  * 任務模板建立表單元件
- * 功能：用於建立新的任務模板，支援選擇所屬工程模板
+ * 功能：用於建立新的任務模板
  * 使用方式：
- * <TaskTemplateForm engineeringTemplates={engineeringTemplates} />
+ * <TaskTemplateForm />
  */
 
 import { createTaskTemplateCommand } from '@/modules/c-hub/application/task-template/task-template.command';
-import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-interface TaskTemplateFormProps {
-  engineeringTemplates: EngineeringTemplate[];
-}
+interface TaskTemplateFormProps { }
 
-export function TaskTemplateForm({ engineeringTemplates }: TaskTemplateFormProps) {
+export function TaskTemplateForm({ }: TaskTemplateFormProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [engineeringId, setEngineeringId] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,13 +34,11 @@ export function TaskTemplateForm({ engineeringTemplates }: TaskTemplateFormProps
 
       await createTaskTemplateCommand({
         name,
-        description: description || null,
-        engineeringId: engineeringId || null
+        description: description || null
       });
 
       setName('');
       setDescription('');
-      setEngineeringId('');
       setSuccess(true);
       router.refresh();
     } catch (err) {
@@ -97,26 +91,6 @@ export function TaskTemplateForm({ engineeringTemplates }: TaskTemplateFormProps
           disabled={isSubmitting}
           className="w-full p-2 border rounded"
         />
-      </div>
-
-      <div>
-        <label htmlFor="engineeringId" className="block text-sm font-medium mb-1">
-          所屬工程模板（可選）
-        </label>
-        <select
-          id="engineeringId"
-          value={engineeringId}
-          onChange={(e) => setEngineeringId(e.target.value)}
-          className="w-full p-2 border rounded"
-          disabled={isSubmitting}
-        >
-          <option value="">-- 不指定工程模板 --</option>
-          {engineeringTemplates.map(template => (
-            <option key={template.id} value={template.id}>
-              {template.name}
-            </option>
-          ))}
-        </select>
       </div>
 
       <button

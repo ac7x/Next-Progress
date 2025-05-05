@@ -92,17 +92,3 @@ export async function getTaskTemplate(id: string): Promise<TaskTemplate | null> 
     return null;
   }
 }
-
-export async function listTaskTemplatesByEngineeringId(engineeringId: string): Promise<TaskTemplate[]> {
-  if (!engineeringId?.trim()) {
-    throw new Error('工程模板 ID 為必填項');
-  }
-
-  try {
-    // 直接呼叫 repository 的 CQRS 查詢方法
-    return await taskTemplateRepository.findByEngineeringTemplateId(engineeringId);
-  } catch (error) {
-    console.error('Failed to list task templates for engineering:', error);
-    return [];
-  }
-}

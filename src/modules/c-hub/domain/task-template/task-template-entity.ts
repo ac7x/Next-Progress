@@ -2,7 +2,6 @@ export interface TaskTemplate {
   id: string;
   name: string;
   description: string | null;
-  engineeringId: string | null;
   priority: number; // 改為數字類型
   createdAt: Date;
   updatedAt: Date;
@@ -11,7 +10,6 @@ export interface TaskTemplate {
 export interface CreateTaskTemplateProps {
   name: string;
   description?: string | null;
-  engineeringId?: string | null;
   priority?: number; // 改為數字類型
 }
 
