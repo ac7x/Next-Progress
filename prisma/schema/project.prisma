@@ -53,36 +53,15 @@ model EngineeringInstance {
   createdAt   DateTime    @default(now()) /// 建立時間
   updatedAt   DateTime    @updatedAt /// 更新時間
 }
-/// 任務間依賴關係模型
-model TaskDependency {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskId        String     @db.ObjectId /// 任務 ID（被依賴者）
-  dependentOnId String     @db.ObjectId /// 依賴的任務 ID
-  task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
-  dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
-}
-/// 任務模型，定義一個工程內的單一任務
-model TaskInstance {
-  id                   String        @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  name                 String /// 任務名稱
-  description          String? /// 任務描述
-  plannedStart         DateTime? /// 計畫開始時間
-  plannedEnd           DateTime? /// 計畫結束時間
-  equipmentCount       Int? /// 預計設備數量
-  actualEquipmentCount Int?         @default(0) /// 實際設備數量
-  priority             Int?         @default(0) /// 優先順序，數字越小優先度越高
-  status               String?      @default("pending") /// 任務狀態，預設為待處理
-  completionRate       Float?       @default(0) /// 任務完成率，0～100%
-  engineeringId        String        @db.ObjectId /// 所屬工程 ID
-  engineering          EngineeringInstance @relation(fields: [engineeringId], references: [id]) /// 所屬工程關聯
-  projectId            String        @db.ObjectId /// 所屬專案 ID
-  project              ProjectInstance @relation("ProjectTasks", fields: [projectId], references: [id]) /// 所屬專案關聯
-  createdAt            DateTime      @default(now()) /// 建立時間
-  updatedAt            DateTime      @updatedAt /// 更新時間，自動更新
-  subtasks             SubTaskInstance[] /// 任務底下的子任務實例清單
-  attachments          Attachment[] /// 任務附件清單
-  dependencies         TaskDependency[] @relation("TaskAsDependency") /// 被依賴的清單
-  dependents           TaskDependency[] @relation("TaskAsDependentOn") /// 依賴他人的清單
+/// 工程模板，定義工程層級資料
+model EngineeringTemplate {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name        String /// 工程模板名稱
+  description String? /// 工程模板描述
+  priority    Int?                 @default(0) /// 工程模板優先順序，數字越小優先度越高
+  createdAt   DateTime             @default(now()) /// 建立時間
+  updatedAt   DateTime             @default(now()) /// 更新時間
+  tasks       TaskTemplate[]       /// 關聯的任務模板清單
 }
 /// 任務模板，隸屬於某個工程模板，定義工程內的任務
 model TaskTemplate {
@@ -90,32 +69,12 @@ model TaskTemplate {
   name          String
   description   String?
   engineeringId String?            @db.ObjectId
+  engineering   EngineeringTemplate? @relation(fields: [engineeringId], references: [id])
   priority      Int?               @default(0) /// 優先順序
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @default(now())
 
   subTaskRelations      TaskTemplateSubTaskTemplate[] /// 關聯到的子任務模板關聯
-}
-/// 子任務實例模型，細分任務的更小步驟
-model SubTaskInstance {
-  id                   String       @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  name                 String /// 子任務名稱
-  description          String? /// 子任務描述
-  plannedStart         DateTime? /// 預計開始時間
-  plannedEnd           DateTime? /// 預計結束時間
-  equipmentCount       Int? /// 預計設備數量
-  actualEquipmentCount Int?         @default(0) /// 實際設備數量
-  startDate            DateTime? /// 真實開始時間
-  endDate              DateTime? /// 真實結束時間
-  actualStart          DateTime? /// 實際開始日期
-  actualEnd            DateTime? /// 實際結束日期
-  priority             Int?         @default(0) /// 優先順序
-  status               String?      @default("pending") /// 子任務狀態
-  completionRate       Float?       @default(0) /// 子任務完成率
-  taskId               String       @db.ObjectId /// 所屬任務 ID
-  task                 TaskInstance @relation(fields: [taskId], references: [id]) /// 所屬任務關聯
-  createdAt            DateTime     @default(now()) /// 建立時間
-  updatedAt            DateTime     @default(now()) /// 更新時間
 }
 /// 子任務模板模型，定義任務模板中的子任務結構
 model SubTaskTemplate {
@@ -147,4 +106,56 @@ model TaskTemplateSubTaskTemplate {
   subTaskTemplate SubTaskTemplate @relation(fields: [subTaskTemplateId], references: [id]) /// 關聯到的子任務模板
 
   @@unique([taskTemplateId, subTaskTemplateId]) /// 確保每個任務模板與子任務模板的組合是唯一的
+}
+/// 任務間依賴關係模型
+model TaskDependency {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  taskId        String     @db.ObjectId /// 任務 ID（被依賴者）
+  dependentOnId String     @db.ObjectId /// 依賴的任務 ID
+  task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
+  dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
+}
+/// 任務模型，定義一個工程內的單一任務
+model TaskInstance {
+  id                   String        @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name                 String /// 任務名稱
+  description          String? /// 任務描述
+  plannedStart         DateTime? /// 計畫開始時間
+  plannedEnd           DateTime? /// 計畫結束時間
+  equipmentCount       Int? /// 預計設備數量
+  actualEquipmentCount Int?         @default(0) /// 實際設備數量
+  priority             Int?         @default(0) /// 優先順序，數字越小優先度越高
+  status               String?      @default("pending") /// 任務狀態，預設為待處理
+  completionRate       Float?       @default(0) /// 任務完成率，0～100%
+  engineeringId        String        @db.ObjectId /// 所屬工程 ID
+  engineering          EngineeringInstance @relation(fields: [engineeringId], references: [id]) /// 所屬工程關聯
+  projectId            String        @db.ObjectId /// 所屬專案 ID
+  project              ProjectInstance @relation("ProjectTasks", fields: [projectId], references: [id]) /// 所屬專案關聯
+  createdAt            DateTime      @default(now()) /// 建立時間
+  updatedAt            DateTime      @updatedAt /// 更新時間，自動更新
+  subtasks             SubTaskInstance[] /// 任務底下的子任務實例清單
+  attachments          Attachment[] /// 任務附件清單
+  dependencies         TaskDependency[] @relation("TaskAsDependency") /// 被依賴的清單
+  dependents           TaskDependency[] @relation("TaskAsDependentOn") /// 依賴他人的清單
+}
+/// 子任務實例模型，細分任務的更小步驟
+model SubTaskInstance {
+  id                   String       @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
+  name                 String /// 子任務名稱
+  description          String? /// 子任務描述
+  plannedStart         DateTime? /// 預計開始時間
+  plannedEnd           DateTime? /// 預計結束時間
+  equipmentCount       Int? /// 預計設備數量
+  actualEquipmentCount Int?         @default(0) /// 實際設備數量
+  startDate            DateTime? /// 真實開始時間
+  endDate              DateTime? /// 真實結束時間
+  actualStart          DateTime? /// 實際開始日期
+  actualEnd            DateTime? /// 實際結束日期
+  priority             Int?         @default(0) /// 優先順序
+  status               String?      @default("pending") /// 子任務狀態
+  completionRate       Float?       @default(0) /// 子任務完成率
+  taskId               String       @db.ObjectId /// 所屬任務 ID
+  task                 TaskInstance @relation(fields: [taskId], references: [id]) /// 所屬任務關聯
+  createdAt            DateTime     @default(now()) /// 建立時間
+  updatedAt            DateTime     @default(now()) /// 更新時間
 }
