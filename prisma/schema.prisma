@@ -355,8 +355,6 @@ model TaskInstance {
   updatedAt            DateTime      @updatedAt /// 更新時間，自動更新
   subtasks             SubTaskInstance[] /// 任務底下的子任務實例清單
   attachments          Attachment[] /// 任務附件清單
-  dependencies         TaskDependency[] @relation("TaskAsDependency") /// 被依賴的清單
-  dependents           TaskDependency[] @relation("TaskAsDependentOn") /// 依賴他人的清單
 }
 /// 子任務實例模型，細分任務的更小步驟
 model SubTaskInstance {
@@ -378,12 +376,4 @@ model SubTaskInstance {
   task                 TaskInstance @relation(fields: [taskId], references: [id]) /// 所屬任務關聯
   createdAt            DateTime     @default(now()) /// 建立時間
   updatedAt            DateTime     @default(now()) /// 更新時間
-}
-/// 任務間依賴關係模型
-model TaskDependency {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵
-  taskId        String     @db.ObjectId /// 任務 ID（被依賴者）
-  dependentOnId String     @db.ObjectId /// 依賴的任務 ID
-  task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
-  dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
 }

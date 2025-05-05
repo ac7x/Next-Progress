@@ -83,7 +83,9 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
       // 使用新的關聯字段 engineeringTemplateId 進行查詢
       const prismaTemplates = await prisma.taskTemplate.findMany({
         where: {
-          engineeringTemplateId: engineeringTemplateId
+          engineeringTemplate: {
+            id: engineeringTemplateId
+          }
         }
       });
 
