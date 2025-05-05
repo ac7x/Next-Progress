@@ -20,7 +20,6 @@ export async function createEngineeringTemplate(
   }
 
   try {
-    // 移除 isActive 屬性，這不存在於 CreateEngineeringTemplateProps 中
     const template = await templateService.createTemplate(data);
 
     if (!isValidEngineeringTemplate(template)) {
