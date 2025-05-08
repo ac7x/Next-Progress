@@ -17,7 +17,7 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
       throw new Error('無效的專案模板數據');
     }
     // 與 engineering-template 一致：資料變更後刷新快取
-    await revalidatePath('/client/template');
+    revalidatePath('/client/template');
     return template;
   } catch (error) {
     console.error('Failed to create template:', error);
@@ -31,7 +31,7 @@ export async function deleteProjectTemplateCommand(id: string): Promise<void> {
     // 直接呼叫 repository 進行物理刪除
     await projectTemplateRepository.delete(id);
     // 與 engineering-template 一致：資料變更後刷新快取
-    await revalidatePath('/client/template');
+    revalidatePath('/client/template');
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');
@@ -50,7 +50,7 @@ export async function updateProjectTemplateCommand(
       priority: data.priority ?? 0,
     });
     // 與 engineering-template 一致：資料變更後刷新快取
-    await revalidatePath('/client/template');
+    revalidatePath('/client/template');
     return template;
   } catch (error) {
     console.error('Failed to update template:', error);

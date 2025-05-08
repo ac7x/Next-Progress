@@ -10,8 +10,6 @@ export function useProjectTemplateQuery() {
       // 型別守衛，確保回傳陣列
       return Array.isArray(result) ? result : [];
     },
-    // staleTime: 1000 * 60, // 1分鐘快取（已移除）
     staleTime: 0, // 強制每次都查詢，不使用快取
-    // cacheTime: 0, // 已移除，避免型別錯誤
   });
 }
