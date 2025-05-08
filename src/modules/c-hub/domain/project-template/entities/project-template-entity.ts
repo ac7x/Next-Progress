@@ -1,13 +1,12 @@
-import { ProjectTemplateDescription } from './value-objects/project-template-description.vo';
-import { ProjectTemplateName } from './value-objects/project-template-name.vo';
-import { ProjectTemplatePriority } from './value-objects/project-template-priority.vo';
+import { ProjectTemplateDescription } from '../value-objects/project-template-description.vo';
+import { ProjectTemplateName } from '../value-objects/project-template-name.vo';
+import { ProjectTemplatePriority } from '../value-objects/project-template-priority.vo';
 
-// 只定義 Entity 與型別守衛
 export interface ProjectTemplate {
   id: string;
   name: ProjectTemplateName;
   description: ProjectTemplateDescription;
-  priority: ProjectTemplatePriority; // 必為 number，不可 null
+  priority: ProjectTemplatePriority;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,7 +14,7 @@ export interface ProjectTemplate {
 export interface CreateProjectTemplateProps {
   name: ProjectTemplateName;
   description?: ProjectTemplateDescription;
-  priority?: ProjectTemplatePriority; // 可選，預設 0
+  priority?: ProjectTemplatePriority;
 }
 
 // 型別守衛函數確保型別安全

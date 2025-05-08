@@ -1,5 +1,5 @@
-import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
-import { IProjectInstanceRepository } from '@/modules/c-hub/domain/project-instance/project-instance-repository';
+import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { IProjectInstanceRepository } from '@/modules/c-hub/domain/project-instance/repositories/project-instance-repository';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { projectInstanceAdapter } from './project-instance-adapters';
 

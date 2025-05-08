@@ -1,4 +1,4 @@
-import { CreateProjectInstanceProps, ProjectInstance } from './project-instance-entity';
+import { CreateProjectInstanceProps, ProjectInstance } from '../entities/project-instance-entity';
 
 export interface IProjectInstanceRepository {
   create(data: CreateProjectInstanceProps): Promise<ProjectInstance>;

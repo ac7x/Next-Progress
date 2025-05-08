@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { useState } from 'react';
 import { ProjectTemplateCreateModal } from './project-template-create-modal';
 

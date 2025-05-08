@@ -1,7 +1,7 @@
 'use client';
 
 import { createProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
-import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { useState } from 'react';
 
 // CQRS: Command Hook，專責建立

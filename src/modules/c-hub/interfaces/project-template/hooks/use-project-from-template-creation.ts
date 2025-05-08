@@ -1,7 +1,7 @@
 'use client';
 
 import { createProjectFromTemplate } from '@/modules/c-hub/application/project-instance/project-instance-actions';
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

@@ -1,5 +1,5 @@
-import { CreateProjectTemplateProps, ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
-import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/project-template-service';
+import { CreateProjectTemplateProps, ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
+import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/services/project-template-service';
 import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
 
 // Application CommandHandler: 建立專案模板

@@ -1,6 +1,6 @@
 import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-queries';
 import { GetProjectTemplateListQueryHandler } from '@/modules/c-hub/application/project-template/project-template.query-handler';
-import { ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { EngineeringTemplateForm } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-form';
 import { EngineeringTemplateList } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-list';
 import { CreateProjectTemplateForm } from '@/modules/c-hub/interfaces/project-template/components/project-template-create-form';

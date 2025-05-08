@@ -1,4 +1,4 @@
-import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import type { Prisma } from '@prisma/client';
 

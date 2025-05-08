@@ -1,9 +1,9 @@
 'use server';
 
-import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { projectInstanceService } from '@/modules/c-hub/domain/project-instance/services/project-instance-service';
 import { revalidatePath } from 'next/cache';
 import { getProjectInstanceProgressSummary } from './project-instance-progress-summary-query';
-import { projectInstanceService } from './project-instance-service';
 import { CreateProjectInstanceFromTemplateCommandHandler } from './project-instance.command-handler';
 
 export async function createProject(data: CreateProjectInstanceProps): Promise<ProjectInstance> {

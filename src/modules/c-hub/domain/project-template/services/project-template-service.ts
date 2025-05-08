@@ -1,8 +1,8 @@
+import { CreateProjectTemplateProps, ProjectTemplate } from '../entities/project-template-entity';
 import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from '../project-template-events';
-import { CreateProjectTemplateProps, ProjectTemplate } from './project-template-entity';
-import { ProjectTemplateDescription } from './value-objects/project-template-description.vo';
-import { ProjectTemplateName } from './value-objects/project-template-name.vo';
-import { ProjectTemplatePriority } from './value-objects/project-template-priority.vo';
+import { ProjectTemplateDescription } from '../value-objects/project-template-description.vo';
+import { ProjectTemplateName } from '../value-objects/project-template-name.vo';
+import { ProjectTemplatePriority } from '../value-objects/project-template-priority.vo';
 
 // 只負責領域邏輯與驗證
 export class ProjectTemplateService {
@@ -44,69 +44,12 @@ export class ProjectTemplateService {
   }
 }
 
-// 只負責領域邏輯與驗證
+
 export class ProjectTemplateDomainService {
-  async createTemplate(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
-    if (!data.name.trim()) {
-      throw new Error('Template name cannot be empty');
+  validateTemplate(data: Partial<CreateProjectTemplateProps>) {
+    if (!data.name || typeof data.name !== 'string' || !data.name.trim()) {
+      throw new Error('專案模板名稱不能為空');
     }
-    // 僅產生領域物件，不寫入資料庫
-    const template: ProjectTemplate = {
-      id: '', // 由 repository 實際產生
-      name: data.name,
-      description: data.description ?? null,
-      priority: data.priority ?? 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    new ProjectTemplateCreatedEvent(template.id, template.name);
-    return template;
-  }
-
-  async deleteTemplate(id: string): Promise<void> {
-    if (!id.trim()) {
-      throw new Error('Template ID cannot be empty');
-    }
-    // 發布領域事件
-    new ProjectTemplateDeletedEvent(id);
-  }
-
-  async getTemplateById(id: string): Promise<ProjectTemplate | null> {
-    if (!id.trim()) {
-      throw new Error('Template ID cannot be empty');
-    }
-    // 模擬從儲存庫獲取模板
-    return null;
-  }
-
-  async listTemplates(): Promise<ProjectTemplate[]> {
-    // 模擬從儲存庫獲取模板列表
-    return [];
-  }
-
-  async updateTemplate(id: string, data: Partial<CreateProjectTemplateProps>): Promise<ProjectTemplate> {
-    if (!id.trim()) throw new Error('Template ID cannot be empty');
-    if (data.name && !data.name.trim()) throw new Error('Template name cannot be empty');
-    // 可加上更多業務規則
-    const updatedTemplate: ProjectTemplate = {
-      id,
-      name: data.name ?? 'Default Name',
-      description: data.description ?? null,
-      priority: data.priority ?? 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    // 發布領域事件
-    new ProjectTemplateUpdatedEvent(updatedTemplate.id, updatedTemplate.name);
-    return updatedTemplate;
-  }
-
-  validateTemplate(template: Partial<ProjectTemplate> | Partial<CreateProjectTemplateProps>): void {
-    if ('name' in template && !template.name?.trim()) {
-      throw new Error('Template name cannot be empty');
-    }
-    if (template.name && template.name.length > 100) {
-      throw new Error('Template name too long');
-    }
+    // 可擴充更多領域驗證
   }
 }

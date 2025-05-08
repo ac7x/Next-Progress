@@ -1,5 +1,5 @@
-import { CreateProjectTemplateProps, ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
-import { IProjectTemplateRepository } from '@/modules/c-hub/domain/project-template/project-template-repository';
+import { CreateProjectTemplateProps, ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
+import { IProjectTemplateRepository } from '@/modules/c-hub/domain/project-template/repositories/project-template-repository';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
 

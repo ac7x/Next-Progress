@@ -1,4 +1,4 @@
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 
 // Query Service: 只負責查詢資料庫中的專案模板列表

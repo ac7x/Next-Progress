@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { useProjectFromTemplateCreation } from '../hooks/use-project-from-template-creation';
 import { ProjectTemplateFormFields } from './project-template-form-fields';
 

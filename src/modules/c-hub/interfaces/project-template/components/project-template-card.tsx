@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
-import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ProjectTemplateCreateButton } from './project-template-create-button';

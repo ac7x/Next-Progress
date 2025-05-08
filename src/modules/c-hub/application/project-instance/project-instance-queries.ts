@@ -1,7 +1,7 @@
 'use server';
 
-import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
-import { projectInstanceService } from './project-instance-service';
+import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { projectInstanceService } from '@/modules/c-hub/domain/project-instance/services/project-instance-service';
 
 export async function listProjects(): Promise<ProjectInstance[]> {
   try {
