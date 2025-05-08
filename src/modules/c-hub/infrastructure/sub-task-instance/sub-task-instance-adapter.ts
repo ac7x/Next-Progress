@@ -17,6 +17,7 @@ export const subTaskAdapter = {
       status: (prismaSubTaskInstance.status || 'TODO') as SubTaskInstanceStatus,
       completionRate: prismaSubTaskInstance.completionRate || 0,
       taskId: prismaSubTaskInstance.taskId,
+      parentTaskId: prismaSubTaskInstance.parentTaskId || null,
       createdAt: prismaSubTaskInstance.createdAt,
       updatedAt: prismaSubTaskInstance.updatedAt
     };

@@ -70,6 +70,7 @@ export class SubTaskInstanceRepository implements ISubTaskInstanceRepository {
         where: { id },
         data: {
           ...data,
+          parentTaskId: data.parentTaskId || null,
           updatedAt: new Date()
         }
       });
