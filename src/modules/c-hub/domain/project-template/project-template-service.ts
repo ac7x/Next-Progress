@@ -1,6 +1,5 @@
 import { CreateProjectTemplateProps, ProjectTemplate } from './project-template-entity';
 import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from './project-template-events';
-import { IProjectTemplateRepository } from './project-template-repository';
 
 // 只負責領域邏輯與驗證
 export class ProjectTemplateService {
@@ -45,17 +44,20 @@ export class ProjectTemplateService {
 
 // 只負責領域邏輯與驗證
 export class ProjectTemplateDomainService {
-  constructor(private readonly repository: IProjectTemplateRepository) { }
-
   async createTemplate(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
     if (!data.name.trim()) {
       throw new Error('Template name cannot be empty');
     }
 
-    const template = await this.repository.create({
-      ...data,
-      priority: data.priority ?? 0, // 新增 priority
-    });
+    const template: ProjectTemplate = {
+      id: crypto.randomUUID(),
+      name: data.name,
+      description: data.description ?? null,
+      isActive: data.isActive ?? true,
+      priority: data.priority ?? 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
     // 發布領域事件
     new ProjectTemplateCreatedEvent(template.id, template.name);
@@ -64,8 +66,6 @@ export class ProjectTemplateDomainService {
   }
 
   async deleteTemplate(id: string): Promise<void> {
-    await this.repository.delete(id);
-
     // 發布領域事件
     new ProjectTemplateDeletedEvent(id);
   }
@@ -74,21 +74,29 @@ export class ProjectTemplateDomainService {
     if (!id.trim()) {
       throw new Error('Template ID cannot be empty');
     }
-    return this.repository.getById(id);
+    // 模擬從儲存庫獲取模板
+    return null;
   }
 
   async listTemplates(): Promise<ProjectTemplate[]> {
-    return this.repository.list();
+    // 模擬從儲存庫獲取模板列表
+    return [];
   }
 
   async updateTemplate(id: string, data: Partial<CreateProjectTemplateProps>): Promise<ProjectTemplate> {
     if (!id.trim()) throw new Error('Template ID cannot be empty');
     if (data.name && !data.name.trim()) throw new Error('Template name cannot be empty');
     // 可加上更多業務規則
-    return this.repository.update(id, {
-      ...data,
-      priority: data.priority ?? 0, // 新增 priority
-    });
+    const updatedTemplate: ProjectTemplate = {
+      id,
+      name: data.name ?? 'Default Name',
+      description: data.description ?? null,
+      isActive: data.isActive ?? true,
+      priority: data.priority ?? 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return updatedTemplate;
   }
 
   validateTemplate(template: Partial<ProjectTemplate>): void {

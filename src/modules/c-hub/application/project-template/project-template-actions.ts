@@ -61,28 +61,3 @@ export async function updateProjectTemplateCommand(
     throw new Error(error instanceof Error ? error.message : 'Failed to update template');
   }
 }
-
-// CQRS: Query UseCases
-export async function listProjectTemplatesQuery(): Promise<ProjectTemplate[]> {
-  try {
-    const templateService = new ProjectTemplateDomainService(projectTemplateRepository);
-    const templates = await templateService.listTemplates();
-    return templates.filter(isValidProjectTemplate);
-  } catch (error) {
-    console.error('Failed to list templates:', error);
-    return [];
-  }
-}
-
-export async function getProjectTemplateQuery(id: string): Promise<ProjectTemplate | null> {
-  if (!id) throw new Error('Template ID is required');
-  try {
-    const templateService = new ProjectTemplateDomainService(projectTemplateRepository);
-    const template = await templateService.getTemplateById(id);
-    if (!template || !isValidProjectTemplate(template)) return null;
-    return template;
-  } catch (error) {
-    console.error('Failed to get template:', error);
-    return null;
-  }
-}
