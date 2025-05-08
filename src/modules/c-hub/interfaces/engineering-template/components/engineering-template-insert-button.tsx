@@ -112,8 +112,8 @@ export function EngineeringTemplateInsertButton({
       <button
         onClick={handleOpenModal}
         className={`${className || 'px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm'}`}
-        disabled={!projects || projects.length === 0 || isPending}
-        title={(!projects || projects.length === 0) ? '請先建立專案才能生成工程' : ''}
+        disabled={isPending}
+        title={isPending ? '處理中...' : ''}
       >
         生成至專案
       </button>
