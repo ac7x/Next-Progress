@@ -193,8 +193,10 @@ export function EngineeringTemplateInsertButton({
                       overflowY: taskTemplates.length > 5 ? 'auto' : 'visible'
                     }}
                   >
-                    {taskTemplates.map(task => (
+                    {taskTemplates.map((task, idx) => (
                       <div key={task.id} className="flex items-center gap-2">
+                        {/* 顯示優先級 */}
+                        <span className="text-xs text-gray-400 w-10 text-right">#{idx}</span>
                         <span className="flex-1 text-sm">{task.name}</span>
                         <input
                           type="number"
