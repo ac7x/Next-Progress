@@ -23,15 +23,20 @@ export function ProjectTemplateEditForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const success = await updateTemplate(template.id, {
-      name,
-      description: description || null,
-      priority: Number(priority),
-    });
+    try {
+      const success = await updateTemplate(template.id, {
+        name,
+        description: description || null,
+        priority: Number(priority),
+      });
 
-    // 只負責 UI 狀態，不負責刷新
-    if (success && onSuccessAction) {
-      onSuccessAction();
+      // 只負責 UI 狀態，不負責刷新
+      if (success && onSuccessAction) {
+        onSuccessAction();
+      }
+    } catch (error) {
+      console.error('更新模板失敗:', error);
+      alert('更新失敗，請稍後再試');
     }
   };
 
