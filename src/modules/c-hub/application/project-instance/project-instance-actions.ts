@@ -20,6 +20,7 @@ export async function createProject(data: CreateProjectInstanceProps): Promise<P
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/manage');
     revalidatePath('/client/dashboard');
+    revalidatePath('/client/template'); // P46a3
 
     return project;
   } catch (error) {
@@ -52,6 +53,7 @@ export async function createProjectFromTemplate(
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/manage');
     revalidatePath('/client/dashboard');
+    revalidatePath('/client/template'); // P46a3
 
     return project;
   } catch (error) {
@@ -76,6 +78,7 @@ export async function updateProject(
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/manage');
     revalidatePath('/client/dashboard');
+    revalidatePath('/client/template'); // P46a3
 
     return project;
   } catch (error) {
@@ -95,6 +98,7 @@ export async function deleteProject(id: string): Promise<void> {
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/manage');
     revalidatePath('/client/dashboard');
+    revalidatePath('/client/template'); // P46a3
   } catch (error) {
     console.error('刪除專案失敗:', error);
     throw error instanceof Error ? error : new Error('刪除專案失敗');
