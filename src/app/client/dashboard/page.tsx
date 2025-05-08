@@ -45,9 +45,13 @@ export default function DashboardPage() {
               .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
               .map((task) => (
                 <div key={task.id} className="space-y-2">
-                  {/* 單一職責：任務摘要卡片（顯示 equipmentCount, actualEquipmentCount, completionRate） */}
-                  <TaskInstanceSummaryCard taskInstance={task} />
-                  {/* 子任務區塊（Server Component，查詢 Concern 分離） */}
+                  {/* 顯示優先級 */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 w-12">優先級: {task.priority ?? 0}</span>
+                    <div className="flex-1">
+                      <TaskInstanceSummaryCard taskInstance={task} />
+                    </div>
+                  </div>
                   <Suspense fallback={null}>
                     <TaskInstanceSubTaskInstancesSection taskInstanceId={task.id} />
                   </Suspense>
