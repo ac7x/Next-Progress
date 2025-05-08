@@ -14,7 +14,7 @@ export const projectInstanceAdapter = {
       priority: prismaProject.priority ?? 0, // 確保為 number
       startDate: prismaProject.startDate,
       endDate: prismaProject.endDate,
-      createdBy: prismaProject.createdBy,
+      createdBy: prismaProject.createdBy ?? prismaProject.creator?.userId ?? '', // 修正型別
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
     };
@@ -65,7 +65,7 @@ export const projectInstanceAdapter = {
     // 獲取或創建用戶
     const userId = data.createdBy || DEFAULT_SYSTEM_USER_ID;
 
-    // 檢查用戶是否存在
+    // 檢查 userId 是否存在
     let user = await prisma.user.findFirst({
       where: { userId: userId }
     });
@@ -89,6 +89,7 @@ export const projectInstanceAdapter = {
       creator: {
         connect: { id: user.id }
       },
+      // createdBy 欄位由 Prisma 關聯自動處理
     };
 
     // 添加 priority 欄位

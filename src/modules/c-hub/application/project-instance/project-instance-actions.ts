@@ -49,7 +49,7 @@ export async function createProjectFromTemplate(
   }
 
   try {
-    // 由 Application Command Handler 處理
+    // 由 Command Handler 處理
     const project = await CreateProjectInstanceFromTemplateCommandHandler(templateId, projectData);
 
     // 確保在數據修改後重新驗證頁面數據

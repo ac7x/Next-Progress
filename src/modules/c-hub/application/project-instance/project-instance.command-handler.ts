@@ -1,3 +1,4 @@
+import { getProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-queries'; // Query Concern
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
 import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/project-instance-repository';
 
@@ -12,7 +13,16 @@ export async function CreateProjectInstanceFromTemplateCommandHandler(
     templateId: string,
     projectData: Omit<CreateProjectInstanceProps, 'templateId'>
 ): Promise<ProjectInstance> {
-    // 由 Application Service 負責協調查詢模板與建立專案
-    // 實際查詢模板與組裝資料應在 Service 層完成
-    return projectInstanceRepository.create(projectData);
+    // 查詢模板（Query Concern）
+    const template = await getProjectTemplate(templateId);
+    if (!template) throw new Error('找不到指定的專案模板');
+
+    // 合併模板資料與 projectData，projectData 優先
+    return projectInstanceRepository.create({
+        ...projectData,
+        name: projectData.name || template.name,
+        description: projectData.description ?? template.description,
+        priority: projectData.priority ?? template.priority ?? 0,
+        // 其他欄位以 projectData 為主
+    });
 }

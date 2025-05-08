@@ -22,7 +22,7 @@ export async function UpdateProjectTemplateCommandHandler(
     data: Partial<CreateProjectTemplateProps>
 ): Promise<ProjectTemplate> {
     const domainService = new ProjectTemplateDomainService();
-    domainService.validateTemplate(data);
+    domainService.validateTemplate(data); // 支援 Partial 型別
     // 只協調 repository
     return projectTemplateRepository.update(id, data);
 }

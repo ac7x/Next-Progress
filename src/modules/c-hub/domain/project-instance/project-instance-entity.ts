@@ -8,7 +8,7 @@ export interface ProjectInstance {
   status?: ProjectStatus;
   startDate: Date | null;
   endDate: Date | null;
-  createdBy: string;
+  createdBy: string; // 確保為 string
   createdAt: Date;
   updatedAt: Date;
 }

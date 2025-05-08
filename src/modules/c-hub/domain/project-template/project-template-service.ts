@@ -101,11 +101,11 @@ export class ProjectTemplateDomainService {
     return updatedTemplate;
   }
 
-  validateTemplate(template: Partial<ProjectTemplate>): void {
-    if (!template.name?.trim()) {
+  validateTemplate(template: Partial<ProjectTemplate> | Partial<CreateProjectTemplateProps>): void {
+    if ('name' in template && !template.name?.trim()) {
       throw new Error('Template name cannot be empty');
     }
-    if (template.name.length > 100) {
+    if (template.name && template.name.length > 100) {
       throw new Error('Template name too long');
     }
   }
