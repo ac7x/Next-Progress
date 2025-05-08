@@ -1,15 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { getProjectTemplateListHandler } from '../project-template.controller';
+'use client';
 
-// CQRS: Query Hook，只負責查詢
+import { listProjectTemplates } from '@/modules/c-hub/application/project-template/project-template-queries';
+import { useQuery } from '@tanstack/react-query';
+
+// CQRS: Query Hook，專責查詢
 export function useProjectTemplateQuery() {
   return useQuery({
     queryKey: ['projectTemplates'],
     queryFn: async () => {
-      const result = await getProjectTemplateListHandler();
+      const result = await listProjectTemplates();
       // 型別守衛，確保回傳陣列
       return Array.isArray(result) ? result : [];
     },
-    staleTime: 0, // 強制每次都查詢，不使用快取
   });
 }

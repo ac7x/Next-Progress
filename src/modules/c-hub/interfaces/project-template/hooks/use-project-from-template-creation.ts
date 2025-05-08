@@ -16,12 +16,12 @@ export interface ProjectTemplateFormState {
 export function useProjectFromTemplateCreation(
   template: ProjectTemplate,
   onCloseAction: () => void,
-  currentUserId: string // 新增參數
+  currentUserId: string
 ) {
   const [formState, setFormState] = useState<ProjectTemplateFormState>({
     name: template.name,
     description: template.description || '',
-    priority: String(template.priority ?? 0), // 預設為模板的 priority
+    priority: String(template.priority ?? 0),
     startDate: '',
     endDate: '',
   });
@@ -86,15 +86,12 @@ export function useProjectFromTemplateCreation(
           priority: formState.priority ? parseInt(formState.priority, 10) : 0,
           startDate: formState.startDate ? new Date(formState.startDate) : null,
           endDate: formState.endDate ? new Date(formState.endDate) : null,
-          createdBy: currentUserId // 使用外部傳入的 userId
+          createdBy: currentUserId
         }
       );
 
       setSuccess(true);
-      setTimeout(() => {
-        router.push('/client/manage');
-        router.refresh();
-      }, 1500);
+      router.push('/client/manage');
     } catch (error) {
       setError(error instanceof Error ? error.message : '從模板創建專案失敗');
     } finally {

@@ -4,7 +4,7 @@ import { createProjectTemplateCommand } from '@/modules/c-hub/application/projec
 import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useState } from 'react';
 
-// CQRS: Command Hook，只負責建立
+// CQRS: Command Hook，專責建立
 export function useProjectTemplateCreate() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +15,6 @@ export function useProjectTemplateCreate() {
 
     try {
       await createProjectTemplateCommand(data);
-      // 不負責 router.refresh，SRP: 只負責命令
       return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : '建立專案模板失敗');

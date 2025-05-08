@@ -1,9 +1,8 @@
+import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { ProjectTemplateQueryService } from '@/modules/c-hub/infrastructure/project-template/project-template.query-service';
 
 // Application QueryHandler: 查詢專案模板列表
-// 只負責 Application Query Handler（查詢）
-// 無需 revalidatePath，僅查詢
-export async function GetProjectTemplateListQueryHandler() {
+export async function GetProjectTemplateListQueryHandler(): Promise<ProjectTemplate[]> {
     try {
         // 僅協調查詢服務，符合 CQRS
         return await ProjectTemplateQueryService.list();

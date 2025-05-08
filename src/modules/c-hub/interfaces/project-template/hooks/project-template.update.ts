@@ -1,10 +1,10 @@
 'use client';
 
+import { updateProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 import { CreateProjectTemplateProps } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useState } from 'react';
-import { updateProjectTemplateCommand } from '@/modules/c-hub/application/project-template/project-template-actions';
 
-// CQRS: Command Hook，只負責更新
+// CQRS: Command Hook，專責更新
 export function useProjectTemplateUpdate() {
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
