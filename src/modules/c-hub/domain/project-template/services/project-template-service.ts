@@ -1,5 +1,5 @@
+import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from '../project-template-events';
 import { CreateProjectTemplateProps, ProjectTemplate } from './project-template-entity';
-import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from './project-template-events';
 import { ProjectTemplateDescription } from './value-objects/project-template-description.vo';
 import { ProjectTemplateName } from './value-objects/project-template-name.vo';
 import { ProjectTemplatePriority } from './value-objects/project-template-priority.vo';
