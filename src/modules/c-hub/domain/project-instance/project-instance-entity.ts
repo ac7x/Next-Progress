@@ -4,7 +4,7 @@ export interface ProjectInstance {
   id: string;
   name: string;
   description: string | null;
-  priority?: number | null; // 添加 priority 欄位
+  priority: number; // 統一為 number
   status?: ProjectStatus;
   startDate: Date | null;
   endDate: Date | null;
@@ -16,7 +16,7 @@ export interface ProjectInstance {
 export interface CreateProjectInstanceProps {
   name: string;
   description?: string | null;
-  priority?: number | null; // 添加 priority 欄位
+  priority?: number; // 統一為 number
   status?: ProjectStatus;
   startDate?: Date | null;
   endDate?: Date | null;

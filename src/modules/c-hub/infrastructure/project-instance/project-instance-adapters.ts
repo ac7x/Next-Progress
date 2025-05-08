@@ -11,7 +11,7 @@ export const projectInstanceAdapter = {
       id: prismaProject.id,
       name: prismaProject.name,
       description: prismaProject.description,
-      priority: prismaProject.priority, // 確保包含 priority
+      priority: prismaProject.priority ?? 0, // 確保為 number
       startDate: prismaProject.startDate,
       endDate: prismaProject.endDate,
       createdBy: prismaProject.createdBy,
@@ -92,7 +92,7 @@ export const projectInstanceAdapter = {
     };
 
     // 添加 priority 欄位
-    if (data.priority !== undefined) {
+    if (data.priority !== undefined && data.priority !== null) {
       createInput.priority = data.priority;
     }
 

@@ -33,11 +33,12 @@ export const projectInstanceService = {
       throw new Error('找不到指定的專案模板');
     }
 
-    // 從模板建立專案
+    // 從模板建立專案，優先以 projectData 為主
     return projectInstanceRepository.create({
       ...projectData,
       name: projectData.name || template.name,
-      description: projectData.description || template.description,
+      description: projectData.description ?? template.description,
+      priority: projectData.priority ?? template.priority ?? 0,
       // 其他屬性從 projectData 獲取
     });
   }

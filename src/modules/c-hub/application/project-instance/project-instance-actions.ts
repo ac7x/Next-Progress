@@ -4,6 +4,7 @@ import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/dom
 import { revalidatePath } from 'next/cache';
 import { getProjectInstanceProgressSummary } from './project-instance-progress-summary-query';
 import { projectInstanceService } from './project-instance-service';
+import { CreateProjectInstanceFromTemplateCommandHandler } from './project-instance.command-handler';
 
 export async function createProject(data: CreateProjectInstanceProps): Promise<ProjectInstance> {
   try {
@@ -48,7 +49,8 @@ export async function createProjectFromTemplate(
   }
 
   try {
-    const project = await projectInstanceService.createFromTemplate(templateId, projectData);
+    // 由 Application Command Handler 處理
+    const project = await CreateProjectInstanceFromTemplateCommandHandler(templateId, projectData);
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/manage');

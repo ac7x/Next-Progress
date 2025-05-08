@@ -18,7 +18,7 @@ export function useProjectFromTemplateCreation(template: ProjectTemplate, onClos
   const [formState, setFormState] = useState<ProjectTemplateFormState>({
     name: template.name,
     description: template.description || '',
-    priority: '0',
+    priority: String(template.priority ?? 0), // 預設為模板的 priority
     startDate: '',
     endDate: '',
   });
@@ -31,7 +31,7 @@ export function useProjectFromTemplateCreation(template: ProjectTemplate, onClos
     setFormState({
       name: template.name,
       description: template.description || '',
-      priority: '0',
+      priority: String(template.priority ?? 0),
       startDate: '',
       endDate: '',
     });
