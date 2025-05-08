@@ -2,8 +2,8 @@
 
 import { CreateProjectTemplateProps, ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
-import { CreateProjectTemplateCommandHandler, UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 import { revalidatePath } from 'next/cache';
+import { CreateProjectTemplateCommandHandler, UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 
 // CQRS: Command UseCases
 export async function createProjectTemplateCommand(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
@@ -16,7 +16,8 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     if (!isValidProjectTemplate(template)) {
       throw new Error('無效的專案模板數據');
     }
-    revalidatePath('/client/template');
+    // 與 engineering-template 一致：資料變更後刷新快取
+    await revalidatePath('/client/template');
     return template;
   } catch (error) {
     console.error('Failed to create template:', error);
@@ -29,7 +30,8 @@ export async function deleteProjectTemplateCommand(id: string): Promise<void> {
   try {
     // 直接呼叫 repository 進行物理刪除
     await projectTemplateRepository.delete(id);
-    revalidatePath('/client/template');
+    // 與 engineering-template 一致：資料變更後刷新快取
+    await revalidatePath('/client/template');
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');
@@ -47,7 +49,8 @@ export async function updateProjectTemplateCommand(
       ...data,
       priority: data.priority ?? 0,
     });
-    revalidatePath('/client/template');
+    // 與 engineering-template 一致：資料變更後刷新快取
+    await revalidatePath('/client/template');
     return template;
   } catch (error) {
     console.error('Failed to update template:', error);

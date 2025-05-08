@@ -2,6 +2,7 @@ import { ProjectTemplateQueryService } from '@/modules/c-hub/infrastructure/proj
 
 // Application QueryHandler: 查詢專案模板列表
 // 只負責 Application Query Handler（查詢）
+// 無需 revalidatePath，僅查詢
 export async function GetProjectTemplateListQueryHandler() {
     try {
         // 僅協調查詢服務，符合 CQRS

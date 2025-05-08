@@ -12,6 +12,7 @@ export async function CreateProjectTemplateCommandHandler(
 
     // 2. 產生領域物件（不含 id/createdAt，由 repository 實際產生）
     // 3. 實際寫入資料庫
+    // 無需 revalidatePath，僅協調領域與儲存庫
     const created = await projectTemplateRepository.create(data);
     return created;
 }
@@ -23,6 +24,6 @@ export async function UpdateProjectTemplateCommandHandler(
 ): Promise<ProjectTemplate> {
     const domainService = new ProjectTemplateDomainService();
     domainService.validateTemplate(data); // 支援 Partial 型別
-    // 只協調 repository
+    // 無需 revalidatePath，僅協調領域與儲存庫
     return projectTemplateRepository.update(id, data);
 }
