@@ -1,4 +1,4 @@
-import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-actions';
+import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-queries';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
 import { ProjectInstanceList } from '@/modules/c-hub/interfaces/project-instance/components/project-instance-list';
 import { Suspense } from 'react';

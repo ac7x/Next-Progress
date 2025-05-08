@@ -1,4 +1,4 @@
-import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-actions';
+import { listProjects } from '@/modules/c-hub/application/project-instance/project-instance-queries';
 import { GetProjectTemplateListQueryHandler } from '@/modules/c-hub/application/project-template/project-template.query-handler';
 import { ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { EngineeringTemplateForm } from '@/modules/c-hub/interfaces/engineering-template/components/engineering-template-form';
@@ -8,9 +8,9 @@ import { ProjectTemplateList } from '@/modules/c-hub/interfaces/project-template
 import { Suspense } from 'react';
 
 // Application Query Handlers
-import { getEngineeringTemplateListHandler } from '@/modules/c-hub/interfaces/engineering-template/server-actions/get-engineering-template-list-handler';
-import { listTaskTemplatesQuery } from '@/modules/c-hub/application/task-template/task-template.query';
 import { listSubTaskTemplatesByTaskTemplateId } from '@/modules/c-hub/application/sub-task-template/sub-task-template-actions';
+import { listTaskTemplatesQuery } from '@/modules/c-hub/application/task-template/task-template.query';
+import { getEngineeringTemplateListHandler } from '@/modules/c-hub/interfaces/engineering-template/server-actions/get-engineering-template-list-handler';
 
 export default async function TemplatePage() {
   try {
