@@ -1,10 +1,11 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
+import { TaskInstanceSummaryCard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance-summary-card';
+import { useQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { TaskInstanceDetails, TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
 
 export default function DashboardPage() {
   // 預設查詢全部任務，可依需求傳入 projectId
@@ -20,7 +21,6 @@ export default function DashboardPage() {
     return (
       <div className="p-6">
         <div className="p-4 bg-red-50 text-red-700 rounded-md">
-          <h2 className="font-bold text-xl mb-2">載入失敗</h2>
           <p>無法載入任務資料，請稍後再試</p>
         </div>
       </div>
@@ -45,8 +45,8 @@ export default function DashboardPage() {
               .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
               .map((task) => (
                 <div key={task.id} className="space-y-2">
-                  {/* 單一職責：任務詳情（Client） */}
-                  <TaskInstanceDetails taskInstance={task} />
+                  {/* 單一職責：任務摘要卡片（顯示 equipmentCount, actualEquipmentCount, completionRate） */}
+                  <TaskInstanceSummaryCard taskInstance={task} />
                   {/* 子任務區塊（Server Component，查詢 Concern 分離） */}
                   <Suspense fallback={null}>
                     <TaskInstanceSubTaskInstancesSection taskInstanceId={task.id} />

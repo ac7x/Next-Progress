@@ -25,3 +25,5 @@
 // 匯出主要元件
 export * from './components/task-instance-details';
 export { default as TaskInstanceSubTaskInstancesSection } from './components/task-instance-sub-task-instances-section';
+export * from './components/task-instance-summary-card';
+
