@@ -82,7 +82,8 @@ export function EngineeringTemplateInsertButton({
       .map((t, idx) => ({
         taskTemplateId: t.id,
         count: Number(taskCounts[t.id]) || 0,
-        priority: idx
+        // 修正：優先級應取自 t.priority，若無則 fallback idx
+        priority: typeof t.priority === 'number' ? t.priority : idx
       }))
       .filter(t => t.count > 0);
 
