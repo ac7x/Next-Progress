@@ -107,16 +107,3 @@ model TaskDependency {
   task          TaskInstance @relation("TaskAsDependency", fields: [taskId], references: [id]) /// 任務關聯（自己）
   dependentOn   TaskInstance @relation("TaskAsDependentOn", fields: [dependentOnId], references: [id]) /// 依賴的任務關聯（他人）
 }
-
-/// 附件模型，定義可以掛在專案或任務下的檔案附件
-model Attachment {
-  id String @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
-  name String /// 附件名稱
-  url String /// 附件檔案網址
-  uploadedBy String @db.ObjectId /// 上傳者的使用者 ID（外鍵）
-  projectId String? @db.ObjectId /// 所屬專案 ID，可為空（外鍵）
-  taskId String? @db.ObjectId /// 所屬任務 ID，可為空（外鍵）
-  project ProjectInstance? @relation(fields: [projectId], references: [id]) /// 關聯到的專案（選填）
-  task TaskInstance? @relation(fields: [taskId], references: [id]) /// 關聯到的任務（選填）
-  createdAt DateTime @default(now()) /// 建立時間
-}
