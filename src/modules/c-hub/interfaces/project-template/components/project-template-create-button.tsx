@@ -6,9 +6,10 @@ import { ProjectTemplateCreateModal } from './project-template-create-modal';
 
 interface ProjectTemplateCreateButtonProps {
   template: ProjectTemplate;
+  currentUserId?: string; // 新增
 }
 
-export function ProjectTemplateCreateButton({ template }: ProjectTemplateCreateButtonProps) {
+export function ProjectTemplateCreateButton({ template, currentUserId = 'system' }: ProjectTemplateCreateButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -32,7 +33,8 @@ export function ProjectTemplateCreateButton({ template }: ProjectTemplateCreateB
       {isModalOpen && (
         <ProjectTemplateCreateModal
           template={template}
-          onCloseAction={handleCloseModal} // 更新為 onCloseAction
+          onCloseAction={handleCloseModal}
+          currentUserId={currentUserId} // 傳遞
         />
       )}
     </>

@@ -89,7 +89,7 @@ export const projectInstanceAdapter = {
       creator: {
         connect: { id: user.id }
       },
-      // createdBy 欄位由 Prisma 關聯自動處理
+      createdBy: user.id, // 確保為 ObjectId string
     };
 
     // 添加 priority 欄位

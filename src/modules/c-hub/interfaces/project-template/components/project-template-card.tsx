@@ -17,6 +17,7 @@ export function ProjectTemplateCard({ template, onDelete }: ProjectTemplateCardP
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const currentUserId = 'system'; // TODO: 從 context 或 props 取得登入用戶ID
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -54,7 +55,7 @@ export function ProjectTemplateCard({ template, onDelete }: ProjectTemplateCardP
 
   const renderCreateButton = () => (
     <div className="mt-4 flex justify-end">
-      <ProjectTemplateCreateButton template={template} />
+      <ProjectTemplateCreateButton template={template} currentUserId={currentUserId} />
     </div>
   );
 
@@ -103,7 +104,7 @@ export function ProjectTemplateCard({ template, onDelete }: ProjectTemplateCardP
           {isDeleting ? '刪除中...' : '刪除'}
         </button>
         <div className="ml-auto">
-          <ProjectTemplateCreateButton template={template} />
+          <ProjectTemplateCreateButton template={template} currentUserId={currentUserId} />
         </div>
       </div>
       {error && (

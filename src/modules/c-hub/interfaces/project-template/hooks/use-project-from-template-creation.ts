@@ -4,7 +4,6 @@ import { createProjectFromTemplate } from '@/modules/c-hub/application/project-i
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface ProjectTemplateFormState {
   name: string;
@@ -14,7 +13,11 @@ export interface ProjectTemplateFormState {
   endDate: string;
 }
 
-export function useProjectFromTemplateCreation(template: ProjectTemplate, onCloseAction: () => void) {
+export function useProjectFromTemplateCreation(
+  template: ProjectTemplate,
+  onCloseAction: () => void,
+  currentUserId: string // 新增參數
+) {
   const [formState, setFormState] = useState<ProjectTemplateFormState>({
     name: template.name,
     description: template.description || '',
@@ -75,8 +78,6 @@ export function useProjectFromTemplateCreation(template: ProjectTemplate, onClos
     setError(null);
 
     try {
-      const currentUserId = uuidv4().replace(/-/g, '').substring(0, 24);
-
       await createProjectFromTemplate(
         template.id,
         {
@@ -85,7 +86,7 @@ export function useProjectFromTemplateCreation(template: ProjectTemplate, onClos
           priority: formState.priority ? parseInt(formState.priority, 10) : 0,
           startDate: formState.startDate ? new Date(formState.startDate) : null,
           endDate: formState.endDate ? new Date(formState.endDate) : null,
-          createdBy: currentUserId
+          createdBy: currentUserId // 使用外部傳入的 userId
         }
       );
 

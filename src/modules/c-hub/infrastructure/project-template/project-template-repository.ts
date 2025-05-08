@@ -11,7 +11,7 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
         data: {
           name: data.name,
           description: data.description ?? null,
-          priority: data.priority ?? 0,
+          priority: data.priority ?? 0, // 確保為 number
         },
       }) as unknown as ProjectTemplate;
     } catch (error) {
@@ -56,6 +56,7 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
         where: { id },
         data: {
           ...data,
+          priority: data.priority ?? 0, // 確保為 number
           updatedAt: new Date(),
         },
       }) as unknown as ProjectTemplate;

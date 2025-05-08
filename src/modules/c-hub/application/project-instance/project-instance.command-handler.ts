@@ -23,6 +23,7 @@ export async function CreateProjectInstanceFromTemplateCommandHandler(
         name: projectData.name || template.name,
         description: projectData.description ?? template.description,
         priority: projectData.priority ?? template.priority ?? 0,
+        createdBy: projectData.createdBy, // 確保傳遞正確
         // 其他欄位以 projectData 為主
     });
 }

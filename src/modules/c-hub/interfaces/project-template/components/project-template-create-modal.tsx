@@ -7,9 +7,10 @@ import { ProjectTemplateFormFields } from './project-template-form-fields';
 interface ProjectTemplateCreateModalProps {
   template: ProjectTemplate;
   onCloseAction: () => void; // 重命名為 onCloseAction 以符合 Server Action 的命名規則
+  currentUserId: string; // 新增
 }
 
-export function ProjectTemplateCreateModal({ template, onCloseAction }: ProjectTemplateCreateModalProps) {
+export function ProjectTemplateCreateModal({ template, onCloseAction, currentUserId }: ProjectTemplateCreateModalProps) {
   const {
     formState,
     handleNameChange,
@@ -21,7 +22,7 @@ export function ProjectTemplateCreateModal({ template, onCloseAction }: ProjectT
     isCreating,
     error,
     success
-  } = useProjectFromTemplateCreation(template, onCloseAction);
+  } = useProjectFromTemplateCreation(template, onCloseAction, currentUserId);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
