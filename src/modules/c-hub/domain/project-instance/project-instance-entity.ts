@@ -1,26 +1,31 @@
+import { ProjectInstanceCreatedBy } from './value-objects/project-instance-created-by.vo';
+import { ProjectInstanceDescription } from './value-objects/project-instance-description.vo';
+import { ProjectInstanceName } from './value-objects/project-instance-name.vo';
+import { ProjectInstancePriority } from './value-objects/project-instance-priority.vo';
+
 export type ProjectStatus = 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 
 export interface ProjectInstance {
   id: string;
-  name: string;
-  description: string | null;
-  priority: number; // 統一為 number
+  name: ProjectInstanceName;
+  description: ProjectInstanceDescription;
+  priority: ProjectInstancePriority; // 統一為 number
   status?: ProjectStatus;
   startDate: Date | null;
   endDate: Date | null;
-  createdBy: string; // 確保為 string
+  createdBy: ProjectInstanceCreatedBy; // 確保為 string
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface CreateProjectInstanceProps {
-  name: string;
-  description?: string | null;
-  priority?: number; // 統一為 number
+  name: ProjectInstanceName;
+  description?: ProjectInstanceDescription;
+  priority?: ProjectInstancePriority; // 統一為 number
   status?: ProjectStatus;
   startDate?: Date | null;
   endDate?: Date | null;
-  createdBy: string;
+  createdBy: ProjectInstanceCreatedBy;
   templateId?: string | null;
 }
 

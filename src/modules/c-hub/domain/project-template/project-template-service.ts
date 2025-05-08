@@ -1,5 +1,8 @@
 import { CreateProjectTemplateProps, ProjectTemplate } from './project-template-entity';
 import { ProjectTemplateCreatedEvent, ProjectTemplateDeletedEvent, ProjectTemplateUpdatedEvent } from './project-template-events';
+import { ProjectTemplateDescription } from './value-objects/project-template-description.vo';
+import { ProjectTemplateName } from './value-objects/project-template-name.vo';
+import { ProjectTemplatePriority } from './value-objects/project-template-priority.vo';
 
 // 只負責領域邏輯與驗證
 export class ProjectTemplateService {
@@ -19,9 +22,9 @@ export class ProjectTemplateService {
 
   update(
     id: string,
-    name: string,
-    description: string | null = null,
-    priority: number | null = 0
+    name: ProjectTemplateName,
+    description: ProjectTemplateDescription = null,
+    priority: ProjectTemplatePriority | null = 0
   ): ProjectTemplate {
     const now = new Date();
     const updatedTemplate: ProjectTemplate = {
