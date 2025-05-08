@@ -13,7 +13,8 @@ export class SubTaskTemplateRepository implements ISubTaskTemplateRepository {
         description: data.description,
         priority: data.priority ?? 0,
         isMandatory: true,
-        orderIndex: 0
+        orderIndex: 0,
+        parentTemplateId: data.parentTemplateId ?? null // P0d62
       };
 
       // 創建子任務模板
@@ -90,6 +91,7 @@ export class SubTaskTemplateRepository implements ISubTaskTemplateRepository {
     if (data.name !== undefined) updateData.name = data.name;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.priority !== undefined) updateData.priority = data.priority;
+    if (data.parentTemplateId !== undefined) updateData.parentTemplateId = data.parentTemplateId; // Pf3fd
 
     // 更新子任務模板
     const prismaTemplate = await prisma.subTaskTemplate.update({

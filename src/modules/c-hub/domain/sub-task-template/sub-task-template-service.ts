@@ -13,6 +13,10 @@ export class SubTaskTemplateDomainService {
     if (!data.taskTemplateId?.trim()) {
       throw new Error('必須指定任務模板ID');
     }
+
+    if (data.parentTemplateId && !data.parentTemplateId.trim()) {
+      throw new Error('父模板ID不能為空');
+    }
     
     const template = await this.repository.create(data);
     
@@ -33,6 +37,10 @@ export class SubTaskTemplateDomainService {
 
     if (data.name !== undefined && !data.name.trim()) {
       throw new Error('子任務模板名稱不能為空');
+    }
+
+    if (data.parentTemplateId && !data.parentTemplateId.trim()) {
+      throw new Error('父模板ID不能為空');
     }
     
     const template = await this.repository.update(id, data);

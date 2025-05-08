@@ -17,7 +17,8 @@ export class SubTaskInstanceRepository implements ISubTaskInstanceRepository {
         priority: data.priority || 0,
         status: data.status || 'TODO',
         completionRate: 0,
-        taskId: data.taskId
+        taskId: data.taskId,
+        parentTaskId: data.parentTaskId || null
       };
 
       const prismaSubTaskInstance = await prisma.subTaskInstance.create({

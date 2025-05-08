@@ -14,6 +14,7 @@ export interface SubTaskInstance {
   status: SubTaskInstanceStatus;
   completionRate: number;
   taskId: string;
+  parentTaskId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,6 +32,7 @@ export interface CreateSubTaskInstanceProps {
   status?: SubTaskInstanceStatus;
   completionRate?: number;
   taskId: string;
+  parentTaskId?: string | null;
 }
 
 export type UpdateSubTaskInstanceProps = Partial<CreateSubTaskInstanceProps>;
