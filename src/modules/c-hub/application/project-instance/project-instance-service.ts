@@ -1,6 +1,6 @@
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
 import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/project-instance-repository';
-import { getProjectTemplateQuery } from '../project-template/project-template-actions'; // 修正 import
+import { getProjectTemplate } from '../project-template/project-template-queries'; // 改為正確的 Query Handler
 
 export const projectInstanceService = {
   async create(data: CreateProjectInstanceProps): Promise<ProjectInstance> {
@@ -27,8 +27,8 @@ export const projectInstanceService = {
     templateId: string,
     projectData: Omit<CreateProjectInstanceProps, 'templateId'>
   ): Promise<ProjectInstance> {
-    // 獲取模板詳情
-    const template = await getProjectTemplateQuery(templateId); // 修正名稱
+    // 獲取模板詳情（CQRS Query Concern）
+    const template = await getProjectTemplate(templateId); // 使用正確的查詢方法
     if (!template) {
       throw new Error('找不到指定的專案模板');
     }

@@ -2,7 +2,6 @@
 
 import { CreateProjectTemplateProps, ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/project-template-service';
-import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
 import { revalidatePath } from 'next/cache';
 import { UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 
@@ -14,7 +13,7 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     if (!data.name.trim()) {
       throw new Error('Template name is required');
     }
-    const templateService = new ProjectTemplateDomainService(projectTemplateRepository);
+    const templateService = new ProjectTemplateDomainService(); // 不傳 repository
     const template = await templateService.createTemplate({
       ...data,
       isActive: data.isActive ?? true,
@@ -23,7 +22,7 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     if (!isValidProjectTemplate(template)) {
       throw new Error('無效的專案模板數據');
     }
-    revalidatePath('/client/template');
+    revalidatePath('/client/template'); // 只在 Command Action 執行
     return template;
   } catch (error) {
     console.error('Failed to create template:', error);
@@ -34,9 +33,9 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
 export async function deleteProjectTemplateCommand(id: string): Promise<void> {
   if (!id) throw new Error('Template ID is required');
   try {
-    const templateService = new ProjectTemplateDomainService(projectTemplateRepository);
+    const templateService = new ProjectTemplateDomainService(); // 不傳 repository
     await templateService.deleteTemplate(id);
-    revalidatePath('/client/template');
+    revalidatePath('/client/template'); // 只在 Command Action 執行
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');
@@ -54,7 +53,7 @@ export async function updateProjectTemplateCommand(
       ...data,
       priority: data.priority ?? 0,
     });
-    revalidatePath('/client/template');
+    revalidatePath('/client/template'); // 只在 Command Action 執行
     return template;
   } catch (error) {
     console.error('Failed to update template:', error);
