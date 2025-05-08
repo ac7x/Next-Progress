@@ -9,5 +9,6 @@ export async function UpdateProjectTemplateCommandHandler(
 ): Promise<ProjectTemplate> {
     const domainService = new ProjectTemplateDomainService(); // 修正：不傳 repository
     // 可加上額外驗證或授權
+    domainService.validateTemplate(data); // 添加驗證邏輯
     return domainService.updateTemplate(id, data);
 }

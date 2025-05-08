@@ -66,6 +66,9 @@ export class ProjectTemplateDomainService {
   }
 
   async deleteTemplate(id: string): Promise<void> {
+    if (!id.trim()) {
+      throw new Error('Template ID cannot be empty');
+    }
     // 發布領域事件
     new ProjectTemplateDeletedEvent(id);
   }
@@ -96,6 +99,8 @@ export class ProjectTemplateDomainService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+    // 發布領域事件
+    new ProjectTemplateUpdatedEvent(updatedTemplate.id, updatedTemplate.name);
     return updatedTemplate;
   }
 
