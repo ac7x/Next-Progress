@@ -245,6 +245,7 @@ model SubTaskInstance {
   status               String?      @default("pending") /// 子任務狀態
   completionRate       Float?       @default(0) /// 子任務完成率
   taskId               String       @db.ObjectId /// 所屬任務 ID
+  parentTaskId         String?      @db.ObjectId /// 父任務 ID
   task                 TaskInstance @relation(fields: [taskId], references: [id]) /// 所屬任務關聯
   createdAt            DateTime     @default(now()) /// 建立時間
   updatedAt            DateTime     @default(now()) /// 更新時間
@@ -384,11 +385,9 @@ model SubTaskTemplate {
   isMandatory     Boolean        @default(true) /// 是否為必須任務，預設為必須
   orderIndex      Int?           @default(0) /// 插入順序，數字越小優先
   parentTemplateId String?       @db.ObjectId /// 來源模板 ID，用於記錄複製來源
+  taskTemplateRelations TaskTemplateSubTaskTemplate[] /// 關聯到的任務模板關聯
   createdAt       DateTime       @default(now()) /// 建立時間
   updatedAt       DateTime       @default(now()) /// 更新時間
-
-  // 新增反向關聯
-  taskTemplateRelations TaskTemplateSubTaskTemplate[] /// 關聯到的任務模板關聯
 }
 /// 中介表：TaskTemplate 與 SubTaskTemplate 的多對多關聯
 model TaskTemplateSubTaskTemplate {

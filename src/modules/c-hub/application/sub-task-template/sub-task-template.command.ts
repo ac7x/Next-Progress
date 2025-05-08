@@ -17,6 +17,10 @@ export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplatePr
         throw new Error('任務模板ID為必填項');
     }
 
+    if (data.parentTemplateId && !data.parentTemplateId.trim()) {
+        throw new Error('父模板ID不能為空');
+    }
+
     try {
         const template = await templateService.createTemplate({
             ...data,
@@ -46,6 +50,10 @@ export async function updateSubTaskTemplateCommand(
 ): Promise<SubTaskTemplate> {
     if (!id?.trim()) {
         throw new Error('模板 ID 為必填項');
+    }
+
+    if (data.parentTemplateId && !data.parentTemplateId.trim()) {
+        throw new Error('父模板ID不能為空');
     }
 
     try {

@@ -88,11 +88,13 @@ export async function createSubTaskInstanceFormAction(formData: FormData): Promi
     const equipmentCountRaw = formData.get('equipmentCount')?.toString() || null;
     const equipmentCount = equipmentCountRaw ? Number(equipmentCountRaw) : null;
     const taskId = formData.get('taskInstanceId')?.toString() || '';
+    const parentTaskId = formData.get('parentTaskId')?.toString() || null;
     await createSubTaskInstanceCommand({
         // 名稱自動生成
         name: '', // 由 Domain Service 決定
         description,
         taskId,
+        parentTaskId,
         // priority, // 預設 0
         // status,   // 預設 'TODO'
         plannedStart,
