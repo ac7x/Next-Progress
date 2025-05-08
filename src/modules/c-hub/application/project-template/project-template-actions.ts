@@ -2,18 +2,16 @@
 
 import { CreateProjectTemplateProps, ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/project-template-service';
-import { UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
-
-// 只負責 Application UseCase（Command）
+import { CreateProjectTemplateCommandHandler, UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 
 // CQRS: Command UseCases
 export async function createProjectTemplateCommand(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
   try {
-    const templateService = new ProjectTemplateDomainService(); // 不傳 repository
-    const template = await templateService.createTemplate({
+    // 呼叫 Application Command Handler，確保寫入資料庫
+    const template = await CreateProjectTemplateCommandHandler({
       ...data,
       isActive: data.isActive ?? true,
-      priority: data.priority ?? 0, // 新增 priority
+      priority: data.priority ?? 0,
     });
     if (!isValidProjectTemplate(template)) {
       throw new Error('無效的專案模板數據');
@@ -28,8 +26,10 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
 export async function deleteProjectTemplateCommand(id: string): Promise<void> {
   if (!id) throw new Error('Template ID is required');
   try {
-    const templateService = new ProjectTemplateDomainService(); // 不傳 repository
+    const templateService = new ProjectTemplateDomainService();
     await templateService.deleteTemplate(id);
+    // 實際刪除交由 repository（如需）
+    // await projectTemplateRepository.delete(id);
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');
@@ -42,7 +42,7 @@ export async function updateProjectTemplateCommand(
 ): Promise<ProjectTemplate> {
   if (!id.trim()) throw new Error('Template ID is required');
   try {
-    // 委派給 Application Command Handler（CQRS: Command）
+    // 呼叫 Application Command Handler
     const template = await UpdateProjectTemplateCommandHandler(id, {
       ...data,
       priority: data.priority ?? 0,

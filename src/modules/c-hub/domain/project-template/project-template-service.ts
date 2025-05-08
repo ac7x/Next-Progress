@@ -48,9 +48,9 @@ export class ProjectTemplateDomainService {
     if (!data.name.trim()) {
       throw new Error('Template name cannot be empty');
     }
-
+    // 僅產生領域物件，不寫入資料庫
     const template: ProjectTemplate = {
-      id: crypto.randomUUID(),
+      id: '', // 由 repository 實際產生
       name: data.name,
       description: data.description ?? null,
       isActive: data.isActive ?? true,
@@ -58,10 +58,7 @@ export class ProjectTemplateDomainService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
-    // 發布領域事件
     new ProjectTemplateCreatedEvent(template.id, template.name);
-
     return template;
   }
 

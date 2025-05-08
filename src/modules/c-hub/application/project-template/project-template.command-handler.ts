@@ -1,14 +1,28 @@
 import { CreateProjectTemplateProps, ProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
 import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/project-template-service';
+import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
+
+// Application CommandHandler: 建立專案模板
+export async function CreateProjectTemplateCommandHandler(
+    data: CreateProjectTemplateProps
+): Promise<ProjectTemplate> {
+    // 1. 執行領域驗證與業務邏輯
+    const domainService = new ProjectTemplateDomainService();
+    domainService.validateTemplate(data);
+
+    // 2. 產生領域物件（不含 id/createdAt，由 repository 實際產生）
+    // 3. 實際寫入資料庫
+    const created = await projectTemplateRepository.create(data);
+    return created;
+}
 
 // Application CommandHandler: 更新專案模板
-// 只負責 Application Command Handler（更新）
 export async function UpdateProjectTemplateCommandHandler(
     id: string,
     data: Partial<CreateProjectTemplateProps>
 ): Promise<ProjectTemplate> {
-    const domainService = new ProjectTemplateDomainService(); // 修正：不傳 repository
-    // 可加上額外驗證或授權
-    domainService.validateTemplate(data); // 添加驗證邏輯
-    return domainService.updateTemplate(id, data);
+    const domainService = new ProjectTemplateDomainService();
+    domainService.validateTemplate(data);
+    // 只協調 repository
+    return projectTemplateRepository.update(id, data);
 }
