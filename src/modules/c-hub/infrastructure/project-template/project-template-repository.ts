@@ -7,12 +7,10 @@ import { Prisma } from '@prisma/client';
 export class ProjectTemplateRepository implements IProjectTemplateRepository {
   async create(data: CreateProjectTemplateProps): Promise<ProjectTemplate> {
     try {
-      // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
       return prisma.projectTemplate.create({
         data: {
           name: data.name,
           description: data.description ?? null,
-          isActive: data.isActive ?? true,
           priority: data.priority ?? 0,
         },
       }) as unknown as ProjectTemplate;
@@ -24,11 +22,7 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
 
   async list(): Promise<ProjectTemplate[]> {
     try {
-      // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
       return prisma.projectTemplate.findMany({
-        where: {
-          isActive: true,
-        },
         orderBy: [
           { priority: 'asc' },
           { createdAt: 'desc' }
@@ -42,15 +36,10 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      // 使用邏輯刪除而非物理刪除
-      const result = await prisma.projectTemplate.updateMany({
+      // 直接物理刪除
+      await prisma.projectTemplate.delete({
         where: { id },
-        data: { isActive: false },
       });
-
-      if (result.count === 0) {
-        console.warn(`ID為 ${id} 的專案模板不存在或已被刪除`);
-      }
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         console.warn(`ID為 ${id} 的專案模板不存在或已被刪除`);
@@ -78,12 +67,8 @@ export class ProjectTemplateRepository implements IProjectTemplateRepository {
 
   async getById(id: string): Promise<ProjectTemplate | null> {
     try {
-      // Prisma schema 已保證 priority 為 number（預設 0），不會為 null
       return prisma.projectTemplate.findFirst({
-        where: {
-          id,
-          isActive: true,
-        },
+        where: { id },
       }) as unknown as ProjectTemplate | null;
     } catch (error) {
       console.error('Get project template by ID error:', error);

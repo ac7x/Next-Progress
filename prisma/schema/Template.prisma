@@ -3,7 +3,6 @@ model ProjectTemplate {
   id          String               @id @default(auto()) @map("_id") @db.ObjectId /// 主鍵，使用 MongoDB ObjectId，自動生成
   name        String /// 專案模板名稱，必填
   description String? /// 專案模板描述，選填
-  isActive    Boolean              @default(true) /// 模板是否啟用，預設為啟用
   priority    Int?                 @default(0) /// 模板優先順序，數字越小優先度越高
   createdAt   DateTime             @default(now()) /// 建立時間，自動設定為目前時間
   updatedAt   DateTime             @default(now()) /// 更新時間，自動設定為目前時間

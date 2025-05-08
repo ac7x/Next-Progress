@@ -1,7 +1,7 @@
 'use server';
 
 import { CreateProjectTemplateProps, ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/project-template-entity';
-import { ProjectTemplateDomainService } from '@/modules/c-hub/domain/project-template/project-template-service';
+import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
 import { CreateProjectTemplateCommandHandler, UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 
 // CQRS: Command UseCases
@@ -10,7 +10,6 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
     // 呼叫 Application Command Handler，確保寫入資料庫
     const template = await CreateProjectTemplateCommandHandler({
       ...data,
-      isActive: data.isActive ?? true,
       priority: data.priority ?? 0,
     });
     if (!isValidProjectTemplate(template)) {
@@ -26,10 +25,8 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
 export async function deleteProjectTemplateCommand(id: string): Promise<void> {
   if (!id) throw new Error('Template ID is required');
   try {
-    const templateService = new ProjectTemplateDomainService();
-    await templateService.deleteTemplate(id);
-    // 實際刪除交由 repository（如需）
-    // await projectTemplateRepository.delete(id);
+    // 直接呼叫 repository 進行物理刪除
+    await projectTemplateRepository.delete(id);
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');

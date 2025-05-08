@@ -11,7 +11,7 @@ export class ProjectTemplateService {
       createdAt: now,
       updatedAt: now,
       ...data,
-      priority: data.priority ?? 0, // 新增 priority
+      priority: data.priority ?? 0,
     };
     new ProjectTemplateCreatedEvent(id, data.name); // 發佈事件
     return projectTemplate;
@@ -21,15 +21,14 @@ export class ProjectTemplateService {
     id: string,
     name: string,
     description: string | null = null,
-    priority: number | null = 0 // 新增 priority
+    priority: number | null = 0
   ): ProjectTemplate {
     const now = new Date();
     const updatedTemplate: ProjectTemplate = {
       id,
       name,
       description,
-      isActive: true,
-      priority: priority ?? 0, // 新增 priority
+      priority: priority ?? 0,
       createdAt: now,
       updatedAt: now,
     };
@@ -53,7 +52,6 @@ export class ProjectTemplateDomainService {
       id: '', // 由 repository 實際產生
       name: data.name,
       description: data.description ?? null,
-      isActive: data.isActive ?? true,
       priority: data.priority ?? 0,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -91,7 +89,6 @@ export class ProjectTemplateDomainService {
       id,
       name: data.name ?? 'Default Name',
       description: data.description ?? null,
-      isActive: data.isActive ?? true,
       priority: data.priority ?? 0,
       createdAt: new Date(),
       updatedAt: new Date(),

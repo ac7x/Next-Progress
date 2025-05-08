@@ -7,7 +7,6 @@ export const ProjectTemplateQueryService = {
         try {
             // 先依 priority 升冪，再依 createdAt 降冪
             return prisma.projectTemplate.findMany({
-                where: { isActive: true },
                 orderBy: [
                     { priority: 'asc' },
                     { createdAt: 'desc' }
