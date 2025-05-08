@@ -23,6 +23,7 @@ export async function createProjectTemplateCommand(data: CreateProjectTemplatePr
       throw new Error('無效的專案模板數據');
     }
     revalidatePath('/client/template'); // 只在 Command Action 執行
+    revalidatePath('/client/manage'); // P65bd
     return template;
   } catch (error) {
     console.error('Failed to create template:', error);
@@ -36,6 +37,7 @@ export async function deleteProjectTemplateCommand(id: string): Promise<void> {
     const templateService = new ProjectTemplateDomainService(); // 不傳 repository
     await templateService.deleteTemplate(id);
     revalidatePath('/client/template'); // 只在 Command Action 執行
+    revalidatePath('/client/manage'); // P65bd
   } catch (error) {
     console.error('Failed to delete template:', error);
     throw error instanceof Error ? error : new Error('Failed to delete template');
@@ -54,6 +56,7 @@ export async function updateProjectTemplateCommand(
       priority: data.priority ?? 0,
     });
     revalidatePath('/client/template'); // 只在 Command Action 執行
+    revalidatePath('/client/manage'); // P65bd
     return template;
   } catch (error) {
     console.error('Failed to update template:', error);
