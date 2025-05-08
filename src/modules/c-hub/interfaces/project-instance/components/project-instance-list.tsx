@@ -2,7 +2,7 @@
 
 import { deleteProject } from '@/modules/c-hub/application/project-instance/project-instance-actions';
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
-import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

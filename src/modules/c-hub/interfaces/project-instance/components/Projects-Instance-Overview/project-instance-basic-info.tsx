@@ -1,4 +1,4 @@
-import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 
 interface Props {
     projectInstance: ProjectInstance;

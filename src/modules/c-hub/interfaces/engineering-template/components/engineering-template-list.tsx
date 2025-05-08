@@ -1,6 +1,6 @@
 'use client';
 
-import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/project-instance-entity';
+import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { useEngineeringTemplatesQuery } from '../hooks/use-engineering-templates-query';
 import { EngineeringTemplateCard } from './engineering-template-card';
 
