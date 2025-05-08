@@ -1,0 +1,61 @@
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { Suspense } from 'react';
+import { TaskInstanceDetails, TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
+
+export default function DashboardPage() {
+  // 預設查詢全部任務，可依需求傳入 projectId
+  const projectId = '';
+  const { data: tasks = [], isLoading, error } = useQuery<TaskInstance[]>({
+    queryKey: ['taskInstances', projectId],
+    queryFn: () => listTaskInstancesByProject(projectId),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="p-4 bg-red-50 text-red-700 rounded-md">
+          <h2 className="font-bold text-xl mb-2">載入失敗</h2>
+          <p>無法載入任務資料，請稍後再試</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 pb-20">
+      <h1 className="text-2xl font-bold mb-6">任務與子任務總覽</h1>
+      <section className="mb-10">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">所有任務</h2>
+          <span className="text-gray-500 text-sm">共 {tasks.length} 項</span>
+        </div>
+        {tasks.length === 0 ? (
+          <div className="text-center py-10 bg-gray-50 rounded-lg">
+            <p className="text-gray-500 mb-3">目前沒有任務</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            {[...tasks]
+              .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
+              .map((task) => (
+                <div key={task.id} className="space-y-2">
+                  {/* 單一職責：任務詳情（Client） */}
+                  <TaskInstanceDetails taskInstance={task} />
+                  {/* 子任務區塊（Server Component，查詢 Concern 分離） */}
+                  <Suspense fallback={null}>
+                    <TaskInstanceSubTaskInstancesSection taskInstanceId={task.id} />
+                  </Suspense>
+                </div>
+              ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,13 @@
+import { createEngineeringCommand } from '@/modules/c-hub/application/engineering-instance/engineering-instance.command';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+export function useCreateEngineeringInstance() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: createEngineeringCommand,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['engineerings'] });
+            queryClient.invalidateQueries({ queryKey: ['projects'] });
+        }
+    });
+}

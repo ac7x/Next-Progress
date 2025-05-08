@@ -1,0 +1,61 @@
+model Asset {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  type          AssetEnum @unique
+  name          String   
+  description   String?  
+  symbol        String?  
+  iconUrl       String?  
+  decimals      Int      @default(0)
+  isActive      Boolean  @default(true)
+  displayOrder  Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+}
+
+model UserAsset {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @unique
+  diamonds     Int      @default(0)
+  hearts       Int      @default(0)
+  bubbles      Int      @default(0)
+  coins        Int      @default(0)
+  extraAssets  Json?    @default("{}")
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [userId])
+
+}
+
+model AssetMutation {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        
+  currency    AssetEnum
+  amount      Int
+  balance     Int           
+  reason      TransactionEnum
+  description String?
+  createdAt   DateTime      @default(now())
+  
+  user        User          @relation(fields: [userId], references: [userId])
+
+  @@index([userId, currency, createdAt]) 
+  @@index([userId, reason, createdAt])
+}
+
+enum AssetEnum {
+  DIAMOND
+  HEART
+  BUBBLE
+  COIN
+}
+
+enum TransactionEnum {
+  INCREASE
+  DECREASE
+  EXCHANGE
+  REWARD
+  TRANSFER
+  BURN
+}
+

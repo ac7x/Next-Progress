@@ -1,0 +1,1 @@
+// This file has been removed as all Command/Query have been separated into .command.ts/.query.ts files.

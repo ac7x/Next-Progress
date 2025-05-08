@@ -1,0 +1,54 @@
+enum TagType {
+  GENERAL
+  PROJECT_INSTANCE
+  PROJECT_TEMPLATE
+  ENGINEERING_INSTANCE
+  ENGINEERING_TEMPLATE
+  TASK_INSTANCE
+  TASK_TEMPLATE
+  SUBTASK_INSTANCE
+  SUBTASK_TEMPLATE
+  WAREHOUSE_INSTANCE
+  WAREHOUSE_ITEM
+}
+
+enum TagRelationType {
+  PROJECT_INSTANCE
+  PROJECT_TEMPLATE
+  ENGINEERING_INSTANCE
+  ENGINEERING_TEMPLATE
+  TASK_INSTANCE
+  TASK_TEMPLATE
+  SUBTASK_INSTANCE
+  SUBTASK_TEMPLATE
+  WAREHOUSE_INSTANCE
+  WAREHOUSE_ITEM
+}
+
+model Tag {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String        @unique
+  type         TagType       @default(GENERAL)
+  description  String?
+  color        String?    
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  tagRelations TagRelation[] // 萬用關聯
+
+  @@index([type])
+}
+
+model TagRelation {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  tagId      String          @db.ObjectId
+  targetId   String          @db.ObjectId
+  targetType TagRelationType
+  createdAt  DateTime        @default(now())
+  priority   Int             @default(0)
+
+  tag        Tag             @relation(fields: [tagId], references: [id])
+
+  @@unique([tagId, targetId, targetType])
+  @@index([targetId, targetType])
+}

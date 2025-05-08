@@ -1,0 +1,23 @@
+model User {
+  id                  String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String         @unique
+  displayName         String
+  pictureUrl          String?
+  statusMessage       String?
+  role                RoleEnum       @default(USER)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  // 關聯
+  userAsset           UserAsset?
+  assetMutations      AssetMutation[]
+  linePayments        LinePay[]
+  createdProjects     ProjectInstance[] @relation("UserCreatedProjects") // 更新模型名稱
+  projectMemberships  ProjectMember[]
+  engineerings        EngineeringInstance[] // 更新模型名稱
+}
+
+enum RoleEnum {
+  USER
+  ADMIN
+}
