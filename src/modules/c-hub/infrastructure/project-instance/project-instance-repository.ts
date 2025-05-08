@@ -7,7 +7,7 @@ export class ProjectInstanceRepository implements IProjectInstanceRepository {
   async create(data: CreateProjectInstanceProps): Promise<ProjectInstance> {
     const createInput = await projectInstanceAdapter.toCreateInput(data);
     const result = await prisma.projectInstance.create({
-      data: createInput,
+      data: createInput, // createInput 已修正，不含 createdBy
     });
     return projectInstanceAdapter.toDomain(result);
   }

@@ -81,21 +81,16 @@ export const projectInstanceAdapter = {
       });
     }
 
-    // 創建基本數據並使用類型斷言處理 priority
-    const createInput: any = {
+    // 僅傳遞 Prisma 支援的欄位，不傳 createdBy
+    const createInput: Prisma.ProjectInstanceCreateInput = {
       name: data.name,
       description: data.description,
       startDate: data.startDate || new Date(),
       creator: {
         connect: { id: user.id }
       },
-      createdBy: user.id, // 確保為 ObjectId string
+      priority: data.priority ?? 0,
     };
-
-    // 添加 priority 欄位
-    if (data.priority !== undefined && data.priority !== null) {
-      createInput.priority = data.priority;
-    }
 
     // 添加 endDate 欄位（如果存在）
     if (data.endDate !== null && data.endDate !== undefined) {
