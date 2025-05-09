@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteSubTaskTemplate } from '@/modules/c-hub/application/sub-task-template/sub-task-template-actions';
-import { SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
+import { SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template';
 import { useState } from 'react';
 
 interface SubTaskTemplateListProps {
