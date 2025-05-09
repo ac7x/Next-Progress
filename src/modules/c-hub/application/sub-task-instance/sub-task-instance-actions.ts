@@ -1,7 +1,6 @@
 'use server';
 
-import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceStatus, UpdateSubTaskInstanceProps, isValidSubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
-import { SubTaskInstanceDomainService } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-service';
+import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceDomainService, SubTaskInstanceStatusType, UpdateSubTaskInstanceProps, isValidSubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
 
 const subTaskInstanceService = new SubTaskInstanceDomainService(subTaskInstanceRepository);
@@ -71,7 +70,7 @@ export async function listSubTasksInstanceByTaskId(taskId: string): Promise<SubT
   }
 }
 
-export async function updateSubTaskInstanceStatus(id: string, status: SubTaskInstanceStatus): Promise<SubTaskInstance> {
+export async function updateSubTaskInstanceStatus(id: string, status: SubTaskInstanceStatusType): Promise<SubTaskInstance> {
   return updateSubTaskInstance(id, { status });
 }
 

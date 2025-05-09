@@ -1,6 +1,6 @@
 'use client';
 
-import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
+import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
 import { SubTaskInstanceDetails } from './sub-task-instance-details';
 
 /**

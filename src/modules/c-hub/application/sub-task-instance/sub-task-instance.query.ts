@@ -1,7 +1,7 @@
 'use server';
 
-import { SubTaskInstance, isValidSubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
-import { SubTaskInstanceDomainService } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-service';
+import { SubTaskInstance, isValidSubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
+import { SubTaskInstanceDomainService } from '@/modules/c-hub/domain/sub-task-instance';
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
 
 const subTaskInstanceService = new SubTaskInstanceDomainService(subTaskInstanceRepository);

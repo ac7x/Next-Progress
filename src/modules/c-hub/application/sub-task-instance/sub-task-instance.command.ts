@@ -1,7 +1,6 @@
 'use server';
 
-import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceStatus, UpdateSubTaskInstanceProps } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
-import { SubTaskInstanceDomainService } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-service';
+import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceDomainService, SubTaskInstanceStatusType, UpdateSubTaskInstanceProps } from '@/modules/c-hub/domain/sub-task-instance';
 import { TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance/task-instance-service';
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
 import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
@@ -67,7 +66,7 @@ export async function deleteSubTaskInstanceCommand(id: string): Promise<{ id: st
 }
 
 // Command: 更新狀態
-export async function updateSubTaskInstanceStatusCommand(id: string, status: SubTaskInstanceStatus): Promise<SubTaskInstance> {
+export async function updateSubTaskInstanceStatusCommand(id: string, status: SubTaskInstanceStatusType): Promise<SubTaskInstance> {
     return updateSubTaskInstanceCommand(id, { status });
 }
 

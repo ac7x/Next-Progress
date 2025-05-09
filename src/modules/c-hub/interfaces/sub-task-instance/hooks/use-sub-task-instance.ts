@@ -1,7 +1,7 @@
 'use client';
 
 import { listSubTasksInstanceByTaskIdQuery } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.query';
-import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
+import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
 import { useQuery } from '@tanstack/react-query';
 
 /**

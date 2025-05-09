@@ -1,7 +1,8 @@
 'use client';
 
 import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand, updateSubTaskInstanceStatusCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
-import { SubTaskInstance, SubTaskInstanceStatus } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
+import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/entities/sub-task-instance-entity';
+import { SubTaskInstanceStatusType } from '@/modules/c-hub/domain/sub-task-instance/value-objects/sub-task-instance-status.vo';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useSubTaskInstanceUpdate } from '../hooks/use-sub-task-instance-update';
@@ -19,7 +20,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
   const { updateSubTaskInstanceField, isUpdating, error } = useSubTaskInstanceUpdate();
   const queryClient = useQueryClient();
 
-  const handleStatusChange = async (status: SubTaskInstanceStatus) => {
+  const handleStatusChange = async (status: SubTaskInstanceStatusType) => {
     try {
       await updateSubTaskInstanceStatusCommand(subTaskInstance.id, status);
       // React Query 自動同步
@@ -95,7 +96,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
           {/* 狀態按鈕或選擇器 */}
           <select
             value={subTaskInstance.status}
-            onChange={(e) => handleStatusChange(e.target.value as SubTaskInstanceStatus)}
+            onChange={(e) => handleStatusChange(e.target.value as SubTaskInstanceStatusType)}
             className="text-xs border rounded px-1 py-0.5"
             disabled={isUpdating}
           >
