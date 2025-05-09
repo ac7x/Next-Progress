@@ -15,11 +15,11 @@ import { revalidatePath } from 'next/cache';
 const engineeringInstanceService = new EngineeringInstanceDomainService(engineeringInstanceRepository);
 
 /**
- * 創建新工程實例
+ * 創建新工程實例 - 命令處理函數
  * @param data 創建工程實例所需資料
  * @returns 創建的工程實例
  */
-export async function createEngineeringInstance(data: CreateEngineeringInstanceProps): Promise<EngineeringInstance> {
+export async function createEngineeringCommand(data: CreateEngineeringInstanceProps): Promise<EngineeringInstance> {
     try {
         if (!data.name?.trim()) {
             throw new Error('工程名稱不能為空');

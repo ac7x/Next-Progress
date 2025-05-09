@@ -1,4 +1,4 @@
-import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/engineering-instance-entity';
+import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
 import { EquipmentCompletionPercent } from './project-instance-equipment-completion-percent';
@@ -35,8 +35,9 @@ export function EngineeringInstanceList({
                 <ul className="list-disc pl-5">
                     {engineeringInstances.map(engineeringInstance => (
                         <li key={engineeringInstance.id} className="mb-2">
-                            <div className="font-medium">{engineeringInstance.name}</div>
-                            {engineeringInstance.description && <div className="text-gray-600 text-sm">{engineeringInstance.description}</div>}
+                            <div className="font-medium">{engineeringInstance.name.getValue()}</div>
+                            {engineeringInstance.description &&
+                                <div className="text-gray-600 text-sm">{engineeringInstance.description.getValue()}</div>}
                             {taskInstancesByEngineering[engineeringInstance.id] && taskInstancesByEngineering[engineeringInstance.id].length > 0 && (
                                 <div className="mt-1 ml-4">
                                     <p className="text-sm text-gray-700 font-medium">相關任務:</p>

@@ -1,6 +1,6 @@
 'use server';
 
-import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/engineering-instance-service';
+import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance';
 import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/engineering-instance-repository';
 
 const service = new EngineeringInstanceDomainService(engineeringInstanceRepository);

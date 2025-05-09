@@ -1,7 +1,7 @@
 'use server';
 
-import { CreateEngineeringInstanceProps, EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/engineering-instance-entity';
-import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/engineering-instance-service';
+import { CreateEngineeringInstanceProps, EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance';
+import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance';
 import { CreateEngineeringFromTemplateProps } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/engineering-instance-repository';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
