@@ -1,4 +1,4 @@
-import { createEngineeringCommand } from '@/modules/c-hub/application/engineering-instance/engineering-instance-command';
+import { createEngineeringCommand } from '@/modules/c-hub/application/engineering-instance/engineering-instance-commands';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useCreateEngineeringInstance() {

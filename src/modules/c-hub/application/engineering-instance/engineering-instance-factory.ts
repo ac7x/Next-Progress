@@ -56,8 +56,8 @@ export async function createEngineeringFromTemplate(
 
         // 2. 準備創建工程實例的數據
         const createData: CreateEngineeringInstanceProps = {
-            name: data.name || template.name.getValue(), // 優先使用用戶提供的名稱，否則使用模板名稱
-            description: data.description !== undefined ? data.description : template.description.getValue(),
+            name: data.name || template.name, // 修正：直接使用字串值，而非 getValue()
+            description: data.description !== undefined ? data.description : template.description, // 修正：直接使用字串或 null 值
             projectId: data.projectId,
             userId: data.userId
         };
@@ -82,8 +82,8 @@ export async function createEngineeringFromTemplate(
                         name: taskTemplate.name,
                         description: taskTemplate.description,
                         engineeringId: engineering.id,
-                        projectId: data.projectId,
-                        userId: data.userId
+                        projectId: data.projectId
+                        // 移除 userId，因為 taskInstanceRepository.create 不接受此參數
                     });
                 }
             }
