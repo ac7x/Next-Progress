@@ -1,6 +1,6 @@
 'use client';
 
-import { updateEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template.command';
+import { updateEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template-command';
 import { UpdateEngineeringTemplateProps } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

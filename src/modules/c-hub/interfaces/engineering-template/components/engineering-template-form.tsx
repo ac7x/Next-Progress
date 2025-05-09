@@ -1,6 +1,6 @@
 'use client';
 
-import { createEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template.command';
+import { createEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template-command';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

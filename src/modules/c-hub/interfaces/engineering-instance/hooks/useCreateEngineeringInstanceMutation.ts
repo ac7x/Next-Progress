@@ -1,4 +1,4 @@
-import { createEngineeringCommand } from '@/modules/c-hub/application/engineering-instance/engineering-instance.command';
+import { createEngineeringCommand } from '@/modules/c-hub/application/engineering-instance/engineering-instance-command';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // 建立工程 mutation hook
