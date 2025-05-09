@@ -1,11 +1,11 @@
 'use server';
 
 import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps, isValidSubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/entities/sub-task-template-entity';
-import { SubTaskTemplateService } from '@/modules/c-hub/domain/sub-task-template/services/sub-task-template-service';
+import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template/services/sub-task-template-service';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
 import { revalidatePath } from 'next/cache';
 
-const templateService = new SubTaskTemplateService(subTaskTemplateRepository);
+const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
 // Command: 建立子任務模板
 export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplateProps): Promise<SubTaskTemplate> {

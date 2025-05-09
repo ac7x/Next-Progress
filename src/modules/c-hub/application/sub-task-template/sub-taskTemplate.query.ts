@@ -1,9 +1,9 @@
 'use server';
 
-import { SubTaskTemplate, SubTaskTemplateService } from '@/modules/c-hub/domain/sub-task-template';
+import { SubTaskTemplate, SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
 
-const templateService = new SubTaskTemplateService(subTaskTemplateRepository);
+const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 
 // Query: 取得單一子任務模板
 export async function getSubTaskTemplateQuery(id: string): Promise<SubTaskTemplate | null> {

@@ -2,7 +2,7 @@ import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps
 import { SubTaskTemplateCreatedEvent, SubTaskTemplateDeletedEvent, SubTaskTemplateUpdatedEvent } from '../events/index';
 import { ISubTaskTemplateRepository } from '../repositories/sub-task-template-repository-interface';
 
-export class SubTaskTemplateService {
+export class SubTaskTemplateDomainService {
     constructor(private readonly repository: ISubTaskTemplateRepository) { }
 
     async createTemplate(data: CreateSubTaskTemplateProps): Promise<SubTaskTemplate> {
