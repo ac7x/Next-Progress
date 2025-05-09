@@ -1,8 +1,14 @@
+'use client';
+
 import { listSubTasksInstanceByTaskIdQuery } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.query';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
 import { useQuery } from '@tanstack/react-query';
 
-// 僅負責查詢，必須帶上父任務 ID
+/**
+ * 根據父任務ID查詢所有子任務的鉤子函數
+ * 使用 React Query 進行資料查詢與快取管理
+ * @param taskInstanceId 父任務ID
+ */
 export function useSubTaskInstancesByTaskInstance(taskInstanceId: string) {
   return useQuery<SubTaskInstance[]>({
     queryKey: ['subTaskInstances', taskInstanceId],
@@ -11,4 +17,15 @@ export function useSubTaskInstancesByTaskInstance(taskInstanceId: string) {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
+}
+
+/**
+ * 根據子任務ID查詢單一子任務的鉤子函數
+ * 使用現有 React Query 快取以優化性能
+ * @param taskInstanceId 父任務ID
+ * @param subTaskInstanceId 子任務ID
+ */
+export function useSubTaskInstanceById(taskInstanceId: string, subTaskInstanceId: string) {
+  const { data: subTasks } = useSubTaskInstancesByTaskInstance(taskInstanceId);
+  return subTasks?.find(subTask => subTask.id === subTaskInstanceId);
 }

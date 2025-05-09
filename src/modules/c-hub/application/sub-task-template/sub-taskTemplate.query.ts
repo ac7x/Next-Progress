@@ -1,7 +1,7 @@
 'use server';
 
 import { SubTaskTemplate, SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template';
-import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
+import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { CreateSubTaskTemplateProps, isValidSubTaskTemplate, SubTaskTemplate, SubTaskTemplateDomainService, UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template';
-import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
+import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
 import { revalidatePath } from 'next/cache';
 
 const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
