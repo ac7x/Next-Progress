@@ -1,5 +1,5 @@
 import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/engineering-instance-entity';
-import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/sub-task-instance-entity';
+import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
 import { EquipmentCompletionPercent } from './project-instance-equipment-completion-percent';
 
@@ -147,3 +147,4 @@ export function TaskWithSubTasks({
 }
 
 export { EngineeringInstanceList as ProjectInstanceEngineeringList };
+
