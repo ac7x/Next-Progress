@@ -80,7 +80,7 @@ export class EngineeringInstanceRepository implements IEngineeringInstanceReposi
    */
   async update(id: string, data: UpdateEngineeringInstanceProps): Promise<EngineeringInstance> {
     const updateData = engineeringInstanceAdapter.toPersistence(data);
-    
+
     const engineering = await prisma.engineeringInstance.update({
       where: { id },
       data: updateData

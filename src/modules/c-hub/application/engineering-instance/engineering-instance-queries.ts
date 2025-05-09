@@ -18,12 +18,12 @@ const engineeringInstanceService = new EngineeringInstanceDomainService(engineer
  * @returns 工程實例列表
  */
 export async function listEngineeringInstances(): Promise<EngineeringInstance[]> {
-  try {
-    return await engineeringInstanceService.list();
-  } catch (error) {
-    console.error('獲取工程實例列表失敗:', error);
-    return [];
-  }
+    try {
+        return await engineeringInstanceService.list();
+    } catch (error) {
+        console.error('獲取工程實例列表失敗:', error);
+        return [];
+    }
 }
 
 /**
@@ -32,16 +32,16 @@ export async function listEngineeringInstances(): Promise<EngineeringInstance[]>
  * @returns 工程實例或null
  */
 export async function getEngineeringInstanceById(id: string): Promise<EngineeringInstance | null> {
-  if (!id?.trim()) {
-    throw new Error('工程ID不能為空');
-  }
-  
-  try {
-    return await engineeringInstanceService.getById(id);
-  } catch (error) {
-    console.error(`獲取工程實例(ID: ${id})失敗:`, error);
-    return null;
-  }
+    if (!id?.trim()) {
+        throw new Error('工程ID不能為空');
+    }
+
+    try {
+        return await engineeringInstanceService.getById(id);
+    } catch (error) {
+        console.error(`獲取工程實例(ID: ${id})失敗:`, error);
+        return null;
+    }
 }
 
 /**
@@ -50,14 +50,14 @@ export async function getEngineeringInstanceById(id: string): Promise<Engineerin
  * @returns 該專案下的工程實例列表
  */
 export async function listEngineeringInstancesByProject(projectId: string): Promise<EngineeringInstance[]> {
-  if (!projectId?.trim()) {
-    throw new Error('專案ID不能為空');
-  }
-  
-  try {
-    return await engineeringInstanceService.listByProject(projectId);
-  } catch (error) {
-    console.error(`獲取專案(ID: ${projectId})工程實例列表失敗:`, error);
-    return [];
-  }
+    if (!projectId?.trim()) {
+        throw new Error('專案ID不能為空');
+    }
+
+    try {
+        return await engineeringInstanceService.listByProject(projectId);
+    } catch (error) {
+        console.error(`獲取專案(ID: ${projectId})工程實例列表失敗:`, error);
+        return [];
+    }
 }

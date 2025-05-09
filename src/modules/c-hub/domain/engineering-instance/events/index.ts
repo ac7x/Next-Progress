@@ -4,5 +4,5 @@
  */
 
 export * from './engineering-instance-created-event';
-export * from './engineering-instance-updated-event';
 export * from './engineering-instance-deleted-event';
+export * from './engineering-instance-updated-event';
