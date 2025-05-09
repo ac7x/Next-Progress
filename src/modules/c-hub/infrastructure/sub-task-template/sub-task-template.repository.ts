@@ -1,5 +1,4 @@
-import { CreateSubTaskTemplateProps, SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
-import { ISubTaskTemplateRepository } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-repository';
+import { CreateSubTaskTemplateProps, ISubTaskTemplateRepository, SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
 import { subTaskTemplateAdapter } from './sub-task-template-adapter';

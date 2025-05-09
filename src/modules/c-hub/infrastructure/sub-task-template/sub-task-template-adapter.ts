@@ -1,9 +1,12 @@
-import { CreateSubTaskTemplateProps, SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
+import { SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template';
 import type { Prisma, SubTaskTemplate as PrismaSubTaskTemplate, TaskTemplateSubTaskTemplate } from '@prisma/client';
 
-interface AdditionalData extends Partial<CreateSubTaskTemplateProps> {
+interface AdditionalData {
   taskTemplate?: Prisma.TaskTemplateGetPayload<{}> | null;
   taskTemplateRelation?: TaskTemplateSubTaskTemplate | null;
+  taskTemplateId?: string;
+  priority?: number;
+  isActive?: boolean;
 }
 
 export const subTaskTemplateAdapter = {

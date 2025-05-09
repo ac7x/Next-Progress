@@ -21,5 +21,6 @@ export * from './events';
 // 領域服務匯出
 export * from './services/sub-task-template-service';
 
-// 倉儲介面匯出
+// 存儲庫介面匯出
 export * from './repositories/sub-task-template-repository-interface';
+

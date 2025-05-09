@@ -1,7 +1,6 @@
 'use server';
 
-import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps, isValidSubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
-import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-service';
+import { CreateSubTaskTemplateProps, isValidSubTaskTemplate, SubTaskTemplate, , UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
 import { revalidatePath } from 'next/cache';
 
