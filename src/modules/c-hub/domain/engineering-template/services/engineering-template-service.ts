@@ -8,13 +8,13 @@ import {
     EngineeringTemplate,
     UpdateEngineeringTemplateProps,
     isValidEngineeringTemplate
-} from '../entities/engineering-template.entity';
+} from '../entities/engineering-template-entity';
 import {
     EngineeringTemplateCreatedEvent,
     EngineeringTemplateDeletedEvent,
     EngineeringTemplateUpdatedEvent
-} from '../events/engineering-template.events';
-import { IEngineeringTemplateRepository } from '../repositories/engineering-template.repository';
+} from '../events/engineering-template-events';
+import { IEngineeringTemplateRepository } from '../repositories/engineering-template-repository';
 
 /**
  * 工程模板領域服務，負責工程模板業務邏輯與驗證

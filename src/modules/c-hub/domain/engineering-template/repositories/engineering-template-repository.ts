@@ -3,11 +3,11 @@
  * 遵循依賴反轉原則，領域層只依賴於抽象介面，不依賴於具體實現
  */
 
-import { 
+import {
     CreateEngineeringTemplateProps,
-    EngineeringTemplate, 
-    UpdateEngineeringTemplateProps 
-} from '../entities/engineering-template.entity';
+    EngineeringTemplate,
+    UpdateEngineeringTemplateProps
+} from '../entities/engineering-template-entity';
 
 export interface IEngineeringTemplateRepository {
     /**
