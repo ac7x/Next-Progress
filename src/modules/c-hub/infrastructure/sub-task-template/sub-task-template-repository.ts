@@ -1,5 +1,5 @@
-import { CreateSubTaskTemplateProps, SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
-import { ISubTaskTemplateRepository } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-repository';
+import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template/entities/sub-task-template-entity';
+import { ISubTaskTemplateRepository } from '@/modules/c-hub/domain/sub-task-template/repositories/sub-task-template-repository-interface';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
 import { subTaskTemplateAdapter } from './sub-task-template-adapter';
@@ -84,7 +84,7 @@ export class SubTaskTemplateRepository implements ISubTaskTemplateRepository {
     return subTaskTemplateAdapter.toDomain(template, { taskTemplateRelation: relation });
   }
 
-  async update(id: string, data: Partial<CreateSubTaskTemplateProps>): Promise<SubTaskTemplate> {
+  async update(id: string, data: Partial<UpdateSubTaskTemplateProps>): Promise<SubTaskTemplate> {
     // 準備更新數據
     const updateData: Prisma.SubTaskTemplateUpdateInput = {};
 

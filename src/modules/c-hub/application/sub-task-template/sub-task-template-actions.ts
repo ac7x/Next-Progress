@@ -1,13 +1,13 @@
 'use server';
 
-import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
+import { CreateSubTaskTemplateProps, SubTaskTemplate, UpdateSubTaskTemplateProps } from '@/modules/c-hub/domain/sub-task-template/entities/sub-task-template-entity';
 import { createSubTaskTemplateCommand, deleteSubTaskTemplateCommand, updateSubTaskTemplateCommand } from './sub-task-template.command';
 // 以 Query 結尾作為 CQRS 查詢區分，避免命名衝突
 import {
+  getSubTaskTemplateQuery,
   listSubTaskTemplatesByTaskTemplateIdHandler,
   ListSubTaskTemplatesByTaskTemplateIdQuery,
-  SubTaskTemplateListResponse,
-  getSubTaskTemplateQuery
+  SubTaskTemplateListResponse
 } from './sub-task-template.query';
 
 // UI Action: 建立子任務模板

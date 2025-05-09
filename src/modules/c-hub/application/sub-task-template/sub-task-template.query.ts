@@ -1,10 +1,10 @@
 'use server';
 
-import { SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-entity';
-import { SubTaskTemplateDomainService } from '@/modules/c-hub/domain/sub-task-template/sub-task-template-service';
-import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template.repository';
+import { SubTaskTemplate } from '@/modules/c-hub/domain/sub-task-template/entities/sub-task-template-entity';
+import { SubTaskTemplateService } from '@/modules/c-hub/domain/sub-task-template/services/sub-task-template-service';
+import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
 
-const templateService = new SubTaskTemplateDomainService(subTaskTemplateRepository);
+const templateService = new SubTaskTemplateService(subTaskTemplateRepository);
 
 // Query: 取得單一子任務模板
 export async function getSubTaskTemplateQuery(id: string): Promise<SubTaskTemplate | null> {
