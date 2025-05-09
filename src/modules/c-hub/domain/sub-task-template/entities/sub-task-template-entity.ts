@@ -85,10 +85,10 @@ export class SubTaskTemplateFactory {
     static create(props: CreateSubTaskTemplateProps): Partial<RichSubTaskTemplate> {
         return {
             name: new SubTaskTemplateName(props.name),
-            description: new SubTaskTemplateDescription(props.description),
+            description: new SubTaskTemplateDescription(props.description ?? null),
             plannedStart: props.plannedStart || null,
             plannedEnd: props.plannedEnd || null,
-            equipmentCount: new SubTaskTemplateEquipmentCount(props.equipmentCount),
+            equipmentCount: new SubTaskTemplateEquipmentCount(props.equipmentCount ?? null),
             priority: new SubTaskTemplatePriority(props.priority ?? 0),
             status: new SubTaskTemplateStatus(props.status || 'pending'),
             completionRate: new SubTaskTemplateCompletionRate(props.completionRate ?? 0),
