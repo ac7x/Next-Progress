@@ -2,8 +2,8 @@
 
 import { createWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain';
+import { getTags, getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

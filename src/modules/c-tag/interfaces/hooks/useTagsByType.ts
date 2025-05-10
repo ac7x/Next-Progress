@@ -1,8 +1,8 @@
 // src/modules/c-tag/interfaces/hooks/useTagsByType.ts
 'use client';
 
+import { getTags, getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useQuery } from '@tanstack/react-query';
 
 export function useTagsByType(type: TagType | 'ALL') {

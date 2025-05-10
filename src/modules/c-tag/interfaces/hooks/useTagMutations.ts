@@ -1,8 +1,8 @@
 // src/modules/c-tag/interfaces/hooks/useTagMutations.ts
 'use client';
 
+import { createTagAction, deleteTagAction, updateTagAction } from '@/modules/c-tag/application/commands/tag-command-handler';
 import { Tag, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
-import { createTagAction, deleteTagAction, updateTagAction } from '@/modules/c-tag/interfaces/tag-command-actions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useCreateTag() {

@@ -2,8 +2,8 @@
 
 import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItem } from '@/modules/c-stock/domain';
+import { getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

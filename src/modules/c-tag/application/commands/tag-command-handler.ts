@@ -69,3 +69,8 @@ export async function DeleteTagCommandHandler(id: string): Promise<void> {
             : new Error('刪除標籤失敗: ' + String(error));
     }
 }
+
+// 直接暴露 Server Actions 給界面層使用
+export const createTagAction = CreateTagCommandHandler;
+export const updateTagAction = UpdateTagCommandHandler;
+export const deleteTagAction = DeleteTagCommandHandler;

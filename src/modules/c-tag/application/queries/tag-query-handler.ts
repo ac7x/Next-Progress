@@ -56,3 +56,8 @@ export async function GetTagsByTypeQueryHandler(type: TagType): Promise<Tag[]> {
             : new Error(`查詢類型 ${type} 的標籤失敗: ` + String(error));
     }
 }
+
+// 直接暴露 Server Actions 給界面層使用
+export const getTags = GetTagListQueryHandler;
+export const getTag = GetTagByIdQueryHandler;
+export const getTagsByType = GetTagsByTypeQueryHandler;
