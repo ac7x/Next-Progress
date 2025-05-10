@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteTaskTemplate, updateTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
-import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
+import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
