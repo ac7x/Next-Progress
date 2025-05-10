@@ -1,4 +1,4 @@
-import { TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance/task-instance-service';
+import { TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance';
 import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
 import { CreateSubTaskInstanceProps, SubTaskInstance, UpdateSubTaskInstanceProps, isValidSubTaskInstance } from '../entities/sub-task-instance-entity';
 import { SubTaskInstanceCompletedEvent } from '../events/sub-task-instance-completed-event';
