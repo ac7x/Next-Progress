@@ -1,33 +1,18 @@
 // src/modules/c-tag/interfaces/tag-command-actions.ts
 'use server';
 
-import { TagCommandService } from '@/modules/c-tag/application/commands/tag-commands';
-import { CreateTagProps, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
-import { TagDomainService } from '@/modules/c-tag/domain/services/tag-domain-service';
-import { tagRepository } from '@/modules/c-tag/infrastructure/repositories/tag-repository';
-import { revalidatePath } from 'next/cache';
+import { CreateTagCommandHandler, DeleteTagCommandHandler, UpdateTagCommandHandler } from '../application/commands/tag-command-handler';
+import { CreateTagProps, UpdateTagProps } from '../domain/entities/tag-entity';
 
-// 初始化服務
-const domainService = new TagDomainService(tagRepository);
-const commandService = new TagCommandService(domainService);
-
-// Command Server Actions
+// Command Server Actions - 介面層僅負責轉發請求到應用層的命令處理器
 export async function createTagAction(data: CreateTagProps) {
-    const tag = await commandService.createTag(data);
-    revalidatePath('/client/dashboard');
-    revalidatePath('/client/tag');
-    return tag;
+    return CreateTagCommandHandler(data);
 }
 
 export async function updateTagAction(id: string, data: UpdateTagProps) {
-    const tag = await commandService.updateTag(id, data);
-    revalidatePath('/client/dashboard');
-    revalidatePath('/client/tag');
-    return tag;
+    return UpdateTagCommandHandler(id, data);
 }
 
 export async function deleteTagAction(id: string) {
-    await commandService.deleteTag(id);
-    revalidatePath('/client/dashboard');
-    revalidatePath('/client/tag');
+    return DeleteTagCommandHandler(id);
 }

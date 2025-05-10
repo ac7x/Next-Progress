@@ -1,24 +1,18 @@
 // src/modules/c-tag/interfaces/tag-query-actions.ts
 'use server';
 
-import { TagQueryService } from '@/modules/c-tag/application/queries/tag-queries';
-import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { TagDomainService } from '@/modules/c-tag/domain/services/tag-domain-service';
-import { tagRepository } from '@/modules/c-tag/infrastructure/repositories/tag-repository';
+import { GetTagByIdQueryHandler, GetTagListQueryHandler, GetTagsByTypeQueryHandler } from '../application/queries/tag-query-handler';
+import { TagType } from '../domain/entities/tag-entity';
 
-// 初始化服務
-const domainService = new TagDomainService(tagRepository);
-const queryService = new TagQueryService(domainService);
-
-// Query Server Actions
-export async function getTags(): Promise<Tag[]> {
-    return queryService.listTags();
+// Query Server Actions - 介面層僅負責轉發請求到應用層的查詢處理器
+export async function getTags() {
+    return GetTagListQueryHandler();
 }
 
-export async function getTag(id: string): Promise<Tag | null> {
-    return queryService.getTagById(id);
+export async function getTag(id: string) {
+    return GetTagByIdQueryHandler(id);
 }
 
-export async function getTagsByType(type: TagType): Promise<Tag[]> {
-    return queryService.listTagsByType(type);
+export async function getTagsByType(type: TagType) {
+    return GetTagsByTypeQueryHandler(type);
 }
