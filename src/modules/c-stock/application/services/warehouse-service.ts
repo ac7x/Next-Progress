@@ -1,109 +1,87 @@
-import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto/warehouse-dto';
-import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
-import { IWarehouseRepository } from '@/modules/c-stock/domain/repositories/warehouse-repository-interface';
-import { WarehouseService as WarehouseDomainService } from '@/modules/c-stock/domain/services/warehouse-service';
-import { revalidatePath } from 'next/cache';
+import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse-entity';
+import { IWarehouseRepository } from '../../domain/repositories/warehouse-repository-interface';
+import { WarehouseService as DomainWarehouseService } from '../../domain/services/warehouse-service';
 
 /**
- * 倉庫應用服務 - 負責協調倉庫領域邏輯與基礎設施，處理跨領域關注點
+ * 倉庫應用服務 - 協調領域服務和基礎設施
  */
 export class WarehouseApplicationService {
-    private readonly domainService: WarehouseDomainService;
+    private readonly domainService: DomainWarehouseService;
 
-    constructor(private readonly repository: IWarehouseRepository) {
-        this.domainService = new WarehouseDomainService(repository);
+    constructor(warehouseRepository: IWarehouseRepository) {
+        this.domainService = new DomainWarehouseService(warehouseRepository);
+    }
+
+    /**
+     * 創建新倉庫
+     * @param data 倉庫創建資料
+     */
+    async createWarehouse(data: CreateWarehouseProps): Promise<Warehouse> {
+        return this.domainService.createWarehouse(data);
+    }
+
+    /**
+     * 更新倉庫資訊
+     * @param id 倉庫ID
+     * @param data 更新資料
+     */
+    async updateWarehouse(id: string, data: UpdateWarehouseProps): Promise<Warehouse> {
+        return this.domainService.updateWarehouse(id, data);
+    }
+
+    /**
+     * 刪除倉庫
+     * @param id 倉庫ID
+     */
+    async deleteWarehouse(id: string): Promise<boolean> {
+        return this.domainService.deleteWarehouse(id);
+    }
+
+    /**
+     * 根據ID查找倉庫
+     * @param id 倉庫ID
+     */
+    async getWarehouseById(id: string): Promise<Warehouse | null> {
+        return this.domainService.getWarehouseById(id);
     }
 
     /**
      * 獲取所有倉庫
+     * @param options 分頁和排序選項
      */
-    async getAllWarehouses(): Promise<Warehouse[]> {
-        try {
-            return await this.domainService.getAllWarehouses();
-        } catch (error) {
-            console.error('獲取倉庫列表失敗:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 根據ID獲取倉庫
-     */
-    async getWarehouseById(id: string): Promise<Warehouse | null> {
-        try {
-            return await this.domainService.getWarehouseById(id);
-        } catch (error) {
-            console.error(`獲取倉庫 ID:${id} 失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 創建新倉庫並刷新相關頁面快取
-     */
-    async createWarehouse(data: CreateWarehouseDTO): Promise<Warehouse> {
-        try {
-            const warehouse = await this.domainService.createWarehouse(data);
-            revalidatePath('/client/warehouse_instance');
-            return warehouse;
-        } catch (error) {
-            console.error('創建倉庫失敗:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 更新倉庫資訊並刷新相關頁面快取
-     */
-    async updateWarehouse(id: string, data: UpdateWarehouseDTO): Promise<Warehouse> {
-        try {
-            const warehouse = await this.domainService.updateWarehouse(id, data);
-            revalidatePath('/client/warehouse_instance');
-            return warehouse;
-        } catch (error) {
-            console.error(`更新倉庫 ID:${id} 失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 刪除倉庫並刷新相關頁面快取
-     */
-    async deleteWarehouse(id: string): Promise<void> {
-        try {
-            await this.domainService.deleteWarehouse(id);
-            revalidatePath('/client/warehouse_instance');
-        } catch (error) {
-            console.error(`刪除倉庫 ID:${id} 失敗:`, error);
-            throw error;
-        }
+    async getAllWarehouses(options?: {
+        skip?: number;
+        take?: number;
+        orderBy?: { [key: string]: 'asc' | 'desc' }
+    }): Promise<Warehouse[]> {
+        return this.domainService.getAllWarehouses(options);
     }
 
     /**
      * 啟用倉庫
+     * @param id 倉庫ID
      */
     async activateWarehouse(id: string): Promise<Warehouse> {
-        try {
-            const warehouse = await this.domainService.activateWarehouse(id);
-            revalidatePath('/client/warehouse_instance');
-            return warehouse;
-        } catch (error) {
-            console.error(`啟用倉庫 ID:${id} 失敗:`, error);
-            throw error;
-        }
+        return this.domainService.activateWarehouse(id);
     }
 
     /**
      * 停用倉庫
+     * @param id 倉庫ID
      */
     async deactivateWarehouse(id: string): Promise<Warehouse> {
-        try {
-            const warehouse = await this.domainService.deactivateWarehouse(id);
-            revalidatePath('/client/warehouse_instance');
-            return warehouse;
-        } catch (error) {
-            console.error(`停用倉庫 ID:${id} 失敗:`, error);
-            throw error;
-        }
+        return this.domainService.deactivateWarehouse(id);
+    }
+
+    /**
+     * 獲取倉庫總數
+     * @param onlyActive 是否僅計算活動倉庫
+     */
+    async getWarehouseCount(onlyActive?: boolean): Promise<number> {
+        return this.domainService.getWarehouseCount(onlyActive);
     }
 }
+
+// 倉庫服務實例將在應用初始化時被注入實際的儲存庫實現
+// 這里先導出一個佔位符，實際使用時會被替換
+export let warehouseService: WarehouseApplicationService;

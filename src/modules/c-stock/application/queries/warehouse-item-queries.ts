@@ -21,10 +21,15 @@ export async function getAllWarehouseItems(options?: {
 /**
  * 根據倉庫ID獲取物品
  * @param warehouseId 倉庫ID
+ * @param options 查詢選項
  * @returns 倉庫物品列表
  */
-export async function getItemsByWarehouseId(warehouseId: string): Promise<WarehouseItem[]> {
-    return warehouseItemService.getItemsByWarehouseId(warehouseId);
+export async function getItemsByWarehouseId(warehouseId: string, options?: {
+    skip?: number;
+    take?: number;
+    orderBy?: { [key: string]: 'asc' | 'desc' };
+}): Promise<WarehouseItem[]> {
+    return warehouseItemService.getItemsByWarehouseId(warehouseId, options);
 }
 
 /**
@@ -34,6 +39,15 @@ export async function getItemsByWarehouseId(warehouseId: string): Promise<Wareho
  */
 export async function getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
     return warehouseItemService.getWarehouseItemById(id);
+}
+
+/**
+ * 獲取物品總數
+ * @param filter 過濾條件
+ * @returns 物品總數
+ */
+export async function getWarehouseItemCount(filter?: { warehouseId?: string; type?: string }): Promise<number> {
+    return warehouseItemService.getWarehouseItemCount(filter);
 }
 
 /**

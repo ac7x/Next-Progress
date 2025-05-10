@@ -1,37 +1,80 @@
-import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem, WarehouseItemType } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
-import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
+import { WarehouseItem, WarehouseItemTypeEnum } from '../../domain/entities/warehouse-item-entity';
 
 /**
- * 倉庫物品 DTO - 用於應用層與介面層之間的資料傳輸
+ * 倉庫物品資料傳輸物件
  */
-export interface WarehouseItemDTO extends WarehouseItem {
-    // 可擴展屬性，例如額外的關聯資料
-    warehouseName?: string;
-}
-
-/**
- * 創建倉庫物品的輸入 DTO
- */
-export type CreateWarehouseItemDTO = CreateWarehouseItemProps;
-
-/**
- * 更新倉庫物品的輸入 DTO
- */
-export type UpdateWarehouseItemDTO = UpdateWarehouseItemProps;
-
-/**
- * 倉庫物品列表項目 DTO - 用於列表顯示
- */
-export interface WarehouseItemListItemDTO {
+export interface WarehouseItemDto {
     id: string;
     name: string;
     description: string | null;
     quantity: number;
-    unit: string | null;
-    type: WarehouseItemType;
     warehouseId: string;
-    warehouseName?: string;
     tags: { id: string; name: string; type: TagRelationType }[];
+    unit?: string | null;
+    type: string;
     createdAt: Date;
     updatedAt: Date;
+    typeName?: string; // 類型的本地化名稱
+}
+
+/**
+ * 建立倉庫物品的輸入 DTO
+ */
+export interface CreateWarehouseItemDto {
+    name: string;
+    description?: string | null;
+    quantity: number;
+    warehouseId: string;
+    tags?: string[] | null;
+    unit?: string | null;
+    type: string;
+}
+
+/**
+ * 更新倉庫物品的輸入 DTO
+ */
+export interface UpdateWarehouseItemDto {
+    name?: string;
+    description?: string | null;
+    quantity?: number;
+    warehouseId?: string;
+    tags?: string[] | null;
+    unit?: string | null;
+    type?: string;
+}
+
+/**
+ * 將倉庫物品實體轉換為 DTO
+ * @param item 倉庫物品實體
+ */
+export function toWarehouseItemDto(item: WarehouseItem): WarehouseItemDto {
+    // 獲取類型的本地化名稱
+    const typeNames: Record<string, string> = {
+        [WarehouseItemTypeEnum.TOOL]: '工具',
+        [WarehouseItemTypeEnum.EQUIPMENT]: '設備',
+        [WarehouseItemTypeEnum.CONSUMABLE]: '耗材'
+    };
+
+    return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        quantity: item.quantity,
+        warehouseId: item.warehouseId,
+        tags: item.tags || [],
+        unit: item.unit,
+        type: item.type,
+        typeName: typeNames[item.type] || item.type,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt
+    };
+}
+
+/**
+ * 將多個倉庫物品實體轉換為 DTO 陣列
+ * @param items 倉庫物品實體陣列
+ */
+export function toWarehouseItemDtoArray(items: WarehouseItem[]): WarehouseItemDto[] {
+    return items.map(toWarehouseItemDto);
 }

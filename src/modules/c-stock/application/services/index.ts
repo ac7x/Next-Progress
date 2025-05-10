@@ -1,12 +1,20 @@
-import { warehouseItemRepository } from '@/modules/c-stock/infrastructure/repositories/warehouse-item-repository';
-import { warehouseInstanceRepository } from '@/modules/c-stock/infrastructure/repositories/warehouse-repository';
+import { warehouseItemRepository } from '../../infrastructure/repositories/warehouse-item-repository';
+import { warehouseRepository } from '../../infrastructure/repositories/warehouse-repository';
 import { WarehouseItemApplicationService } from './warehouse-item-service';
 import { WarehouseApplicationService } from './warehouse-service';
 
-// 創建應用服務實例
-export const warehouseService = new WarehouseApplicationService(warehouseInstanceRepository);
-export const warehouseItemService = new WarehouseItemApplicationService(warehouseItemRepository, warehouseInstanceRepository);
+// 初始化服務實例
+const warehouseApplicationService = new WarehouseApplicationService(warehouseRepository);
+const warehouseItemApplicationService = new WarehouseItemApplicationService(
+    warehouseItemRepository,
+    warehouseRepository
+);
 
-// 匯出服務類
-export { WarehouseApplicationService, WarehouseItemApplicationService };
+// 替換占位符
+export const warehouseService = warehouseApplicationService;
+export const warehouseItemService = warehouseItemApplicationService;
+
+// 匯出所有服務類型
+export * from './warehouse-item-service';
+export * from './warehouse-service';
 

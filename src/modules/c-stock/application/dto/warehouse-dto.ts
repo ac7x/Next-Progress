@@ -1,33 +1,58 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
+import { Warehouse } from '../../domain/entities/warehouse-entity';
 
 /**
- * 倉庫 DTO - 用於應用層與介面層之間的資料傳輸
+ * 倉庫資料傳輸物件
  */
-export interface WarehouseDTO extends Warehouse {
-    // 可擴展屬性，例如統計資料或關聯資料
-    itemCount?: number;
-}
-
-/**
- * 創建倉庫的輸入 DTO
- */
-export type CreateWarehouseDTO = CreateWarehouseProps;
-
-/**
- * 更新倉庫的輸入 DTO
- */
-export type UpdateWarehouseDTO = UpdateWarehouseProps;
-
-/**
- * 倉庫列表項目 DTO - 用於列表顯示
- */
-export interface WarehouseListItemDTO {
+export interface WarehouseDto {
     id: string;
     name: string;
     description: string | null;
     location: string | null;
     isActive: boolean;
-    itemCount: number;
     createdAt: Date;
     updatedAt: Date;
+}
+
+/**
+ * 建立倉庫的輸入 DTO
+ */
+export interface CreateWarehouseDto {
+    name: string;
+    description?: string | null;
+    location?: string | null;
+    isActive?: boolean;
+}
+
+/**
+ * 更新倉庫的輸入 DTO
+ */
+export interface UpdateWarehouseDto {
+    name?: string;
+    description?: string | null;
+    location?: string | null;
+    isActive?: boolean;
+}
+
+/**
+ * 將倉庫實體轉換為 DTO
+ * @param warehouse 倉庫實體
+ */
+export function toWarehouseDto(warehouse: Warehouse): WarehouseDto {
+    return {
+        id: warehouse.id,
+        name: warehouse.name,
+        description: warehouse.description,
+        location: warehouse.location || null,
+        isActive: warehouse.isActive,
+        createdAt: warehouse.createdAt,
+        updatedAt: warehouse.updatedAt
+    };
+}
+
+/**
+ * 將多個倉庫實體轉換為 DTO 陣列
+ * @param warehouses 倉庫實體陣列
+ */
+export function toWarehouseDtoArray(warehouses: Warehouse[]): WarehouseDto[] {
+    return warehouses.map(toWarehouseDto);
 }

@@ -1,25 +1,87 @@
-import { CreateWarehouseItemDTO, UpdateWarehouseItemDTO } from '@/modules/c-stock/application/dto/warehouse-item-dto';
-import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
-import { IWarehouseItemRepository } from '@/modules/c-stock/domain/repositories/warehouse-item-repository-interface';
-import { IWarehouseRepository } from '@/modules/c-stock/domain/repositories/warehouse-repository-interface';
-import { WarehouseItemService as WarehouseItemDomainService } from '@/modules/c-stock/domain/services/warehouse-item-service';
-import { revalidatePath } from 'next/cache';
+import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '../../domain/entities/warehouse-item-entity';
+import { IWarehouseItemRepository } from '../../domain/repositories/warehouse-item-repository-interface';
+import { IWarehouseRepository } from '../../domain/repositories/warehouse-repository-interface';
+import { WarehouseItemService as DomainWarehouseItemService } from '../../domain/services/warehouse-item-service';
 
 /**
- * 倉庫物品應用服務 - 負責協調倉庫物品領域邏輯與基礎設施，處理跨領域關注點
+ * 倉庫物品應用服務 - 協調領域服務和基礎設施
  */
 export class WarehouseItemApplicationService {
-    private readonly domainService: WarehouseItemDomainService;
+    private readonly domainService: DomainWarehouseItemService;
 
     constructor(
-        private readonly warehouseItemRepository: IWarehouseItemRepository,
-        private readonly warehouseRepository: IWarehouseRepository
+        warehouseItemRepository: IWarehouseItemRepository,
+        warehouseRepository: IWarehouseRepository
     ) {
-        this.domainService = new WarehouseItemDomainService(warehouseItemRepository, warehouseRepository);
+        this.domainService = new DomainWarehouseItemService(warehouseItemRepository, warehouseRepository);
     }
 
     /**
-     * 獲取所有倉庫物品
+     * 創建新倉庫物品
+     * @param data 倉庫物品創建資料
+     */
+    async createWarehouseItem(data: CreateWarehouseItemProps): Promise<WarehouseItem> {
+        return this.domainService.createWarehouseItem(data);
+    }
+
+    /**
+     * 批量創建倉庫物品
+     * @param items 倉庫物品創建資料列表
+     * @param warehouseId 倉庫ID
+     */
+    async createManyWarehouseItems(
+        items: Omit<CreateWarehouseItemProps, 'warehouseId'>[],
+        warehouseId: string
+    ): Promise<number> {
+        return this.domainService.createManyWarehouseItems(items, warehouseId);
+    }
+
+    /**
+     * 更新倉庫物品資訊
+     * @param id 物品ID
+     * @param data 更新資料
+     */
+    async updateWarehouseItem(id: string, data: UpdateWarehouseItemProps): Promise<WarehouseItem> {
+        return this.domainService.updateWarehouseItem(id, data);
+    }
+
+    /**
+     * 更新物品數量
+     * @param id 物品ID
+     * @param quantity 新數量
+     */
+    async updateWarehouseItemQuantity(id: string, quantity: number): Promise<WarehouseItem> {
+        return this.domainService.updateWarehouseItemQuantity(id, quantity);
+    }
+
+    /**
+     * 刪除倉庫物品
+     * @param id 物品ID
+     */
+    async deleteWarehouseItem(id: string): Promise<boolean> {
+        return this.domainService.deleteWarehouseItem(id);
+    }
+
+    /**
+     * 根據倉庫ID刪除所有物品
+     * @param warehouseId 倉庫ID
+     */
+    async deleteItemsByWarehouseId(warehouseId: string): Promise<number> {
+        return this.domainService.deleteItemsByWarehouseId(warehouseId);
+    }
+
+    /**
+     *
+     * 根據ID查找倉庫物品
+     * @param id 物品ID
+     */
+    async getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
+        return this.domainService.getWarehouseItemById(id);
+    }
+
+    /**
+     * 獲取所有倉庫物品，可選擇按倉庫或類型過濾
+     * @param options 查詢選項
      */
     async getAllWarehouseItems(options?: {
         warehouseId?: string;
@@ -28,123 +90,44 @@ export class WarehouseItemApplicationService {
         take?: number;
         orderBy?: { [key: string]: 'asc' | 'desc' };
     }): Promise<WarehouseItem[]> {
-        try {
-            return await this.domainService.getAllWarehouseItems(options);
-        } catch (error) {
-            console.error('獲取倉庫物品列表失敗:', error);
-            throw error;
-        }
+        return this.domainService.getAllWarehouseItems(options);
     }
 
     /**
      * 根據倉庫ID獲取物品
+     * @param warehouseId 倉庫ID
+     * @param options 查詢選項
      */
-    async getItemsByWarehouseId(warehouseId: string): Promise<WarehouseItem[]> {
-        try {
-            return await this.domainService.getItemsByWarehouseId(warehouseId);
-        } catch (error) {
-            console.error(`獲取倉庫 ID:${warehouseId} 的物品失敗:`, error);
-            throw error;
-        }
+    async getItemsByWarehouseId(warehouseId: string, options?: {
+        skip?: number;
+        take?: number;
+        orderBy?: { [key: string]: 'asc' | 'desc' };
+    }): Promise<WarehouseItem[]> {
+        return this.domainService.getItemsByWarehouseId(warehouseId, options);
     }
 
     /**
-     * 根據ID獲取倉庫物品
+     * 獲取物品總數
+     * @param filter 過濾條件
      */
-    async getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
-        try {
-            return await this.domainService.getWarehouseItemById(id);
-        } catch (error) {
-            console.error(`獲取倉庫物品 ID:${id} 失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 創建新倉庫物品並刷新相關頁面快取
-     */
-    async createWarehouseItem(data: CreateWarehouseItemDTO): Promise<WarehouseItem> {
-        try {
-            const item = await this.domainService.createWarehouseItem(data);
-            revalidatePath(`/client/warehouse_instance`);
-            return item;
-        } catch (error) {
-            console.error('創建倉庫物品失敗:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 批量創建倉庫物品並刷新相關頁面快取
-     */
-    async createManyWarehouseItems(
-        items: Omit<CreateWarehouseItemDTO, 'warehouseId'>[],
-        warehouseId: string
-    ): Promise<number> {
-        try {
-            const count = await this.domainService.createManyWarehouseItems(items, warehouseId);
-            revalidatePath(`/client/warehouse_instance`);
-            return count;
-        } catch (error) {
-            console.error(`批量創建倉庫物品到倉庫 ID:${warehouseId} 失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 更新倉庫物品資訊並刷新相關頁面快取
-     */
-    async updateWarehouseItem(id: string, data: UpdateWarehouseItemDTO): Promise<WarehouseItem> {
-        try {
-            const item = await this.domainService.updateWarehouseItem(id, data);
-            revalidatePath(`/client/warehouse_instance`);
-            return item;
-        } catch (error) {
-            console.error(`更新倉庫物品 ID:${id} 失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 更新倉庫物品數量並刷新相關頁面快取
-     */
-    async updateWarehouseItemQuantity(id: string, quantity: number): Promise<WarehouseItem> {
-        try {
-            const item = await this.domainService.updateWarehouseItemQuantity(id, quantity);
-            revalidatePath(`/client/warehouse_instance`);
-            return item;
-        } catch (error) {
-            console.error(`更新倉庫物品 ID:${id} 數量失敗:`, error);
-            throw error;
-        }
-    }
-
-    /**
-     * 刪除倉庫物品並刷新相關頁面快取
-     */
-    async deleteWarehouseItem(id: string): Promise<void> {
-        try {
-            await this.domainService.deleteWarehouseItem(id);
-            revalidatePath(`/client/warehouse_instance`);
-        } catch (error) {
-            console.error(`刪除倉庫物品 ID:${id} 失敗:`, error);
-            throw error;
-        }
+    async getWarehouseItemCount(filter?: { warehouseId?: string; type?: string }): Promise<number> {
+        return this.domainService.getWarehouseItemCount(filter);
     }
 
     /**
      * 搜索倉庫物品
+     * @param query 搜索關鍵詞
+     * @param options 搜索選項
      */
     async searchWarehouseItems(query: string, options?: {
         warehouseId?: string;
         skip?: number;
         take?: number;
     }): Promise<WarehouseItem[]> {
-        try {
-            return await this.domainService.searchWarehouseItems(query, options);
-        } catch (error) {
-            console.error(`搜索倉庫物品失敗:`, error);
-            throw error;
-        }
+        return this.domainService.searchWarehouseItems(query, options);
     }
 }
+
+// 倉庫物品服務實例將在應用初始化時被注入實際的儲存庫實現
+// 這里先導出一個佔位符，實際使用時會被替換
+export let warehouseItemService: WarehouseItemApplicationService;
