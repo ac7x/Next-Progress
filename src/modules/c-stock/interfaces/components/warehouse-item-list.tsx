@@ -1,7 +1,7 @@
 'use client';
 
 import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
-import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
+import { WarehouseItem } from '@/modules/c-stock/domain';
 import { tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';

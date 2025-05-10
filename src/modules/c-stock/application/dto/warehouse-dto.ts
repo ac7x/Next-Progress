@@ -3,7 +3,7 @@ import { Warehouse } from '../../domain/entities/warehouse-entity';
 /**
  * 倉庫資料傳輸物件
  */
-export interface WarehouseDto {
+export interface WarehouseDTO {
     id: string;
     name: string;
     description: string | null;
@@ -16,7 +16,7 @@ export interface WarehouseDto {
 /**
  * 建立倉庫的輸入 DTO
  */
-export interface CreateWarehouseDto {
+export interface CreateWarehouseDTO {
     name: string;
     description?: string | null;
     location?: string | null;
@@ -26,7 +26,7 @@ export interface CreateWarehouseDto {
 /**
  * 更新倉庫的輸入 DTO
  */
-export interface UpdateWarehouseDto {
+export interface UpdateWarehouseDTO {
     name?: string;
     description?: string | null;
     location?: string | null;
@@ -37,7 +37,7 @@ export interface UpdateWarehouseDto {
  * 將倉庫實體轉換為 DTO
  * @param warehouse 倉庫實體
  */
-export function toWarehouseDto(warehouse: Warehouse): WarehouseDto {
+export function toWarehouseDTO(warehouse: Warehouse): WarehouseDTO {
     return {
         id: warehouse.id,
         name: warehouse.name,
@@ -53,6 +53,6 @@ export function toWarehouseDto(warehouse: Warehouse): WarehouseDto {
  * 將多個倉庫實體轉換為 DTO 陣列
  * @param warehouses 倉庫實體陣列
  */
-export function toWarehouseDtoArray(warehouses: Warehouse[]): WarehouseDto[] {
-    return warehouses.map(toWarehouseDto);
+export function toWarehouseDTOArray(warehouses: Warehouse[]): WarehouseDTO[] {
+    return warehouses.map(toWarehouseDTO);
 }

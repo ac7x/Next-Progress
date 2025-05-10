@@ -4,7 +4,7 @@ import { WarehouseItem, WarehouseItemTypeEnum } from '../../domain/entities/ware
 /**
  * 倉庫物品資料傳輸物件
  */
-export interface WarehouseItemDto {
+export interface WarehouseItemDTO {
     id: string;
     name: string;
     description: string | null;
@@ -21,7 +21,7 @@ export interface WarehouseItemDto {
 /**
  * 建立倉庫物品的輸入 DTO
  */
-export interface CreateWarehouseItemDto {
+export interface CreateWarehouseItemDTO {
     name: string;
     description?: string | null;
     quantity: number;
@@ -34,7 +34,7 @@ export interface CreateWarehouseItemDto {
 /**
  * 更新倉庫物品的輸入 DTO
  */
-export interface UpdateWarehouseItemDto {
+export interface UpdateWarehouseItemDTO {
     name?: string;
     description?: string | null;
     quantity?: number;
@@ -48,7 +48,7 @@ export interface UpdateWarehouseItemDto {
  * 將倉庫物品實體轉換為 DTO
  * @param item 倉庫物品實體
  */
-export function toWarehouseItemDto(item: WarehouseItem): WarehouseItemDto {
+export function toWarehouseItemDTO(item: WarehouseItem): WarehouseItemDTO {
     // 獲取類型的本地化名稱
     const typeNames: Record<string, string> = {
         [WarehouseItemTypeEnum.TOOL]: '工具',
@@ -75,6 +75,6 @@ export function toWarehouseItemDto(item: WarehouseItem): WarehouseItemDto {
  * 將多個倉庫物品實體轉換為 DTO 陣列
  * @param items 倉庫物品實體陣列
  */
-export function toWarehouseItemDtoArray(items: WarehouseItem[]): WarehouseItemDto[] {
-    return items.map(toWarehouseItemDto);
+export function toWarehouseItemDTOArray(items: WarehouseItem[]): WarehouseItemDTO[] {
+    return items.map(toWarehouseItemDTO);
 }
