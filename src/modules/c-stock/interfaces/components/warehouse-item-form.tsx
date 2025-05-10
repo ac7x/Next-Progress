@@ -2,8 +2,8 @@
 
 import { createWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain';
-import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
+import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -26,8 +26,8 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   useEffect(() => {
     const loadData = async () => {
       try {
-        const itemTags = await tagQueryListByType(TagType.WAREHOUSE_ITEM);
-        const generalTags = await tagQueryList();
+        const itemTags = await getTagsByType(TagType.WAREHOUSE_ITEM);
+        const generalTags = await getTags();
 
         const uniqueTags = [...itemTags];
         generalTags.forEach(tag => {

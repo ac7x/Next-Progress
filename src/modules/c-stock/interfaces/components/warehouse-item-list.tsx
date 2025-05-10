@@ -2,8 +2,8 @@
 
 import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItem } from '@/modules/c-stock/domain';
-import { tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
+import { getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +22,7 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
   useEffect(() => {
     async function fetchTags() {
       try {
-        const tags = await tagQueryListByType(TagType.WAREHOUSE_ITEM);
+        const tags = await getTagsByType(TagType.WAREHOUSE_ITEM);
         setAvailableTags(tags);
       } catch (err) {
         console.error('載入標籤失敗:', err);
