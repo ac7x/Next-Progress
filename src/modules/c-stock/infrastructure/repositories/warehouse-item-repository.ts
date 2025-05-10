@@ -2,7 +2,7 @@ import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/cli
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { IWarehouseItemRepository } from '@/modules/c-stock/domain/warehouse-item-repository';
 import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
-import { warehouseItemAdapter } from './warehouse-item-adapter';
+import { warehouseItemAdapter } from '../adapter/warehouse-item-adapter';
 
 export class WarehouseItemRepository implements IWarehouseItemRepository {
   async create(data: CreateWarehouseItemProps): Promise<WarehouseItem> {

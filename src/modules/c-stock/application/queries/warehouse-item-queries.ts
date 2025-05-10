@@ -9,13 +9,13 @@ import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-
  * @returns 倉庫物品列表
  */
 export async function getAllWarehouseItems(options?: {
-  warehouseId?: string;
-  type?: string;
-  skip?: number;
-  take?: number;
-  orderBy?: { [key: string]: 'asc' | 'desc' };
+    warehouseId?: string;
+    type?: string;
+    skip?: number;
+    take?: number;
+    orderBy?: { [key: string]: 'asc' | 'desc' };
 }): Promise<WarehouseItem[]> {
-  return warehouseItemService.getAllWarehouseItems(options);
+    return warehouseItemService.getAllWarehouseItems(options);
 }
 
 /**
@@ -24,7 +24,7 @@ export async function getAllWarehouseItems(options?: {
  * @returns 倉庫物品列表
  */
 export async function getItemsByWarehouseId(warehouseId: string): Promise<WarehouseItem[]> {
-  return warehouseItemService.getItemsByWarehouseId(warehouseId);
+    return warehouseItemService.getItemsByWarehouseId(warehouseId);
 }
 
 /**
@@ -33,7 +33,7 @@ export async function getItemsByWarehouseId(warehouseId: string): Promise<Wareho
  * @returns 倉庫物品或null
  */
 export async function getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
-  return warehouseItemService.getWarehouseItemById(id);
+    return warehouseItemService.getWarehouseItemById(id);
 }
 
 /**
@@ -43,9 +43,9 @@ export async function getWarehouseItemById(id: string): Promise<WarehouseItem | 
  * @returns 匹配的倉庫物品列表
  */
 export async function searchWarehouseItems(query: string, options?: {
-  warehouseId?: string;
-  skip?: number;
-  take?: number;
+    warehouseId?: string;
+    skip?: number;
+    take?: number;
 }): Promise<WarehouseItem[]> {
-  return warehouseItemService.searchWarehouseItems(query, options);
+    return warehouseItemService.searchWarehouseItems(query, options);
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { CreateWarehouseDTO, UpdateWarehouseDTO, WarehouseDTO } from '@/modules/c-stock/application/dto';
+import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto';
 import { warehouseService } from '@/modules/c-stock/application/services';
 import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
 
@@ -9,7 +9,7 @@ import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
  * @param data 倉庫創建資料
  */
 export async function createWarehouse(data: CreateWarehouseDTO): Promise<Warehouse> {
-  return warehouseService.createWarehouse(data);
+    return warehouseService.createWarehouse(data);
 }
 
 /**
@@ -18,7 +18,7 @@ export async function createWarehouse(data: CreateWarehouseDTO): Promise<Warehou
  * @param data 更新資料
  */
 export async function updateWarehouse(id: string, data: UpdateWarehouseDTO): Promise<Warehouse> {
-  return warehouseService.updateWarehouse(id, data);
+    return warehouseService.updateWarehouse(id, data);
 }
 
 /**
@@ -26,7 +26,7 @@ export async function updateWarehouse(id: string, data: UpdateWarehouseDTO): Pro
  * @param id 倉庫ID
  */
 export async function deleteWarehouse(id: string): Promise<void> {
-  return warehouseService.deleteWarehouse(id);
+    return warehouseService.deleteWarehouse(id);
 }
 
 /**
@@ -34,7 +34,7 @@ export async function deleteWarehouse(id: string): Promise<void> {
  * @param id 倉庫ID
  */
 export async function activateWarehouse(id: string): Promise<Warehouse> {
-  return warehouseService.activateWarehouse(id);
+    return warehouseService.activateWarehouse(id);
 }
 
 /**
@@ -42,5 +42,5 @@ export async function activateWarehouse(id: string): Promise<Warehouse> {
  * @param id 倉庫ID
  */
 export async function deactivateWarehouse(id: string): Promise<Warehouse> {
-  return warehouseService.deactivateWarehouse(id);
+    return warehouseService.deactivateWarehouse(id);
 }

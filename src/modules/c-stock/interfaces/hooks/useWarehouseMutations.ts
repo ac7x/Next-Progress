@@ -1,11 +1,11 @@
 'use client';
 
-import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto';
-import { 
-  createWarehouse, 
-  updateWarehouse, 
-  deleteWarehouse 
+import {
+  createWarehouse,
+  deleteWarehouse,
+  updateWarehouse
 } from '@/modules/c-stock/application/commands';
+import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 /**

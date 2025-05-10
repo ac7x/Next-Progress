@@ -1,6 +1,6 @@
 import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
 import { IWarehouseInstanceDomainService, WarehouseInstanceDomainService } from '@/modules/c-stock/domain/warehouse-service';
-import { warehouseInstanceRepository } from '@/modules/c-stock/infrastructure/warehouse-repository';
+import { warehouseInstanceRepository } from '@/modules/c-stock/infrastructure/repositories/warehouse-repository';
 
 export class WarehouseInstanceApplicationService {
   constructor(private readonly domainService: IWarehouseInstanceDomainService) { }

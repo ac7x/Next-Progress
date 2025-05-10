@@ -1,6 +1,5 @@
 'use server';
 
-import { WarehouseDTO } from '@/modules/c-stock/application/dto';
 import { warehouseService } from '@/modules/c-stock/application/services';
 import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
 
@@ -9,7 +8,7 @@ import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
  * @returns 倉庫列表
  */
 export async function getAllWarehouses(): Promise<Warehouse[]> {
-  return warehouseService.getAllWarehouses();
+    return warehouseService.getAllWarehouses();
 }
 
 /**
@@ -18,5 +17,5 @@ export async function getAllWarehouses(): Promise<Warehouse[]> {
  * @returns 倉庫資訊或null
  */
 export async function getWarehouseById(id: string): Promise<Warehouse | null> {
-  return warehouseService.getWarehouseById(id);
+    return warehouseService.getWarehouseById(id);
 }

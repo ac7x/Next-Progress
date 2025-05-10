@@ -1,17 +1,17 @@
 'use server';
 
+import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseItemDTO, UpdateWarehouseItemDTO } from '@/modules/c-stock/application/dto';
 import { warehouseItemService } from '@/modules/c-stock/application/services';
 import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
 import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
-import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 
 /**
  * 創建新倉庫物品
  * @param data 倉庫物品創建資料
  */
 export async function createWarehouseItem(data: CreateWarehouseItemDTO): Promise<WarehouseItem> {
-  return warehouseItemService.createWarehouseItem(data);
+    return warehouseItemService.createWarehouseItem(data);
 }
 
 /**
@@ -20,10 +20,10 @@ export async function createWarehouseItem(data: CreateWarehouseItemDTO): Promise
  * @param warehouseId 倉庫ID
  */
 export async function createManyWarehouseItems(
-  items: Omit<CreateWarehouseItemDTO, 'warehouseId'>[],
-  warehouseId: string
+    items: Omit<CreateWarehouseItemDTO, 'warehouseId'>[],
+    warehouseId: string
 ): Promise<number> {
-  return warehouseItemService.createManyWarehouseItems(items, warehouseId);
+    return warehouseItemService.createManyWarehouseItems(items, warehouseId);
 }
 
 /**
@@ -32,10 +32,10 @@ export async function createManyWarehouseItems(
  * @param data 更新資料
  */
 export async function updateWarehouseItem(
-  id: string,
-  data: UpdateWarehouseItemDTO
+    id: string,
+    data: UpdateWarehouseItemDTO
 ): Promise<WarehouseItem> {
-  return warehouseItemService.updateWarehouseItem(id, data);
+    return warehouseItemService.updateWarehouseItem(id, data);
 }
 
 /**
@@ -44,10 +44,10 @@ export async function updateWarehouseItem(
  * @param quantity 新數量
  */
 export async function updateWarehouseItemQuantity(
-  id: string,
-  quantity: number
+    id: string,
+    quantity: number
 ): Promise<WarehouseItem> {
-  return warehouseItemService.updateWarehouseItemQuantity(id, quantity);
+    return warehouseItemService.updateWarehouseItemQuantity(id, quantity);
 }
 
 /**
@@ -55,7 +55,7 @@ export async function updateWarehouseItemQuantity(
  * @param id 物品ID
  */
 export async function deleteWarehouseItem(id: string): Promise<void> {
-  return warehouseItemService.deleteWarehouseItem(id);
+    return warehouseItemService.deleteWarehouseItem(id);
 }
 
 /**
@@ -64,9 +64,9 @@ export async function deleteWarehouseItem(id: string): Promise<void> {
  * @param tagId 標籤ID
  */
 export async function addTagToWarehouseItem(itemId: string, tagId: string): Promise<void> {
-  await prisma.tagRelation.create({
-    data: { tagId, targetId: itemId, targetType: TagRelationType.WAREHOUSE_ITEM },
-  });
+    await prisma.tagRelation.create({
+        data: { tagId, targetId: itemId, targetType: TagRelationType.WAREHOUSE_ITEM },
+    });
 }
 
 /**
@@ -75,7 +75,7 @@ export async function addTagToWarehouseItem(itemId: string, tagId: string): Prom
  * @param tagId 標籤ID
  */
 export async function removeTagFromWarehouseItem(itemId: string, tagId: string): Promise<void> {
-  await prisma.tagRelation.deleteMany({
-    where: { targetId: itemId, tagId, targetType: TagRelationType.WAREHOUSE_ITEM },
-  });
+    await prisma.tagRelation.deleteMany({
+        where: { targetId: itemId, tagId, targetType: TagRelationType.WAREHOUSE_ITEM },
+    });
 }
