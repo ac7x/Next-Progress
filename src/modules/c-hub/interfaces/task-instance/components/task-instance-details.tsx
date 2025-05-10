@@ -7,11 +7,11 @@
  * <TaskInstanceDetails taskInstance={taskInstance} />
  */
 
+import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-instance/task-instance-command';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import TaskInstanceSubTaskInstancesSection from './task-instance-sub-task-instances-section';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-instance/task-instance.command';
 
 interface TaskInstanceDetailsProps {
   taskInstance: TaskInstance;

@@ -4,7 +4,7 @@ import { listEngineeringsByProject } from '@/modules/c-hub/application/engineeri
 import { listSubTasksInstanceByTaskId } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-actions';
 import { updateSubTaskInstanceCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
-import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-instance/task-instance.command';
+import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-instance/task-instance-command';
 import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';

@@ -1,6 +1,6 @@
 'use client';
 
-import { getTaskInstancesByProjectQuery } from '@/modules/c-hub/application/task-instance/task-instance.query';
+import { getTaskInstancesByProjectQuery } from '@/modules/c-hub/application/task-instance/task-instance-query';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
 import { TaskInstanceSummaryCard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance-summary-card';

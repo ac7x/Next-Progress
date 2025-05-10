@@ -6,7 +6,7 @@
  */
 
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
-import { getTaskInstancesByProjectQuery } from './task-instance.query';
+import { getTaskInstancesByProjectQuery } from './task-instance-query';
 
 /**
  * 根據專案ID獲取該專案下的所有任務實體
