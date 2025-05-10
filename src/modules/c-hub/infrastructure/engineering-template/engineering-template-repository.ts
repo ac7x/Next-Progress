@@ -1,5 +1,6 @@
-import { CreateEngineeringTemplateProps, EngineeringTemplate, UpdateEngineeringTemplateProps } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
-import { IEngineeringTemplateRepository } from '@/modules/c-hub/domain/engineering-template/engineering-template-repository';
+import { CreateEngineeringTemplateProps, EngineeringTemplate, UpdateEngineeringTemplateProps } from '@/modules/c-hub/domain/engineering-template';
+import { IEngineeringTemplateRepository } from '@/modules/c-hub/domain/engineering-template';
+
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
 import { engineeringTemplateAdapter } from './engineering-template-adapter';

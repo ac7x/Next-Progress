@@ -1,4 +1,4 @@
-import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
+import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { engineeringTemplateAdapter } from './engineering-template-adapter';
 

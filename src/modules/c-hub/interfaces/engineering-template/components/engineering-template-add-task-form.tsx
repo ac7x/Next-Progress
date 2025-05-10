@@ -1,7 +1,7 @@
 'use client';
 
 import { createTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
-import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
+import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

@@ -1,4 +1,4 @@
-import { EngineeringTemplate, UpdateEngineeringTemplateProps } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
+import { EngineeringTemplate, UpdateEngineeringTemplateProps } from '@/modules/c-hub/domain/engineering-template';
 import type { Prisma, EngineeringTemplate as PrismaEngineeringTemplate } from '@prisma/client';
 
 export const engineeringTemplateAdapter = {

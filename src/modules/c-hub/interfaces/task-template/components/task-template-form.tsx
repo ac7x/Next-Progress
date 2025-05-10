@@ -8,7 +8,7 @@
  */
 
 import { createTaskTemplateCommand } from '@/modules/c-hub/application/task-template/task-template.command';
-import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
+import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
