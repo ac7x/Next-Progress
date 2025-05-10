@@ -1,5 +1,5 @@
-import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
-import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
+import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
+import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
 // 可選：import { WarehouseItemType } from '@prisma/client';
 
 /**
@@ -9,14 +9,14 @@ export const warehouseDisplayUtils = {
   /**
    * 格式化倉庫名稱顯示
    */
-  formatWarehouseName(warehouse: WarehouseInstance): string {
+  formatWarehouseName(warehouse: Warehouse): string {
     return warehouse.name || '未命名倉庫';
   },
 
   /**
    * 生成倉庫標識顯示（ID的一部分）
    */
-  getWarehouseIdBadge(warehouse: WarehouseInstance): string {
+  getWarehouseIdBadge(warehouse: Warehouse): string {
     return warehouse.id.slice(0, 8);
   },
 
@@ -66,7 +66,7 @@ export const warehouseDisplayUtils = {
   /**
    * 獲取倉庫物品完整名稱
    */
-  getItemFullName(item: WarehouseItem, warehouse?: WarehouseInstance | null): string {
+  getItemFullName(item: WarehouseItem, warehouse?: Warehouse | null): string {
     if (warehouse) {
       return `${warehouse.name} - ${item.name}`;
     }
