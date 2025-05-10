@@ -1,3 +1,6 @@
+// src/modules/c-tag/interfaces/hooks/useTags.ts
+'use client';
+
 import { Tag } from '@/modules/c-tag/domain/entities/tag-entity';
 import { getTags } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useQuery } from '@tanstack/react-query';

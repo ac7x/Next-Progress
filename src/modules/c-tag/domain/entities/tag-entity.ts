@@ -1,3 +1,4 @@
+// src/modules/c-tag/domain/entities/tag-entity.ts
 import { z } from 'zod';
 
 // 領域層 enum 定義
@@ -73,5 +74,5 @@ export const updateTagSchema = createTagSchema.partial();
 
 export function isValidTag(tag: unknown): tag is Tag {
   return typeof tag === 'object' && tag !== null
-    && 'id' in tag && 'name' in tag && 'type' in tag && 'color' in tag;
+    && 'id' in tag && 'name' in tag && 'type' in tag;
 }

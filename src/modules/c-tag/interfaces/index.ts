@@ -1,3 +1,4 @@
+// src/modules/c-tag/interfaces/index.ts
 /**
  * C-Tag Interface Layer
  * 

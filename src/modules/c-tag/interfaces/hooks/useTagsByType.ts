@@ -1,3 +1,6 @@
+// src/modules/c-tag/interfaces/hooks/useTagsByType.ts
+'use client';
+
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useQuery } from '@tanstack/react-query';

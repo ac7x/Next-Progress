@@ -1,3 +1,6 @@
+// src/modules/c-tag/interfaces/hooks/useTagMutations.ts
+'use client';
+
 import { Tag, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { createTagAction, deleteTagAction, updateTagAction } from '@/modules/c-tag/interfaces/tag-command-actions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,7 +13,6 @@ export function useCreateTag() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tags'] });
       qc.invalidateQueries({ queryKey: ['tags', 'ALL'] });
-      // 依所有類型快取刷新（如有多個類型頁籤）
     }
   });
 }
