@@ -1,4 +1,4 @@
-import { CreateTaskTemplateProps, TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
+import { CreateTaskTemplateProps, TaskTemplate } from '@/modules/c-hub/domain/task-template';
 import type { Prisma, TaskTemplate as PrismaTaskTemplate } from '@prisma/client';
 
 type TaskTemplateWithRelations = PrismaTaskTemplate & {
@@ -14,9 +14,10 @@ export const taskTemplateAdapter = {
       id: prismaModel.id,
       name: prismaModel.name,
       description: prismaModel.description ?? null,
-      engineeringId: prismaModel.engineeringId,
+      engineeringId: prismaModel.engineering?.id ?? null,
       priority: prismaModel.priority ?? additionalData?.priority ?? 0,
-      isActive: prismaModel.isActive ?? additionalData?.isActive ?? true,
+      // 從 additionalData 中獲取 isActive 值，或預設為 true
+      isActive: additionalData?.isActive ?? true,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -27,13 +28,20 @@ export const taskTemplateAdapter = {
 
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
-    if (domainModel.engineeringId !== undefined) data.engineeringId = domainModel.engineeringId;
-    if (domainModel.isActive !== undefined) data.isActive = domainModel.isActive;
+
+    // 將 engineeringId 正確映射到 Prisma 關係
+    if (domainModel.engineeringId !== undefined) {
+      data.engineering = domainModel.engineeringId
+        ? { connect: { id: domainModel.engineeringId } }
+        : { disconnect: true };
+    }
 
     // 確保 priority 被視為數字類型
     if (domainModel.priority !== undefined) {
       data.priority = domainModel.priority;
     }
+
+    // isActive 不是 Prisma 模型的欄位，因此我們不加入到 persistence 資料中
 
     return data;
   }

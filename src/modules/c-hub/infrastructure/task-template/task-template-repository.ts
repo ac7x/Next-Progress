@@ -20,11 +20,12 @@ export class TaskTemplateRepository implements ITaskTemplateRepository {
           description: data.description || null,
           engineeringId: data.engineeringId || null,
           priority: data.priority ?? 0,
-          isActive: data.isActive ?? true,
+          // isActive 不是 Prisma 模型中的欄位，移除
         },
       });
 
-      return taskTemplateAdapter.toDomain(prismaTemplate);
+      // 在 adapter 轉換中加入 isActive 屬性
+      return taskTemplateAdapter.toDomain(prismaTemplate, { isActive: data.isActive ?? true });
     } catch (error) {
       console.error('Failed to create task template:', error);
       throw error instanceof Error ? error : new Error('Failed to create task template');
