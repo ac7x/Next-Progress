@@ -1,4 +1,4 @@
-import { TaskInstance, TaskInstanceStatus } from '@/modules/c-hub/domain/task-instance';
+import { TaskInstance, TaskInstanceStatusType } from '@/modules/c-hub/domain/task-instance';
 import type { TaskInstance as PrismaTaskInstance } from '@prisma/client';
 
 type TaskInstanceWithRelations = PrismaTaskInstance & {
@@ -16,7 +16,7 @@ export const taskInstanceAdapter = {
       plannedEnd: prismaTaskInstance.plannedEnd,
       equipmentCount: prismaTaskInstance.equipmentCount,
       actualEquipmentCount: prismaTaskInstance.actualEquipmentCount ?? 0,
-      status: (prismaTaskInstance.status || 'TODO') as TaskInstanceStatus,
+      status: (prismaTaskInstance.status || 'TODO') as TaskInstanceStatusType,
       priority: prismaTaskInstance.priority ?? 0,
       completionRate: prismaTaskInstance.completionRate ?? 0,
       engineeringId: prismaTaskInstance.engineeringId,
