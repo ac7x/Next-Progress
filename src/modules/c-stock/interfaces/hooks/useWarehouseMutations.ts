@@ -1,18 +1,44 @@
-import { createWarehouseInstance, deleteWarehouseInstance } from '@/modules/c-stock/application/warehouse.command';
-import { CreateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
-import { useMutation } from '@tanstack/react-query';
+'use client';
 
-// Command Hook Only (SRP: 只負責寫入)
-export function useCreateWarehouseInstance() {
-  return useMutation<WarehouseInstance, Error, CreateWarehouseInstanceProps>({
-    mutationKey: ['warehouseInstance', 'createInstance'],
-    mutationFn: createWarehouseInstance
-  });
-}
+import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto';
+import { 
+  createWarehouse, 
+  updateWarehouse, 
+  deleteWarehouse 
+} from '@/modules/c-stock/application/commands';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export function useDeleteWarehouseInstance() {
-  return useMutation<void, Error, string>({
-    mutationKey: ['warehouseInstance', 'deleteInstance'],
-    mutationFn: deleteWarehouseInstance
+/**
+ * 倉庫變更操作 Hook
+ */
+export function useWarehouseMutations() {
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: (data: CreateWarehouseDTO) => createWarehouse(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    },
   });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateWarehouseDTO }) =>
+      updateWarehouse(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteWarehouse(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    },
+  });
+
+  return {
+    createWarehouse: createMutation,
+    updateWarehouse: updateMutation,
+    deleteWarehouse: deleteMutation,
+  };
 }

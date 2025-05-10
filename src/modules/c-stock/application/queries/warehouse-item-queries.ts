@@ -1,0 +1,51 @@
+'use server';
+
+import { warehouseItemService } from '@/modules/c-stock/application/services';
+import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
+
+/**
+ * 獲取所有倉庫物品
+ * @param options 查詢選項
+ * @returns 倉庫物品列表
+ */
+export async function getAllWarehouseItems(options?: {
+  warehouseId?: string;
+  type?: string;
+  skip?: number;
+  take?: number;
+  orderBy?: { [key: string]: 'asc' | 'desc' };
+}): Promise<WarehouseItem[]> {
+  return warehouseItemService.getAllWarehouseItems(options);
+}
+
+/**
+ * 根據倉庫ID獲取物品
+ * @param warehouseId 倉庫ID
+ * @returns 倉庫物品列表
+ */
+export async function getItemsByWarehouseId(warehouseId: string): Promise<WarehouseItem[]> {
+  return warehouseItemService.getItemsByWarehouseId(warehouseId);
+}
+
+/**
+ * 根據ID獲取倉庫物品
+ * @param id 物品ID
+ * @returns 倉庫物品或null
+ */
+export async function getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
+  return warehouseItemService.getWarehouseItemById(id);
+}
+
+/**
+ * 搜索倉庫物品
+ * @param query 搜索關鍵詞
+ * @param options 搜索選項
+ * @returns 匹配的倉庫物品列表
+ */
+export async function searchWarehouseItems(query: string, options?: {
+  warehouseId?: string;
+  skip?: number;
+  take?: number;
+}): Promise<WarehouseItem[]> {
+  return warehouseItemService.searchWarehouseItems(query, options);
+}
