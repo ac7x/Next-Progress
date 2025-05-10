@@ -1,6 +1,6 @@
-import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { ITagDomainService, TagDomainService } from '@/modules/c-tag/domain';
-import { tagRepository } from '@/modules/c-tag/infrastructure/tag-repository';
+import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
+import { tagRepository } from '@/modules/c-tag/infrastructure/repositories/tag-repository';
 import { tagUtil } from '@/modules/c-tag/infrastructure/tag-util';
 
 export class TagApplicationService {

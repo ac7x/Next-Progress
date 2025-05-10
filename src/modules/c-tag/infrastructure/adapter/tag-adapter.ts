@@ -3,15 +3,15 @@ import { Tag as DomainTag, TagType } from '@/modules/c-tag/domain/entities/tag-e
 import { Tag as PrismaTag } from '@prisma/client';
 
 export const tagAdapter = {
-    toDomain(prismaTag: PrismaTag): DomainTag {
-        return {
-            id: prismaTag.id,
-            name: prismaTag.name,
-            type: prismaTag.type as TagType,
-            description: prismaTag.description,
-            color: prismaTag.color,
-            createdAt: prismaTag.createdAt,
-            updatedAt: prismaTag.updatedAt
-        };
-    }
+  toDomain(prismaTag: PrismaTag): DomainTag {
+    return {
+      id: prismaTag.id,
+      name: prismaTag.name,
+      type: prismaTag.type as TagType,
+      description: prismaTag.description,
+      color: prismaTag.color,
+      createdAt: prismaTag.createdAt,
+      updatedAt: prismaTag.updatedAt
+    };
+  }
 };

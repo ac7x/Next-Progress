@@ -2,7 +2,7 @@
 
 import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { revalidatePath } from 'next/cache';
-import { tagService } from './tag-service';
+import { tagService } from './services/tag-service';
 
 // Query UseCases
 export async function tagQueryList(): Promise<Tag[]> {
