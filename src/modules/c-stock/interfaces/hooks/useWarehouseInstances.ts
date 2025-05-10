@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllWarehouses } from '@/modules/c-stock/application/queries/warehouse-queries';
+import { getAllWarehouses } from '@/modules/c-stock/application';
 import { useQuery } from '@tanstack/react-query';
 
 // Query Hook Only (SRP: 只查詢)

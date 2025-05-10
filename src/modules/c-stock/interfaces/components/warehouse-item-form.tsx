@@ -1,7 +1,7 @@
 'use client';
 
 import { createWarehouseItem } from '@/modules/c-stock/application';
-import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain/value-objects/warehouse-item-type.vo';
+import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain';
 import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';

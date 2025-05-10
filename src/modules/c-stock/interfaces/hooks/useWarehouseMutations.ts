@@ -4,8 +4,8 @@ import {
   createWarehouse,
   deleteWarehouse,
   updateWarehouse
-} from '@/modules/c-stock/application/commands';
-import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application/dto';
+} from '@/modules/c-stock/application';
+import { CreateWarehouseDTO, UpdateWarehouseDTO } from '@/modules/c-stock/application';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 /**

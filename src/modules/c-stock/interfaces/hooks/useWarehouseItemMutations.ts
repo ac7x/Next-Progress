@@ -6,8 +6,8 @@ import {
   deleteWarehouseItem,
   updateWarehouseItem,
   updateWarehouseItemQuantity,
-} from '@/modules/c-stock/application/commands';
-import { CreateWarehouseItemDTO, UpdateWarehouseItemDTO } from '@/modules/c-stock/application/dto';
+} from '@/modules/c-stock/application';
+import { CreateWarehouseItemDTO, UpdateWarehouseItemDTO } from '@/modules/c-stock/application';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 /**

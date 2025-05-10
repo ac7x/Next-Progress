@@ -1,6 +1,6 @@
 'use server';
 
-import { warehouseItemService } from '@/modules/c-stock/application/services';
+import { warehouseItemService } from '@/modules/c-stock/application';
 import { WarehouseItem } from '@/modules/c-stock/domain';
 
 /**
