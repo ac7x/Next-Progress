@@ -1,4 +1,4 @@
-import { getWarehouseItemsByWarehouse } from '@/modules/c-stock/application/warehouseItem.query';
+import { getWarehouseItemsByWarehouse } from '@/modules/c-stock/application/warehouseItem-query';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { useQuery } from '@tanstack/react-query';
 
