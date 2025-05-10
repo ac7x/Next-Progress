@@ -2,9 +2,9 @@
 
 import {
     EngineeringTemplate,
+    EngineeringTemplateDomainService,
     isValidEngineeringTemplate
-} from '@/modules/c-hub/domain/engineering-template/engineering-template-entity';
-import { EngineeringTemplateDomainService } from '@/modules/c-hub/domain/engineering-template/engineering-template-service';
+} from '@/modules/c-hub/domain/engineering-template';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
 
 const templateService = new EngineeringTemplateDomainService(engineeringTemplateRepository);
