@@ -1,6 +1,6 @@
 'use client';
 
-import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
+import { getTaskInstancesByProjectQuery } from '@/modules/c-hub/application/task-instance/task-instance.query';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
 import { TaskInstanceSummaryCard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance-summary-card';
@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const projectId = '';
   const { data: tasks = [], isLoading, error } = useQuery<TaskInstance[]>({
     queryKey: ['taskInstances', projectId],
-    queryFn: () => listTaskInstancesByProject(projectId),
+    queryFn: () => getTaskInstancesByProjectQuery(projectId),
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });

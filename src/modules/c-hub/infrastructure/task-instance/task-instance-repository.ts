@@ -208,8 +208,23 @@ export class TaskInstanceRepositoryImpl implements ITaskInstanceRepository {
    */
   async findByFilter(filter: Partial<TaskInstance>): Promise<TaskInstance[]> {
     try {
+      // 創建 Prisma 可接受的查詢條件
+      const whereCondition: any = {};
+
+      // 只添加非空值到查詢條件
+      if (filter.id) whereCondition.id = filter.id;
+      if (filter.name) whereCondition.name = filter.name;
+      if (filter.status) whereCondition.status = filter.status;
+      if (filter.priority !== undefined) whereCondition.priority = filter.priority;
+      if (filter.projectId) whereCondition.projectId = filter.projectId;
+
+      // 特別處理可能為 null 的字段
+      if (filter.engineeringId !== undefined) {
+        whereCondition.engineeringId = filter.engineeringId === null ? null : filter.engineeringId;
+      }
+
       const tasks = await prisma.taskInstance.findMany({
-        where: filter,
+        where: whereCondition,
         include: {
           engineering: true,
           project: true
