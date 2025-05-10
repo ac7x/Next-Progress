@@ -1,5 +1,5 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
+import { WarehouseItem } from '@/modules/c-stock/domain';
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 
 export const warehouseItemAdapter = {

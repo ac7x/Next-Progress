@@ -1,5 +1,4 @@
-import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
-import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
+import { WarehouseInstance, WarehouseItem } from '@/modules/c-stock/domain';
 // 可選：import { WarehouseItemType } from '@prisma/client';
 
 /**
