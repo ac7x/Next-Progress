@@ -1,4 +1,4 @@
-import { Tag as DomainTag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag as DomainTag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { Tag as PrismaTag } from '@prisma/client';
 
 export const tagAdapter = {

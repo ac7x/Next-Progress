@@ -1,7 +1,7 @@
 'use server';
 
 import { tagCommandService } from '@/modules/c-tag/application/tag-command';
-import { CreateTagProps, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
+import { CreateTagProps, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { revalidatePath } from 'next/cache';
 
 // Command Server Actions

@@ -1,6 +1,6 @@
 'use client';
 
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useDeleteTag } from '../hooks/useTagMutations';
 import { tagDisplayUtils } from '../utils/tag-display-utils';
 

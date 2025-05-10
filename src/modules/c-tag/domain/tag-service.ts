@@ -1,4 +1,4 @@
-import { CreateTagProps, Tag, TagType, UpdateTagProps, isValidTag } from './tag-entity';
+import { CreateTagProps, Tag, TagType, UpdateTagProps, isValidTag } from './entities/tag-entity';
 import { ITagRepository } from './tag-repository';
 
 export interface ITagDomainService {

@@ -1,4 +1,4 @@
-import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 // 直接引用 Prisma 生成的 enum
 
 // 型別 alias，供 domain 層使用

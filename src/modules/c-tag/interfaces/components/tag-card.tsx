@@ -1,6 +1,6 @@
 'use client';
 
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { tagDisplayUtils } from '@/modules/c-tag/interfaces/utils/tag-display-utils';
 
 interface TagCardProps {

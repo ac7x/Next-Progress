@@ -1,6 +1,6 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
-import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 
 export const warehouseItemAdapter = {
   async toDomain(prismaWarehouseItem: any): Promise<WarehouseItem> {

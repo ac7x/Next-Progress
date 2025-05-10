@@ -1,7 +1,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { IWarehouseItemRepository } from '@/modules/c-stock/domain/warehouse-item-repository';
-import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { warehouseItemAdapter } from '../adapter/warehouse-item-adapter';
 
 export class WarehouseItemRepository implements IWarehouseItemRepository {

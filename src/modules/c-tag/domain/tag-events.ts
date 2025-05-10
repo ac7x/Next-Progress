@@ -1,4 +1,4 @@
-import { TagType } from './tag-entity';
+import { TagType } from './entities/tag-entity';
 
 export class TagCreatedEvent {
   constructor(

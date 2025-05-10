@@ -3,7 +3,7 @@
 import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application/warehouseItem-command';
 import { WarehouseItem } from '@/modules/c-stock/domain/warehouse-item-entity';
 import { tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

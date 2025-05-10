@@ -1,4 +1,4 @@
-import { TagType } from '@/modules/c-tag/domain/tag-entity';
+import { TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { formatHex, hsl, wcagContrast } from 'culori';
 
 // 定義每個標籤類型的色相

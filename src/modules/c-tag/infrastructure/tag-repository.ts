@@ -1,5 +1,5 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
+import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { ITagRepository } from '@/modules/c-tag/domain/tag-repository';
 import { tagAdapter } from './tag-adapters';
 

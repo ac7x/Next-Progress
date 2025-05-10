@@ -1,4 +1,4 @@
-import { CreateTagProps, Tag, TagType, UpdateTagProps } from './tag-entity';
+import { CreateTagProps, Tag, TagType, UpdateTagProps } from './entities/tag-entity';
 
 export interface ITagRepository {
   list(): Promise<Tag[]>;

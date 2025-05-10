@@ -1,6 +1,6 @@
 'use client';
 
-import { TagType } from '@/modules/c-tag/domain/tag-entity';
+import { TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import TagCategoryListClient from '@/modules/c-tag/interfaces/components/tag-category-list';
 import TagFormClient from '@/modules/c-tag/interfaces/components/tag-form';
 import { TagTypeFilter } from '@/modules/c-tag/interfaces/components/tag-type-filter';

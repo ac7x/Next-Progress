@@ -1,6 +1,6 @@
 'use client';
 
-import { Tag } from '@/modules/c-tag/domain/tag-entity';
+import { Tag } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useState } from 'react';
 import { useDeleteTag } from '../hooks/useTagMutations';
 import { tagDisplayUtils } from '../utils/tag-display-utils';

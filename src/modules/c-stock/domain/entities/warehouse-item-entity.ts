@@ -1,4 +1,4 @@
-import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
+import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { WarehouseItemDescription } from '../value-objects/warehouse-item-description.vo';
 import { WarehouseItemName } from '../value-objects/warehouse-item-name.vo';
 import { WarehouseItemQuantity } from '../value-objects/warehouse-item-quantity.vo';

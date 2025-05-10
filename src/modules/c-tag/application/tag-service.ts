@@ -1,4 +1,4 @@
-import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/tag-entity';
+import { CreateTagProps, Tag, TagType, UpdateTagProps } from '@/modules/c-tag/domain/entities/tag-entity';
 import { ITagDomainService, TagDomainService } from '@/modules/c-tag/domain/tag-service';
 import { tagRepository } from '@/modules/c-tag/infrastructure/tag-repository';
 import { tagUtil } from '@/modules/c-tag/infrastructure/tag-util';

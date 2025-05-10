@@ -1,7 +1,7 @@
 'use server';
 
 import { tagQueryService } from '@/modules/c-tag/application/tag-query';
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 
 // Query Server Actions
 export async function getTags(): Promise<Tag[]> {

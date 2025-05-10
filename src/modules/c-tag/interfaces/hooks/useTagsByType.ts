@@ -1,4 +1,4 @@
-import { Tag, TagType } from '@/modules/c-tag/domain/tag-entity';
+import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { getTags, getTagsByType } from '@/modules/c-tag/interfaces/tag-query-actions';
 import { useQuery } from '@tanstack/react-query';
 

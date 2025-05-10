@@ -1,4 +1,4 @@
-import { TagType } from '@/modules/c-tag/domain/tag-entity';
+import { TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { tagDisplayUtils } from '@/modules/c-tag/interfaces/utils/tag-display-utils';
 
 // 預設用於工程/任務/子任務進度的 TagType
