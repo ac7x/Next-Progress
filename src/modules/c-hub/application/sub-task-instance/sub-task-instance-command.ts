@@ -28,7 +28,7 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
         // 重新驗證專案頁面（聚合根同步後，父任務狀態已更新）
         if (subTaskInstance.taskId) {
             const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
-            const parentTask = await taskInstanceService.getById(subTaskInstance.taskId);
+            const parentTask = await taskInstanceService.getTaskInstanceById(subTaskInstance.taskId);
             if (parentTask?.projectId) {
                 revalidatePath(`/client/project/${parentTask.projectId}`);
             }
