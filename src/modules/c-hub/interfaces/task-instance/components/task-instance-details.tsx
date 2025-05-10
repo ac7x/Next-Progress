@@ -7,7 +7,7 @@
  * <TaskInstanceDetails taskInstance={taskInstance} />
  */
 
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { useState } from 'react';
 import TaskInstanceSubTaskInstancesSection from './task-instance-sub-task-instances-section';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

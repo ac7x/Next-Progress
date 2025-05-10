@@ -8,7 +8,7 @@ import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-inst
 import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { useEffect, useState } from 'react';
 import { ProjectInstanceBasicInfo } from './project-instance-basic-info';
 import { ProjectInstanceEngineeringList } from './project-instance-engineering-list';

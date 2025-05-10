@@ -1,4 +1,4 @@
-import { TaskInstance, TaskInstanceStatus } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance, TaskInstanceStatus } from '@/modules/c-hub/domain/task-instance';
 import type { TaskInstance as PrismaTaskInstance } from '@prisma/client';
 
 type TaskInstanceWithRelations = PrismaTaskInstance & {

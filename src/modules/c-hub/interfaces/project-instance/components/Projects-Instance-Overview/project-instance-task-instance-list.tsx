@@ -1,5 +1,5 @@
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance';
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 // 新增：引入 TaskWithSubTasks
 import { TaskWithSubTasks } from './project-instance-engineering-list';
 

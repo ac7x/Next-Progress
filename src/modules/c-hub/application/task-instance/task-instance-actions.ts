@@ -1,6 +1,6 @@
 'use server';
 
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
 
 // 其他現有的 Server Actions...

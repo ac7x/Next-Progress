@@ -1,4 +1,4 @@
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 
 export function TaskOverviewSummary({ taskInstances }: { taskInstances: TaskInstance[] }) {
     return (

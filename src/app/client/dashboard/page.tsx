@@ -1,7 +1,7 @@
 'use client';
 
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
+import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
 import { TaskInstanceSummaryCard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance-summary-card';
 import { useQuery } from '@tanstack/react-query';
