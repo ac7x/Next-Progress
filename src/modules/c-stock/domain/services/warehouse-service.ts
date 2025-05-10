@@ -14,17 +14,19 @@ import { IWarehouseRepository } from '../repositories/warehouse-repository-inter
  * 倉庫領域服務 - 實現倉庫相關的業務邏輯
  */
 export class WarehouseService {
-    constructor(private readonly warehouseRepository: IWarehouseRepository) { }
+    constructor(
+        private readonly warehouseRepository: IWarehouseRepository
+    ) { }
 
     /**
      * 創建新倉庫
      * @param data 創建資料
      */
     async createWarehouse(data: CreateWarehouseProps): Promise<Warehouse> {
-        // 檢查同名倉庫是否已存在
+        // 檢查名稱是否重複（業務規則）
         const existingWarehouse = await this.warehouseRepository.findByName(data.name);
         if (existingWarehouse) {
-            throw new Error(`倉庫名稱 "${data.name}" 已存在`);
+            throw new Error(`已存在名稱為 "${data.name}" 的倉庫`);
         }
 
         // 創建倉庫
@@ -49,11 +51,11 @@ export class WarehouseService {
             throw new Error(`倉庫 ID "${id}" 不存在`);
         }
 
-        // 如果要更新名稱，檢查名稱是否已被使用
+        // 如果要更新名稱，檢查新名稱是否重複
         if (data.name && data.name !== existingWarehouse.name) {
             const warehouseWithSameName = await this.warehouseRepository.findByName(data.name);
             if (warehouseWithSameName && warehouseWithSameName.id !== id) {
-                throw new Error(`倉庫名稱 "${data.name}" 已被使用`);
+                throw new Error(`已存在名稱為 "${data.name}" 的倉庫`);
             }
         }
 
@@ -103,26 +105,22 @@ export class WarehouseService {
 
     /**
      * 獲取所有倉庫
+     * @param options 查詢選項
      */
     async getAllWarehouses(options?: {
         skip?: number;
         take?: number;
-        orderBy?: { [key: string]: 'asc' | 'desc' }
+        orderBy?: { [key: string]: 'asc' | 'desc' };
+        onlyActive?: boolean;
     }): Promise<Warehouse[]> {
         return this.warehouseRepository.findAll(options);
     }
 
     /**
-     * 根據名稱獲取倉庫
+     * 獲取倉庫總數
+     * @param onlyActive 是否只計算啟用的倉庫
      */
-    async getWarehouseByName(name: string): Promise<Warehouse | null> {
-        return this.warehouseRepository.findByName(name);
-    }
-
-    /**
-     * 獲取倉庫數量
-     */
-    async getWarehousesCount(filter?: { isActive?: boolean }): Promise<number> {
-        return this.warehouseRepository.count(filter);
+    async getWarehousesCount(onlyActive: boolean = false): Promise<number> {
+        return this.warehouseRepository.count(onlyActive ? { isActive: true } : undefined);
     }
 }

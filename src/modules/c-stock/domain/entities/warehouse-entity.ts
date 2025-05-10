@@ -29,7 +29,12 @@ export interface CreateWarehouseProps {
 /**
  * 更新倉庫的輸入資料
  */
-export type UpdateWarehouseProps = Partial<CreateWarehouseProps>;
+export interface UpdateWarehouseProps {
+    name?: string;
+    description?: string | null;
+    location?: string | null;
+    isActive?: boolean;
+}
 
 /**
  * 豐富的倉庫領域模型 - 使用值物件
@@ -99,13 +104,18 @@ export class WarehouseFactory {
  * @param warehouse 需要驗證的對象
  */
 export function isValidWarehouse(warehouse: unknown): warehouse is Warehouse {
-    return (
-        typeof warehouse === 'object' &&
+    return typeof warehouse === 'object' &&
         warehouse !== null &&
         'id' in warehouse &&
         'name' in warehouse &&
         'isActive' in warehouse &&
         'createdAt' in warehouse &&
-        'updatedAt' in warehouse
-    );
+        'updatedAt' in warehouse;
 }
+
+// 向後兼容性支援 - 為現有的代碼提供兼容性支持
+export type WarehouseInstance = Warehouse;
+export type CreateWarehouseInstanceProps = CreateWarehouseProps;
+export type UpdateWarehouseInstanceProps = UpdateWarehouseProps;
+export const isValidWarehouseInstance = isValidWarehouse;
+export const WarehouseInstanceFactory = WarehouseFactory;

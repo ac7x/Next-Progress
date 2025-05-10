@@ -1,10 +1,11 @@
 /**
  * 倉庫物品類型 - 枚舉定義
+ * 需要與 Prisma 的 WarehouseItemType 枚舉保持一致
  */
 export enum WarehouseItemTypeEnum {
-    TOOL = 'TOOL',
-    EQUIPMENT = 'EQUIPMENT',
-    CONSUMABLE = 'CONSUMABLE',
+    TOOL = 'TOOL',           // 工具
+    EQUIPMENT = 'EQUIPMENT', // 設備
+    CONSUMABLE = 'CONSUMABLE' // 耗材
 }
 
 /**
@@ -13,9 +14,10 @@ export enum WarehouseItemTypeEnum {
 export class WarehouseItemType {
     private readonly value: WarehouseItemTypeEnum;
 
-    constructor(value: string | WarehouseItemTypeEnum) {
+    constructor(value: string) {
+        // 驗證輸入類型是否為有效的 WarehouseItemType
         if (!Object.values(WarehouseItemTypeEnum).includes(value as WarehouseItemTypeEnum)) {
-            throw new Error(`無效的物品類型：${value}`);
+            throw new Error(`無效的物品類型：${value}。有效類型為：${Object.values(WarehouseItemTypeEnum).join(', ')}`);
         }
         this.value = value as WarehouseItemTypeEnum;
     }

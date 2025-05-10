@@ -1,10 +1,11 @@
+import { TagRelationType } from '@/modules/c-tag/domain/tag-entity';
 import { WarehouseItemDescription } from '../value-objects/warehouse-item-description.vo';
 import { WarehouseItemName } from '../value-objects/warehouse-item-name.vo';
 import { WarehouseItemQuantity } from '../value-objects/warehouse-item-quantity.vo';
 import { WarehouseItemType, WarehouseItemTypeEnum } from '../value-objects/warehouse-item-type.vo';
 
 /**
- * 基礎倉庫物品實體（資料庫層級）
+ * 倉庫物品基本實體（資料庫層級）
  */
 export interface WarehouseItem {
     id: string;
@@ -12,9 +13,9 @@ export interface WarehouseItem {
     description: string | null;
     quantity: number;
     warehouseId: string;
-    type: string; // 對應 WarehouseItemTypeEnum
+    tags: { id: string; name: string; type: TagRelationType }[];
     unit?: string | null;
-    tags: { id: string; name: string; type: string }[];
+    type: string; // 存儲為字符串，對應 WarehouseItemTypeEnum
     createdAt: Date;
     updatedAt: Date;
 }
@@ -27,17 +28,23 @@ export interface CreateWarehouseItemProps {
     description?: string | null;
     quantity: number;
     warehouseId: string;
-    type: string | WarehouseItemTypeEnum;
-    unit?: string | null;
     tags?: string[] | null;
+    unit?: string | null;
+    type: string; // 使用字符串以兼容 Prisma 和域模型
 }
 
 /**
  * 更新倉庫物品的輸入資料
  */
-export type UpdateWarehouseItemProps = Partial<Omit<CreateWarehouseItemProps, 'type'>> & {
-    type?: string | WarehouseItemTypeEnum;
-};
+export interface UpdateWarehouseItemProps {
+    name?: string;
+    description?: string | null;
+    quantity?: number;
+    warehouseId?: string;
+    tags?: string[] | null;
+    unit?: string | null;
+    type?: string; // 使用字符串以兼容 Prisma 和域模型
+}
 
 /**
  * 豐富的倉庫物品領域模型 - 使用值物件
@@ -48,9 +55,9 @@ export interface RichWarehouseItem {
     description: WarehouseItemDescription;
     quantity: WarehouseItemQuantity;
     warehouseId: string;
-    type: WarehouseItemType;
+    tags: { id: string; name: string; type: TagRelationType }[];
     unit?: string | null;
-    tags: { id: string; name: string; type: string }[];
+    type: WarehouseItemType;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -131,3 +138,6 @@ export function isValidWarehouseItem(item: unknown): item is WarehouseItem {
         'updatedAt' in item
     );
 }
+
+// 為保持向後兼容性，同時匯出舊的接口
+export { WarehouseItemTypeEnum };
