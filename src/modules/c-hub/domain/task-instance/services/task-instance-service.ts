@@ -189,3 +189,13 @@ export class TaskInstanceService {
         return taskInstances.map(taskInstance => this.toRichModel(taskInstance));
     }
 }
+
+/**
+ * 為了向後兼容，提供 TaskInstanceDomainService 作為 TaskInstanceService 的別名
+ * 應用層應優先使用這個類名
+ */
+export class TaskInstanceDomainService extends TaskInstanceService {
+    constructor(taskInstanceRepository: TaskInstanceRepository) {
+        super(taskInstanceRepository);
+    }
+}
