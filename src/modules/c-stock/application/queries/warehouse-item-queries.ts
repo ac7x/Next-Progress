@@ -1,7 +1,7 @@
 'use server';
 
 import { warehouseItemService } from '@/modules/c-stock/application/services';
-import { WarehouseItem } from '@/modules/c-stock/domain/entities/warehouse-item-entity';
+import { WarehouseItem } from '@/modules/c-stock/domain';
 
 /**
  * 獲取所有倉庫物品

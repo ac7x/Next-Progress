@@ -1,7 +1,7 @@
 'use client';
 
 import { createWarehouseItem } from '@/modules/c-stock/application';
-import { WarehouseItemType } from '@/modules/c-stock/domain'; // 正確使用本地 enum
+import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain/value-objects/warehouse-item-type.vo';
 import { tagQueryList, tagQueryListByType } from '@/modules/c-tag/application/tag-actions';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';
@@ -20,13 +20,13 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
-  const [type, setType] = useState<WarehouseItemType>(WarehouseItemType.TOOL); // 使用 domain enum
+  const [type, setType] = useState<string>(WarehouseItemTypeEnum.TOOL); // 使用枚舉值作為字串
   const router = useRouter();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const itemTags = await tagQueryListByType(TagType.WAREHOUSE_ITEM); // 修正為 WAREHOUSE_ITEM
+        const itemTags = await tagQueryListByType(TagType.WAREHOUSE_ITEM);
         const generalTags = await tagQueryList();
 
         const uniqueTags = [...itemTags];
@@ -63,7 +63,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
         description: description || null,
         quantity,
         warehouseId,
-        type,
+        type, // 直接傳遞 string 型別
         tags: selectedTags.length > 0 ? selectedTags : null
       });
 
@@ -154,13 +154,15 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
         <select
           id="type"
           value={type}
-          onChange={(e) => setType(e.target.value as WarehouseItemType)}
+          onChange={(e) => setType(e.target.value)}
           className="w-full p-2 border rounded"
           disabled={isSubmitting}
         >
-          {Object.values(WarehouseItemType).map((itemType) => (
+          {Object.values(WarehouseItemTypeEnum).map((itemType) => (
             <option key={itemType} value={itemType}>
-              {itemType}
+              {itemType === WarehouseItemTypeEnum.TOOL ? '工具' :
+                itemType === WarehouseItemTypeEnum.EQUIPMENT ? '設備' :
+                  itemType === WarehouseItemTypeEnum.CONSUMABLE ? '耗材' : itemType}
             </option>
           ))}
         </select>

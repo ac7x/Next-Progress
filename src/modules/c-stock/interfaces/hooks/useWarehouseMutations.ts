@@ -42,3 +42,25 @@ export function useWarehouseMutations() {
     deleteWarehouse: deleteMutation,
   };
 }
+
+// 具名 hook：建立倉庫
+export function useCreateWarehouseInstance() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CreateWarehouseDTO) => createWarehouse(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    },
+  });
+}
+
+// 具名 hook：刪除倉庫
+export function useDeleteWarehouseInstance() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteWarehouse(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    },
+  });
+}

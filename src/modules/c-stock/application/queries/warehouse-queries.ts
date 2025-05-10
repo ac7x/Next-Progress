@@ -1,7 +1,7 @@
 'use server';
 
 import { warehouseService } from '@/modules/c-stock/application/services';
-import { Warehouse } from '@/modules/c-stock/domain/entities/warehouse-entity';
+import { Warehouse } from '@/modules/c-stock/domain';
 
 /**
  * 獲取所有倉庫
