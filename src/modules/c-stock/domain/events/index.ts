@@ -5,3 +5,4 @@ export * from './warehouse-item-created-event';
 export * from './warehouse-item-deleted-event';
 export * from './warehouse-item-updated-event';
 export * from './warehouse-updated-event';
+
