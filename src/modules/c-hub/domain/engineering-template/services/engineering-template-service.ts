@@ -6,6 +6,7 @@
 import {
     CreateEngineeringTemplateProps,
     EngineeringTemplate,
+    EngineeringTemplateFactory,
     UpdateEngineeringTemplateProps,
     isValidEngineeringTemplate
 } from '../entities/engineering-template-entity';
@@ -13,8 +14,8 @@ import {
     EngineeringTemplateCreatedEvent,
     EngineeringTemplateDeletedEvent,
     EngineeringTemplateUpdatedEvent
-} from '../events/engineering-template-events';
-import { IEngineeringTemplateRepository } from '../repositories/engineering-template-repository';
+} from '../events';
+import { IEngineeringTemplateRepository } from '../repositories/engineering-template-repository-interface';
 
 /**
  * 工程模板領域服務，負責工程模板業務邏輯與驗證
@@ -30,6 +31,10 @@ export class EngineeringTemplateDomainService {
     async createTemplate(data: CreateEngineeringTemplateProps): Promise<EngineeringTemplate> {
         this.validateCreate(data);
 
+        // 使用工廠創建富領域模型
+        const richTemplate = EngineeringTemplateFactory.create(data);
+
+        // 持久化到資料庫
         const template = await this.repository.create({
             ...data
         });
@@ -41,7 +46,7 @@ export class EngineeringTemplateDomainService {
         // 發布工程模板創建事件
         new EngineeringTemplateCreatedEvent(
             template.id,
-            template.name.getValue()
+            template.name
         );
 
         return template;
@@ -61,13 +66,13 @@ export class EngineeringTemplateDomainService {
             throw new Error('工程模板 ID 不能為空');
         }
 
-        this.validateTemplate(data);
+        this.validateUpdate(data);
         const template = await this.repository.update(id, data);
 
         // 發布工程模板更新事件
         new EngineeringTemplateUpdatedEvent(
             template.id,
-            template.name.getValue()
+            template.name
         );
 
         return template;
@@ -131,19 +136,27 @@ export class EngineeringTemplateDomainService {
         if (data.name.length > 100) {
             throw new Error('工程模板名稱不能超過100個字符');
         }
+
+        if (data.description && data.description.length > 500) {
+            throw new Error('工程模板描述不能超過500個字符');
+        }
     }
 
     /**
      * 驗證更新模板的輸入資料
-     * @param template 更新資料
+     * @param data 更新資料
      */
-    private validateTemplate(template: Partial<CreateEngineeringTemplateProps>): void {
-        if (template.name !== undefined && !template.name.trim()) {
+    private validateUpdate(data: UpdateEngineeringTemplateProps): void {
+        if (data.name !== undefined && !data.name.trim()) {
             throw new Error('工程模板名稱不能為空');
         }
 
-        if (template.name && template.name.length > 100) {
+        if (data.name && data.name.length > 100) {
             throw new Error('工程模板名稱不能超過100個字符');
+        }
+
+        if (data.description && data.description.length > 500) {
+            throw new Error('工程模板描述不能超過500個字符');
         }
     }
 }
