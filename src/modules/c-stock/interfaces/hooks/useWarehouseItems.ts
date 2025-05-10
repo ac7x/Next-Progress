@@ -1,6 +1,6 @@
 'use client';
 
-import { getItemsByWarehouseId, searchWarehouseItems } from '@/modules/c-stock/application';
+import { getItemsByWarehouseId, searchWarehouseItems } from '@/modules/c-stock/application/queries';
 import { useQuery } from '@tanstack/react-query';
 
 /**

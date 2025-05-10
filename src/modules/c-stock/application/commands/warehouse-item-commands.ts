@@ -4,7 +4,7 @@ import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/cli
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { revalidatePath } from 'next/cache';
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps } from '../../domain/entities/warehouse-item-entity';
-import { warehouseItemService } from '../services/warehouse-item-service';
+import { warehouseItemService } from '../services';
 
 /**
  * 創建新倉庫物品

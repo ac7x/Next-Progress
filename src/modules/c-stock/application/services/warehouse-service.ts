@@ -81,7 +81,3 @@ export class WarehouseApplicationService {
         return this.domainService.getWarehouseCount(onlyActive);
     }
 }
-
-// 倉庫服務實例將在應用初始化時被注入實際的儲存庫實現
-// 這里先導出一個佔位符，實際使用時會被替換
-export let warehouseService: WarehouseApplicationService;

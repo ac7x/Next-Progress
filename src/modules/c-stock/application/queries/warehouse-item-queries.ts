@@ -1,6 +1,6 @@
 'use server';
 
-import { warehouseItemService } from '@/modules/c-stock/application';
+import { warehouseItemService } from '@/modules/c-stock/application/services'; // 修正匯入路徑
 import { WarehouseItem } from '@/modules/c-stock/domain';
 
 /**

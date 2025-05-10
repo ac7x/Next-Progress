@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { CreateWarehouseProps, UpdateWarehouseProps } from '../../domain/entities/warehouse-entity';
-import { warehouseService } from '../services/warehouse-service';
+import { warehouseService } from '../services';
 
 /**
  * 創建新倉庫
