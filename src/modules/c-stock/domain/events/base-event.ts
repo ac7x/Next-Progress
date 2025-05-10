@@ -1,12 +1,10 @@
 /**
- * 領域事件基礎類 - 所有領域事件的父類
+ * 領域事件基類 - 所有領域事件的基礎
  */
 export abstract class DomainEvent {
-    public readonly occurredAt: Date;
-    public readonly eventId: string;
+    public readonly occurredOn: Date;
 
     constructor() {
-        this.occurredAt = new Date();
-        this.eventId = crypto.randomUUID();
+        this.occurredOn = new Date();
     }
 }

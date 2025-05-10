@@ -3,16 +3,14 @@ import {
     UpdateWarehouseItemProps,
     WarehouseItem
 } from '../entities/warehouse-item-entity';
-import {
-    WarehouseItemCreatedEvent,
-    WarehouseItemDeletedEvent,
-    WarehouseItemUpdatedEvent
-} from '../events';
+import { WarehouseItemCreatedEvent } from '../events/warehouse-item-created-event';
+import { WarehouseItemDeletedEvent } from '../events/warehouse-item-deleted-event';
+import { WarehouseItemUpdatedEvent } from '../events/warehouse-item-updated-event';
 import { IWarehouseItemRepository } from '../repositories/warehouse-item-repository-interface';
 import { IWarehouseRepository } from '../repositories/warehouse-repository-interface';
 
 /**
- * 倉庫物品領域服務 - 實現物品相關的業務邏輯
+ * 倉庫物品領域服務 - 封裝與倉庫物品相關的業務邏輯
  */
 export class WarehouseItemService {
     constructor(
@@ -22,46 +20,58 @@ export class WarehouseItemService {
 
     /**
      * 創建新倉庫物品
-     * @param data 創建資料
+     * @param data 倉庫物品創建資料
      */
     async createWarehouseItem(data: CreateWarehouseItemProps): Promise<WarehouseItem> {
         // 檢查倉庫是否存在
         const warehouse = await this.warehouseRepository.findById(data.warehouseId);
         if (!warehouse) {
-            throw new Error(`倉庫 ID "${data.warehouseId}" 不存在`);
+            throw new Error(`找不到 ID 為 ${data.warehouseId} 的倉庫`);
         }
 
-        // 創建物品
+        // 檢查倉庫是否處於活動狀態
+        if (!warehouse.isActive) {
+            throw new Error(`倉庫 "${warehouse.name}" 目前處於非活動狀態，無法新增物品`);
+        }
+
+        // 創建倉庫物品
         const item = await this.warehouseItemRepository.create(data);
 
-        // 發布物品創建事件
+        // 觸發事件 (實際項目可能會使用事件總線)
         const event = new WarehouseItemCreatedEvent(item);
-        // 事件發布邏輯將在基礎設施層實現
+        console.log('倉庫物品創建事件已觸發:', event);
 
         return item;
     }
 
     /**
      * 批量創建倉庫物品
-     * @param dataList 創建資料列表
+     * @param items 倉庫物品創建資料列表
+     * @param warehouseId 倉庫ID
      */
-    async createWarehouseItems(dataList: CreateWarehouseItemProps[]): Promise<number> {
-        // 檢查所有物品的倉庫ID是否存在
-        const warehouseIds = [...new Set(dataList.map(data => data.warehouseId))];
-
-        for (const warehouseId of warehouseIds) {
-            const warehouse = await this.warehouseRepository.findById(warehouseId);
-            if (!warehouse) {
-                throw new Error(`倉庫 ID "${warehouseId}" 不存在`);
-            }
+    async createManyWarehouseItems(
+        items: Omit<CreateWarehouseItemProps, 'warehouseId'>[],
+        warehouseId: string
+    ): Promise<number> {
+        // 檢查倉庫是否存在
+        const warehouse = await this.warehouseRepository.findById(warehouseId);
+        if (!warehouse) {
+            throw new Error(`找不到 ID 為 ${warehouseId} 的倉庫`);
         }
 
-        // 批量創建物品
-        const createdCount = await this.warehouseItemRepository.createMany(dataList);
+        // 檢查倉庫是否處於活動狀態
+        if (!warehouse.isActive) {
+            throw new Error(`倉庫 "${warehouse.name}" 目前處於非活動狀態，無法新增物品`);
+        }
 
-        // 在實際應用中，我們可能還會發布批量創建事件
+        // 添加倉庫ID到每個物品
+        const itemsWithWarehouseId = items.map(item => ({
+            ...item,
+            warehouseId
+        }));
 
-        return createdCount;
+        // 批量創建
+        return this.warehouseItemRepository.createMany(itemsWithWarehouseId);
     }
 
     /**
@@ -71,72 +81,64 @@ export class WarehouseItemService {
      */
     async updateWarehouseItem(id: string, data: UpdateWarehouseItemProps): Promise<WarehouseItem> {
         // 檢查物品是否存在
-        const existingItem = await this.warehouseItemRepository.findById(id);
-        if (!existingItem) {
-            throw new Error(`物品 ID "${id}" 不存在`);
+        const item = await this.warehouseItemRepository.findById(id);
+        if (!item) {
+            throw new Error(`找不到 ID 為 ${id} 的倉庫物品`);
         }
 
-        // 如果要更新倉庫ID，檢查新倉庫是否存在
-        if (data.warehouseId && data.warehouseId !== existingItem.warehouseId) {
-            const warehouse = await this.warehouseRepository.findById(data.warehouseId);
-            if (!warehouse) {
-                throw new Error(`倉庫 ID "${data.warehouseId}" 不存在`);
+        // 如果要變更倉庫，檢查目標倉庫是否存在且處於活動狀態
+        if (data.warehouseId && data.warehouseId !== item.warehouseId) {
+            const targetWarehouse = await this.warehouseRepository.findById(data.warehouseId);
+            if (!targetWarehouse) {
+                throw new Error(`找不到 ID 為 ${data.warehouseId} 的倉庫`);
+            }
+
+            if (!targetWarehouse.isActive) {
+                throw new Error(`目標倉庫 "${targetWarehouse.name}" 處於非活動狀態，無法轉移物品`);
             }
         }
 
-        // 保存更新前的值用於事件
-        const previousValues = { ...existingItem };
+        // 保存舊值以便事件使用
+        const previousValues = { ...item };
 
         // 更新物品
         const updatedItem = await this.warehouseItemRepository.update(id, data);
 
-        // 發布物品更新事件
+        // 觸發事件
         const event = new WarehouseItemUpdatedEvent(updatedItem, previousValues);
-        // 事件發布邏輯將在基礎設施層實現
+        console.log('倉庫物品更新事件已觸發:', event);
 
         return updatedItem;
     }
 
     /**
-     * 增加物品庫存
+     * 更新物品數量
      * @param id 物品ID
-     * @param quantity 增加數量
+     * @param quantity 新數量
      */
-    async increaseItemQuantity(id: string, quantity: number): Promise<WarehouseItem> {
-        if (quantity <= 0) {
-            throw new Error('增加的數量必須大於零');
-        }
-
+    async updateWarehouseItemQuantity(id: string, quantity: number): Promise<WarehouseItem> {
+        // 檢查物品是否存在
         const item = await this.warehouseItemRepository.findById(id);
         if (!item) {
-            throw new Error(`物品 ID "${id}" 不存在`);
+            throw new Error(`找不到 ID 為 ${id} 的倉庫物品`);
         }
 
-        const newQuantity = item.quantity + quantity;
-        return this.warehouseItemRepository.updateQuantity(id, newQuantity);
-    }
-
-    /**
-     * 減少物品庫存
-     * @param id 物品ID
-     * @param quantity 減少數量
-     */
-    async decreaseItemQuantity(id: string, quantity: number): Promise<WarehouseItem> {
-        if (quantity <= 0) {
-            throw new Error('減少的數量必須大於零');
+        // 檢查數量是否有效
+        if (quantity < 0) {
+            throw new Error('物品數量不能為負數');
         }
 
-        const item = await this.warehouseItemRepository.findById(id);
-        if (!item) {
-            throw new Error(`物品 ID "${id}" 不存在`);
-        }
+        // 保存舊值以便事件使用
+        const previousValues = { ...item };
 
-        if (item.quantity < quantity) {
-            throw new Error(`物品 "${item.name}" 庫存不足，當前庫存: ${item.quantity}, 請求減少: ${quantity}`);
-        }
+        // 更新數量
+        const updatedItem = await this.warehouseItemRepository.updateQuantity(id, quantity);
 
-        const newQuantity = item.quantity - quantity;
-        return this.warehouseItemRepository.updateQuantity(id, newQuantity);
+        // 觸發事件
+        const event = new WarehouseItemUpdatedEvent(updatedItem, previousValues);
+        console.log('倉庫物品數量更新事件已觸發:', event);
+
+        return updatedItem;
     }
 
     /**
@@ -145,45 +147,61 @@ export class WarehouseItemService {
      */
     async deleteWarehouseItem(id: string): Promise<boolean> {
         // 檢查物品是否存在
-        const existingItem = await this.warehouseItemRepository.findById(id);
-        if (!existingItem) {
-            throw new Error(`物品 ID "${id}" 不存在`);
+        const item = await this.warehouseItemRepository.findById(id);
+        if (!item) {
+            throw new Error(`找不到 ID 為 ${id} 的倉庫物品`);
         }
+
+        // 保存相關資訊以便觸發事件
+        const warehouseId = item.warehouseId;
 
         // 刪除物品
         const result = await this.warehouseItemRepository.delete(id);
 
-        if (result) {
-            // 發布物品刪除事件
-            const event = new WarehouseItemDeletedEvent(id, existingItem.warehouseId);
-            // 事件發布邏輯將在基礎設施層實現
-        }
+        // 觸發事件
+        const event = new WarehouseItemDeletedEvent(id, warehouseId);
+        console.log('倉庫物品刪除事件已觸發:', event);
 
         return result;
     }
 
     /**
-     * 獲取單個倉庫物品
+     * 根據倉庫ID刪除所有物品
+     * @param warehouseId 倉庫ID
+     */
+    async deleteItemsByWarehouseId(warehouseId: string): Promise<number> {
+        // 檢查倉庫是否存在
+        const warehouse = await this.warehouseRepository.findById(warehouseId);
+        if (!warehouse) {
+            throw new Error(`找不到 ID 為 ${warehouseId} 的倉庫`);
+        }
+
+        // 獲取所有物品以便觸發事件
+        const items = await this.warehouseItemRepository.findByWarehouseId(warehouseId);
+
+        // 批量刪除
+        const deletedCount = await this.warehouseItemRepository.deleteByWarehouseId(warehouseId);
+
+        // 為每個物品觸發刪除事件
+        items.forEach(item => {
+            const event = new WarehouseItemDeletedEvent(item.id, warehouseId);
+            console.log('倉庫物品刪除事件已觸發:', event);
+        });
+
+        return deletedCount;
+    }
+
+    /**
+     * 根據ID查找倉庫物品
      * @param id 物品ID
      */
-    async getWarehouseItem(id: string): Promise<WarehouseItem | null> {
+    async getWarehouseItemById(id: string): Promise<WarehouseItem | null> {
         return this.warehouseItemRepository.findById(id);
     }
 
     /**
-     * 獲取倉庫中的所有物品
-     * @param warehouseId 倉庫ID
-     */
-    async getItemsByWarehouse(warehouseId: string, options?: {
-        skip?: number;
-        take?: number;
-        orderBy?: { [key: string]: 'asc' | 'desc' };
-    }): Promise<WarehouseItem[]> {
-        return this.warehouseItemRepository.findByWarehouseId(warehouseId, options);
-    }
-
-    /**
-     * 獲取所有倉庫物品
+     * 獲取所有倉庫物品，可選擇按倉庫或類型過濾
+     * @param options 查詢選項
      */
     async getAllWarehouseItems(options?: {
         warehouseId?: string;
@@ -196,20 +214,39 @@ export class WarehouseItemService {
     }
 
     /**
+     * 根據倉庫ID獲取物品
+     * @param warehouseId 倉庫ID
+     * @param options 查詢選項
+     */
+    async getItemsByWarehouseId(warehouseId: string, options?: {
+        skip?: number;
+        take?: number;
+        orderBy?: { [key: string]: 'asc' | 'desc' };
+    }): Promise<WarehouseItem[]> {
+        return this.warehouseItemRepository.findByWarehouseId(warehouseId, options);
+    }
+
+    /**
+     * 獲取物品總數
+     * @param filter 過濾條件
+     */
+    async getWarehouseItemCount(filter?: { warehouseId?: string; type?: string }): Promise<number> {
+        return this.warehouseItemRepository.count(filter);
+    }
+
+    /**
      * 搜索倉庫物品
+     * @param query 搜索關鍵詞
+     * @param options 搜索選項
      */
     async searchWarehouseItems(query: string, options?: {
         warehouseId?: string;
         skip?: number;
         take?: number;
     }): Promise<WarehouseItem[]> {
+        if (!query || query.trim() === '') {
+            return [];
+        }
         return this.warehouseItemRepository.search(query, options);
-    }
-
-    /**
-     * 獲取物品數量
-     */
-    async getWarehouseItemsCount(filter?: { warehouseId?: string; type?: string }): Promise<number> {
-        return this.warehouseItemRepository.count(filter);
     }
 }

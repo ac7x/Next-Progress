@@ -5,7 +5,7 @@ import { WarehouseItemQuantity } from '../value-objects/warehouse-item-quantity.
 import { WarehouseItemType, WarehouseItemTypeEnum } from '../value-objects/warehouse-item-type.vo';
 
 /**
- * 倉庫物品基本實體（資料庫層級）
+ * 基礎倉庫物品實體（資料庫層級）
  */
 export interface WarehouseItem {
     id: string;
@@ -141,3 +141,4 @@ export function isValidWarehouseItem(item: unknown): item is WarehouseItem {
 
 // 為保持向後兼容性，同時匯出舊的接口
 export { WarehouseItemTypeEnum };
+

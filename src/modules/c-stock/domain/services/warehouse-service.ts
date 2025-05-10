@@ -3,38 +3,34 @@ import {
     UpdateWarehouseProps,
     Warehouse
 } from '../entities/warehouse-entity';
-import {
-    WarehouseCreatedEvent,
-    WarehouseDeletedEvent,
-    WarehouseUpdatedEvent
-} from '../events';
+import { WarehouseCreatedEvent } from '../events/warehouse-created-event';
+import { WarehouseDeletedEvent } from '../events/warehouse-deleted-event';
+import { WarehouseUpdatedEvent } from '../events/warehouse-updated-event';
 import { IWarehouseRepository } from '../repositories/warehouse-repository-interface';
 
 /**
- * 倉庫領域服務 - 實現倉庫相關的業務邏輯
+ * 倉庫領域服務 - 封裝與倉庫相關的業務邏輯
  */
 export class WarehouseService {
-    constructor(
-        private readonly warehouseRepository: IWarehouseRepository
-    ) { }
+    constructor(private readonly warehouseRepository: IWarehouseRepository) { }
 
     /**
      * 創建新倉庫
-     * @param data 創建資料
+     * @param data 倉庫創建資料
      */
     async createWarehouse(data: CreateWarehouseProps): Promise<Warehouse> {
-        // 檢查名稱是否重複（業務規則）
+        // 檢查名稱是否已存在
         const existingWarehouse = await this.warehouseRepository.findByName(data.name);
         if (existingWarehouse) {
-            throw new Error(`已存在名稱為 "${data.name}" 的倉庫`);
+            throw new Error(`已存在名為 "${data.name}" 的倉庫`);
         }
 
         // 創建倉庫
         const warehouse = await this.warehouseRepository.create(data);
 
-        // 發布倉庫創建事件
+        // 觸發事件 (實際項目可能會使用事件總線)
         const event = new WarehouseCreatedEvent(warehouse);
-        // 事件發布邏輯將在基礎設施層實現
+        console.log('倉庫創建事件已觸發:', event);
 
         return warehouse;
     }
@@ -46,28 +42,28 @@ export class WarehouseService {
      */
     async updateWarehouse(id: string, data: UpdateWarehouseProps): Promise<Warehouse> {
         // 檢查倉庫是否存在
-        const existingWarehouse = await this.warehouseRepository.findById(id);
-        if (!existingWarehouse) {
-            throw new Error(`倉庫 ID "${id}" 不存在`);
+        const warehouse = await this.warehouseRepository.findById(id);
+        if (!warehouse) {
+            throw new Error(`找不到 ID 為 ${id} 的倉庫`);
         }
 
-        // 如果要更新名稱，檢查新名稱是否重複
-        if (data.name && data.name !== existingWarehouse.name) {
-            const warehouseWithSameName = await this.warehouseRepository.findByName(data.name);
-            if (warehouseWithSameName && warehouseWithSameName.id !== id) {
-                throw new Error(`已存在名稱為 "${data.name}" 的倉庫`);
+        // 如果嘗試更改名稱，檢查新名稱是否已被占用
+        if (data.name && data.name !== warehouse.name) {
+            const existingWarehouse = await this.warehouseRepository.findByName(data.name);
+            if (existingWarehouse && existingWarehouse.id !== id) {
+                throw new Error(`已存在名為 "${data.name}" 的倉庫`);
             }
         }
 
-        // 保存更新前的值用於事件
-        const previousValues = { ...existingWarehouse };
+        // 保存舊值以便事件使用
+        const previousValues = { ...warehouse };
 
         // 更新倉庫
         const updatedWarehouse = await this.warehouseRepository.update(id, data);
 
-        // 發布倉庫更新事件
+        // 觸發事件
         const event = new WarehouseUpdatedEvent(updatedWarehouse, previousValues);
-        // 事件發布邏輯將在基礎設施層實現
+        console.log('倉庫更新事件已觸發:', event);
 
         return updatedWarehouse;
     }
@@ -78,49 +74,62 @@ export class WarehouseService {
      */
     async deleteWarehouse(id: string): Promise<boolean> {
         // 檢查倉庫是否存在
-        const existingWarehouse = await this.warehouseRepository.findById(id);
-        if (!existingWarehouse) {
-            throw new Error(`倉庫 ID "${id}" 不存在`);
+        const warehouse = await this.warehouseRepository.findById(id);
+        if (!warehouse) {
+            throw new Error(`找不到 ID 為 ${id} 的倉庫`);
         }
 
         // 刪除倉庫
         const result = await this.warehouseRepository.delete(id);
 
-        if (result) {
-            // 發布倉庫刪除事件
-            const event = new WarehouseDeletedEvent(id);
-            // 事件發布邏輯將在基礎設施層實現
-        }
+        // 觸發事件
+        const event = new WarehouseDeletedEvent(id);
+        console.log('倉庫刪除事件已觸發:', event);
 
         return result;
     }
 
     /**
-     * 獲取單個倉庫
+     * 根據ID查找倉庫
      * @param id 倉庫ID
      */
-    async getWarehouse(id: string): Promise<Warehouse | null> {
+    async getWarehouseById(id: string): Promise<Warehouse | null> {
         return this.warehouseRepository.findById(id);
     }
 
     /**
      * 獲取所有倉庫
-     * @param options 查詢選項
+     * @param options 分頁和排序選項
      */
     async getAllWarehouses(options?: {
         skip?: number;
         take?: number;
-        orderBy?: { [key: string]: 'asc' | 'desc' };
-        onlyActive?: boolean;
+        orderBy?: { [key: string]: 'asc' | 'desc' }
     }): Promise<Warehouse[]> {
         return this.warehouseRepository.findAll(options);
     }
 
     /**
-     * 獲取倉庫總數
-     * @param onlyActive 是否只計算啟用的倉庫
+     * 啟用倉庫
+     * @param id 倉庫ID
      */
-    async getWarehousesCount(onlyActive: boolean = false): Promise<number> {
+    async activateWarehouse(id: string): Promise<Warehouse> {
+        return this.updateWarehouse(id, { isActive: true });
+    }
+
+    /**
+     * 停用倉庫
+     * @param id 倉庫ID
+     */
+    async deactivateWarehouse(id: string): Promise<Warehouse> {
+        return this.updateWarehouse(id, { isActive: false });
+    }
+
+    /**
+     * 獲取倉庫總數
+     * @param onlyActive 是否僅計算活動倉庫
+     */
+    async getWarehouseCount(onlyActive?: boolean): Promise<number> {
         return this.warehouseRepository.count(onlyActive ? { isActive: true } : undefined);
     }
 }

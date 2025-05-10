@@ -1,7 +1,7 @@
 import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '../entities/warehouse-item-entity';
 
 /**
- * 倉庫物品儲存庫接口 - 定義倉庫物品實體的持久化操作
+ * 倉庫物品儲存庫介面 - 定義倉庫物品實體的持久化操作
  */
 export interface IWarehouseItemRepository {
     /**
@@ -25,6 +25,7 @@ export interface IWarehouseItemRepository {
     /**
      * 根據倉庫ID查詢物品
      * @param warehouseId 倉庫ID
+     * @param options 查詢選項
      */
     findByWarehouseId(warehouseId: string, options?: {
         skip?: number;
@@ -79,6 +80,7 @@ export interface IWarehouseItemRepository {
     /**
      * 搜索倉庫物品
      * @param query 搜索關鍵詞
+     * @param options 搜索選項
      */
     search(query: string, options?: {
         warehouseId?: string;
