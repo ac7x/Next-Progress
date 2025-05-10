@@ -1,6 +1,6 @@
 'use client';
 
-import { WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
+import { WarehouseInstance } from '@/modules/c-stock/domain';
 import { useState } from 'react';
 import { useWarehouseItems } from '../hooks/useWarehouseItems';
 import { WarehouseItemForm } from './warehouse-item-form';

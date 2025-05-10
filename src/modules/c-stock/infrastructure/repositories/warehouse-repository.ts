@@ -1,5 +1,5 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain/warehouse-entity';
+import { CreateWarehouseInstanceProps, UpdateWarehouseInstanceProps, WarehouseInstance } from '@/modules/c-stock/domain';
 import { IWarehouseInstanceRepository } from '@/modules/c-stock/domain/warehouse-repository';
 
 export class WarehouseInstanceRepository implements IWarehouseInstanceRepository {
