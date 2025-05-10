@@ -1,4 +1,4 @@
-import { 
+import {
     TaskInstanceCompletionRate,
     TaskInstanceDescription,
     TaskInstanceEquipmentCount,

@@ -5,7 +5,7 @@ export class TaskInstanceCompletionRate {
 
     constructor(value: number | null | undefined) {
         const numberValue = value ?? 0;
-        
+
         // 確保完成率在有效範圍內
         if (numberValue < TaskInstanceCompletionRate.MIN_VALUE) {
             throw new Error(`任務完成率不能小於 ${TaskInstanceCompletionRate.MIN_VALUE}%`);

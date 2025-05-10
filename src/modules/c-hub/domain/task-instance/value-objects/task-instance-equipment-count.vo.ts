@@ -37,7 +37,7 @@ export class TaskInstanceEquipmentCount {
         if (this.value === null || this.value === 0 || actualCount === null) {
             return 0;
         }
-        
+
         let rate = Math.round((actualCount / this.value) * 100);
         return Math.min(Math.max(rate, 0), 100); // 確保在 0-100% 範圍內
     }

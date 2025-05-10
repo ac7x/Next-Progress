@@ -5,7 +5,7 @@ export class TaskInstanceName {
 
     constructor(value: string | null | undefined) {
         const trimmedValue = value?.trim() || '';
-        
+
         if (trimmedValue.length < TaskInstanceName.MIN_LENGTH) {
             throw new Error(`任務名稱太短，至少需要 ${TaskInstanceName.MIN_LENGTH} 個字元`);
         }

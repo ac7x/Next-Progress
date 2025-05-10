@@ -1,15 +1,15 @@
-import { 
-    CreateTaskInstanceProps, 
-    RichTaskInstance, 
-    TaskInstance, 
-    TaskInstanceFactory, 
+import {
+    CreateTaskInstanceProps,
+    RichTaskInstance,
+    TaskInstance,
+    TaskInstanceFactory,
     UpdateTaskInstanceProps
 } from '../entities';
-import { 
-    TaskInstanceCompletedEvent, 
-    TaskInstanceCreatedEvent, 
-    TaskInstanceDeletedEvent, 
-    TaskInstanceUpdatedEvent 
+import {
+    TaskInstanceCompletedEvent,
+    TaskInstanceCreatedEvent,
+    TaskInstanceDeletedEvent,
+    TaskInstanceUpdatedEvent
 } from '../events';
 import { TaskInstanceRepository } from '../repositories';
 import { TaskInstanceStatusType } from '../value-objects';
@@ -19,7 +19,7 @@ import { TaskInstanceStatusType } from '../value-objects';
  * 封裝與任務實例相關的核心業務邏輯與行為
  */
 export class TaskInstanceService {
-    constructor(private readonly taskInstanceRepository: TaskInstanceRepository) {}
+    constructor(private readonly taskInstanceRepository: TaskInstanceRepository) { }
 
     /**
      * 創建新任務實例
@@ -58,7 +58,7 @@ export class TaskInstanceService {
 
         // === 自動推導完成率與狀態 ===
         let updatedProps = { ...props };
-        
+
         if (
             props.actualEquipmentCount !== undefined ||
             props.equipmentCount !== undefined

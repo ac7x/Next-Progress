@@ -38,8 +38,8 @@ export class TaskInstancePriority {
      */
     static fromName(priorityName?: TaskInstancePriorityName): TaskInstancePriority {
         if (!priorityName) return new TaskInstancePriority(TaskInstancePriority.MEDIUM);
-        
-        switch(priorityName) {
+
+        switch (priorityName) {
             case 'HIGH':
                 return new TaskInstancePriority(TaskInstancePriority.HIGH);
             case 'LOW':

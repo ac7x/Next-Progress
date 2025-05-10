@@ -1,9 +1,16 @@
-import { CreateTaskInstanceProps, TaskInstance, UpdateTaskInstanceProps } from '@/modules/c-hub/domain/task-instance/task-instance-entity';
-import { ITaskInstanceRepository } from '@/modules/c-hub/domain/task-instance/task-instance-repository';
+import { CreateTaskInstanceProps, TaskInstance, UpdateTaskInstanceProps } from '@/modules/c-hub/domain/task-instance/entities';
+import { TaskInstanceRepository as ITaskInstanceRepository } from '@/modules/c-hub/domain/task-instance/repositories';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { taskInstanceAdapter } from './task-instance-adapter';
 
-export class TaskInstanceRepository implements ITaskInstanceRepository {
+/**
+ * 任務實例儲存庫實現
+ * 負責任務實例數據的持久化操作
+ */
+export class TaskInstanceRepositoryImpl implements ITaskInstanceRepository {
+  /**
+   * 創建新任務實例
+   */
   async create(data: CreateTaskInstanceProps): Promise<TaskInstance> {
     try {
       // 首先檢索工程以獲取其專案ID
@@ -58,6 +65,9 @@ export class TaskInstanceRepository implements ITaskInstanceRepository {
     }
   }
 
+  /**
+   * 根據專案 ID 查詢任務
+   */
   async findByProjectId(projectId: string): Promise<TaskInstance[]> {
     try {
       const tasks = await prisma.taskInstance.findMany({
@@ -75,6 +85,9 @@ export class TaskInstanceRepository implements ITaskInstanceRepository {
     }
   }
 
+  /**
+   * 根據 ID 查詢任務
+   */
   async findById(id: string): Promise<TaskInstance | null> {
     try {
       const task = await prisma.taskInstance.findUnique({
@@ -92,6 +105,9 @@ export class TaskInstanceRepository implements ITaskInstanceRepository {
     }
   }
 
+  /**
+   * 更新任務
+   */
   async update(id: string, data: UpdateTaskInstanceProps): Promise<TaskInstance> {
     try {
       // 準備更新數據，處理特殊關聯
@@ -133,7 +149,25 @@ export class TaskInstanceRepository implements ITaskInstanceRepository {
     }
   }
 
-  async list(): Promise<TaskInstance[]> {
+  /**
+   * 刪除任務
+   */
+  async delete(id: string): Promise<boolean> {
+    try {
+      await prisma.taskInstance.delete({
+        where: { id }
+      });
+      return true;
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+      return false;
+    }
+  }
+
+  /**
+   * 查詢所有任務
+   */
+  async findAll(): Promise<TaskInstance[]> {
     try {
       const tasks = await prisma.taskInstance.findMany({
         include: {
@@ -148,6 +182,47 @@ export class TaskInstanceRepository implements ITaskInstanceRepository {
       throw error;
     }
   }
+
+  /**
+   * 根據工程 ID 查詢任務
+   */
+  async findByEngineeringId(engineeringId: string): Promise<TaskInstance[]> {
+    try {
+      const tasks = await prisma.taskInstance.findMany({
+        where: { engineeringId },
+        include: {
+          engineering: true,
+          project: true
+        }
+      });
+
+      return tasks.map(taskInstanceAdapter.toDomain);
+    } catch (error) {
+      console.error('Failed to find tasks by engineering ID:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 根據過濾條件查詢任務
+   */
+  async findByFilter(filter: Partial<TaskInstance>): Promise<TaskInstance[]> {
+    try {
+      const tasks = await prisma.taskInstance.findMany({
+        where: filter,
+        include: {
+          engineering: true,
+          project: true
+        }
+      });
+
+      return tasks.map(taskInstanceAdapter.toDomain);
+    } catch (error) {
+      console.error('Failed to find tasks by filter:', error);
+      throw error;
+    }
+  }
 }
 
-export const taskInstanceRepository = new TaskInstanceRepository();
+// 為了向後兼容，繼續暴露一個實例，使其他模塊可以直接使用
+export const taskInstanceRepository = new TaskInstanceRepositoryImpl();
