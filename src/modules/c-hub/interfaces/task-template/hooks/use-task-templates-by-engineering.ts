@@ -1,5 +1,5 @@
 import { listTaskTemplatesByEngineeringIdQuery } from '@/modules/c-hub/application/task-template/task-template.query';
-import { TaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
+import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
 import { useQuery } from '@tanstack/react-query';
 
 /**

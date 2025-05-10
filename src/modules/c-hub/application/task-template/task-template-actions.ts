@@ -1,7 +1,6 @@
 'use server';
 
-import { CreateTaskTemplateProps, TaskTemplate, UpdateTaskTemplateProps, isValidTaskTemplate } from '@/modules/c-hub/domain/task-template/task-template-entity';
-import { TaskTemplateDomainService } from '@/modules/c-hub/domain/task-template/task-template-service';
+import { CreateTaskTemplateProps, TaskTemplate, TaskTemplateDomainService, UpdateTaskTemplateProps, isValidTaskTemplate } from '@/modules/c-hub/domain/task-template';
 import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
@@ -94,8 +93,7 @@ export async function listTaskTemplatesByEngineeringId(engineeringId: string): P
   }
 
   try {
-    // 直接呼叫 repository 的 CQRS 查詢方法
-    return await taskTemplateRepository.findByEngineeringTemplateId(engineeringId);
+    return await templateService.findTemplatesByEngineeringId(engineeringId);
   } catch (error) {
     console.error('Failed to list task templates for engineering:', error);
     return [];

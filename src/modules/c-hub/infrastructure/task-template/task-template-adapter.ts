@@ -13,10 +13,10 @@ export const taskTemplateAdapter = {
     return {
       id: prismaModel.id,
       name: prismaModel.name,
-      description: (prismaModel as any).description ?? null,
+      description: prismaModel.description ?? null,
       engineeringId: prismaModel.engineeringId,
       priority: prismaModel.priority ?? additionalData?.priority ?? 0,
-      isActive: additionalData?.isActive ?? true,
+      isActive: prismaModel.isActive ?? additionalData?.isActive ?? true,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt
     };
@@ -27,6 +27,8 @@ export const taskTemplateAdapter = {
 
     if (domainModel.name !== undefined) data.name = domainModel.name;
     if (domainModel.description !== undefined) data.description = domainModel.description;
+    if (domainModel.engineeringId !== undefined) data.engineeringId = domainModel.engineeringId;
+    if (domainModel.isActive !== undefined) data.isActive = domainModel.isActive;
 
     // 確保 priority 被視為數字類型
     if (domainModel.priority !== undefined) {
