@@ -1,6 +1,6 @@
 'use client';
 
-import { updateSubTaskInstanceCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
+import { updateSubTaskInstanceCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
 import { UpdateSubTaskInstanceProps } from '@/modules/c-hub/domain/sub-task-instance';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';

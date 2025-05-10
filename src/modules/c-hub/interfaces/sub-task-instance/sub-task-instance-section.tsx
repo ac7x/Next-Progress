@@ -1,6 +1,6 @@
-import { SubTaskInstanceForm } from './components/sub-task-instance-form';
-import { createSubTaskInstanceFormAction } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
+import { createSubTaskInstanceFormAction } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
 import { Suspense } from 'react';
+import { SubTaskInstanceForm } from './components/sub-task-instance-form';
 import { SubTaskInstanceListWrapper } from './sub-task-instance-list-wrapper';
 
 // Server Component：僅負責渲染與查詢（Query Concern），命令交由 Server Action

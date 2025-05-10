@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand, updateSubTaskInstanceStatusCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance.command';
+import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand, updateSubTaskInstanceStatusCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/entities/sub-task-instance-entity';
 import { SubTaskInstanceStatusType } from '@/modules/c-hub/domain/sub-task-instance/value-objects/sub-task-instance-status.vo';
 import { useQueryClient } from '@tanstack/react-query';
