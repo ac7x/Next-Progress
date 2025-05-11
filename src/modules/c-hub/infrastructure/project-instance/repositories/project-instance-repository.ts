@@ -13,7 +13,12 @@ export class ProjectInstanceRepository implements IProjectInstanceRepository {
   }
 
   async list(): Promise<ProjectInstance[]> {
-    const projects = await prisma.projectInstance.findMany();
+    const projects = await prisma.projectInstance.findMany({
+      orderBy: [
+        { priority: 'asc' }, // 優先級數字越小優先度越高，故使用升序排序
+        { createdAt: 'desc' } // 相同優先級時，較新建立的排前面
+      ]
+    });
     return projects.map(projectInstanceAdapter.toDomain);
   }
 
