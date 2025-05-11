@@ -83,7 +83,6 @@ export function ProjectTemplateCard({ template, onDelete }: ProjectTemplateCardP
       {template.description && (
         <p className="text-gray-600 mb-2 text-sm break-words">{template.description}</p>
       )}
-      <div className="text-xs text-gray-500 mb-2">建立時間：{new Date(template.createdAt).toLocaleDateString()}</div>
 
       <div className="flex-1" />
 
