@@ -1,6 +1,7 @@
 'use client';
 
 import { getTaskInstancesByProjectQuery } from '@/modules/c-hub/application/task-instance/task-instance-query';
+import { PriorityFormatter } from '@/modules/c-hub/domain/project-instance/value-objects/priority-formatter';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { TaskInstanceSubTaskInstancesSection } from '@/modules/c-hub/interfaces/task-instance';
 import { TaskInstanceSummaryCard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance-summary-card';
@@ -45,9 +46,14 @@ export default function DashboardPage() {
               .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
               .map((task) => (
                 <div key={task.id} className="space-y-2">
-                  {/* 顯示優先級 */}
+                  {/* 優化優先級顯示 */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400 w-12">優先級: {task.priority ?? 0}</span>
+                    <div className={`flex items-center gap-1 w-32 ${PriorityFormatter.getTextColorClass(task.priority ?? 0)}`}>
+                      <div className={`w-3 h-3 rounded-full ${PriorityFormatter.getColorClass(task.priority ?? 0)}`}></div>
+                      <span className="text-xs">
+                        優先級 {task.priority ?? 0} - {PriorityFormatter.toLabel(task.priority ?? 0)}
+                      </span>
+                    </div>
                     <div className="flex-1">
                       <TaskInstanceSummaryCard taskInstance={task} />
                     </div>

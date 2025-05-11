@@ -3,6 +3,7 @@
 import { deleteProject, updateProject } from '@/modules/c-hub/application/project-instance/project-instance-actions';
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { PriorityFormatter } from '@/modules/c-hub/domain/project-instance/value-objects/priority-formatter';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -184,14 +185,12 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                         <div className="flex items-center">
                           {/* 優先級視覺指示器 */}
                           <div
-                            className={`w-3 h-3 rounded-full mr-1 ${(projectInstance.priority ?? 0) <= 2
-                                ? 'bg-red-500'    // 高優先級 (0-2)
-                                : (projectInstance.priority ?? 0) <= 5
-                                  ? 'bg-yellow-500' // 中優先級 (3-5)
-                                  : 'bg-green-500'  // 低優先級 (6-9)
-                              }`}
+                            className={`w-3 h-3 rounded-full mr-1 ${PriorityFormatter.getColorClass(projectInstance.priority ?? 0)}`}
                           ></div>
                           <span className="tabular-nums">{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '—'}</span>
+                          <span className="ml-1 text-xs text-gray-500">
+                            ({PriorityFormatter.toLabel(projectInstance.priority ?? 0)})
+                          </span>
                         </div>
                         <div className="flex flex-col">
                           <button

@@ -1,4 +1,5 @@
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { PriorityFormatter } from '@/modules/c-hub/domain/project-instance/value-objects/priority-formatter';
 
 interface Props {
     projectInstance: ProjectInstance;
@@ -13,7 +14,14 @@ export function ProjectInstanceBasicInfo({ projectInstance }: Props) {
             </div>
             <div>
                 <p className="text-sm text-gray-500">優先順序</p>
-                <p>{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '未設定'}</p>
+                <p className={`flex items-center ${PriorityFormatter.getTextColorClass(projectInstance.priority ?? 0)}`}>
+                    <span className={`w-3 h-3 rounded-full mr-2 ${PriorityFormatter.getColorClass(projectInstance.priority ?? 0)}`}></span>
+                    {projectInstance.priority !== null && projectInstance.priority !== undefined ? (
+                        <>
+                            {projectInstance.priority} - {PriorityFormatter.toLabel(projectInstance.priority)}
+                        </>
+                    ) : '未設定'}
+                </p>
             </div>
             <div>
                 <p className="text-sm text-gray-500">建立時間</p>
