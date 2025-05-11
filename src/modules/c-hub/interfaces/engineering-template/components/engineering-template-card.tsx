@@ -169,10 +169,6 @@ export function EngineeringTemplateCard({ template, projects = [] }: Engineering
         <p className="text-gray-600 mt-6 mb-2 text-sm">{template.description}</p>
       )}
 
-      <div className="mt-2 text-xs text-gray-500">
-        <p>建立時間：{new Date(template.createdAt).toLocaleDateString()}</p>
-      </div>
-
       <div className="mt-4 pt-2 border-t">
         <button
           onClick={handleToggleTasks}
