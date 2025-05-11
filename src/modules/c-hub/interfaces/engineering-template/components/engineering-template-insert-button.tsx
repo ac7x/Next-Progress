@@ -4,6 +4,7 @@ import { listTaskTemplatesByEngineeringId } from '@/modules/c-hub/application/ta
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
+import { TaskTemplateCount } from '@/modules/c-hub/domain/task-template/value-objects';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -29,7 +30,7 @@ export function EngineeringTemplateInsertButton({
   const [name, setName] = useState(template.name);
   const [description, setDescription] = useState(template.description || '');
   const [taskTemplates, setTaskTemplates] = useState<TaskTemplate[]>([]);
-  const [taskCounts, setTaskCounts] = useState<Record<string, number>>({});
+  const [taskCounts, setTaskCounts] = useState<Record<string, TaskTemplateCount>>({});
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -40,8 +41,8 @@ export function EngineeringTemplateInsertButton({
     if (isModalOpen) {
       listTaskTemplatesByEngineeringId(template.id).then((tasks) => {
         setTaskTemplates(tasks);
-        const defaultCounts: Record<string, number> = {};
-        tasks.forEach(t => { defaultCounts[t.id] = 1; });
+        const defaultCounts: Record<string, TaskTemplateCount> = {};
+        tasks.forEach(t => { defaultCounts[t.id] = TaskTemplateCount.create(1); });
         setTaskCounts(defaultCounts);
       });
     }
@@ -60,10 +61,19 @@ export function EngineeringTemplateInsertButton({
   };
 
   const handleTaskCountChange = (taskId: string, value: number) => {
-    setTaskCounts(prev => ({
-      ...prev,
-      [taskId]: value
-    }));
+    try {
+      // 使用值物件來驗證數量值
+      const countVO = TaskTemplateCount.create(value);
+      setTaskCounts(prev => ({
+        ...prev,
+        [taskId]: countVO
+      }));
+    } catch (err) {
+      // 捕捉值物件可能拋出的錯誤
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,16 +90,19 @@ export function EngineeringTemplateInsertButton({
       return;
     }
 
-    const tasksWithCount = taskTemplates
-      .map((t, idx) => ({
-        taskTemplateId: t.id,
-        count: Number(taskCounts[t.id]) || 0,
-        // 修正：優先級應取自 t.priority，若無則 fallback idx
-        priority: typeof t.priority === 'number' ? t.priority : idx
-      }))
-      .filter(t => t.count > 0);
-
     try {
+      const tasksWithCount = taskTemplates
+        .map((t, idx) => {
+          const countVO = taskCounts[t.id] || TaskTemplateCount.create(1);
+          return {
+            taskTemplateId: t.id,
+            count: countVO.getValue(),
+            // 修正：優先級應取自 t.priority，若無則 fallback idx
+            priority: typeof t.priority === 'number' ? t.priority : idx
+          };
+        })
+        .filter(t => t.count > 0);
+
       await mutateAsync({
         engineeringTemplateId: template.id,
         projectId: selectedProjectId,
@@ -206,7 +219,8 @@ export function EngineeringTemplateInsertButton({
                         <input
                           type="number"
                           min={1}
-                          value={taskCounts[task.id] ?? 1}
+                          max={100}
+                          value={taskCounts[task.id] ? taskCounts[task.id].getValue() : 1}
                           onChange={e => handleTaskCountChange(task.id, Number(e.target.value))}
                           className="w-20 p-1 border rounded"
                           disabled={isPending}
