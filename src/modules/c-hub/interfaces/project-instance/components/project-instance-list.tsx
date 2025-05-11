@@ -69,7 +69,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
     setSelectedProjectInstance(selectedProjectInstance?.id === projectInstance.id ? null : projectInstance);
   };
 
-  // 處理優先順序調整 - 使用絕對優先順序而非相對調整
+  // 優化後的優先順序調整 - 直接使用固定增量，避免複雜計算
   const handlePriorityChange = async (id: string, change: number) => {
     setIsUpdating({ id, field: 'priority' });
     setError(null);
@@ -78,36 +78,15 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
       const project = projectInstances.find(p => p.id === id);
       if (!project) return;
 
-      // 獲取所有專案並按優先順序排序
-      const sortedProjects = [...projectInstances].sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
+      // 計算新的優先順序值 (0-9 範圍內)
+      const currentPriority = project.priority ?? 0;
+      let newPriority = currentPriority + change;
 
-      // 找出當前專案在排序後的位置
-      const currentIndex = sortedProjects.findIndex(p => p.id === id);
-      if (currentIndex === -1) return;
+      // 範圍限制 (0-9)
+      newPriority = Math.max(0, Math.min(9, newPriority));
 
-      // 計算目標位置（確保在有效範圍內）
-      const targetIndex = Math.max(0, Math.min(sortedProjects.length - 1, currentIndex + change));
-
-      // 如果位置沒變，不需要更新
-      if (targetIndex === currentIndex) return;
-
-      // 取得目標位置的優先順序值
-      const targetPriority = sortedProjects[targetIndex].priority ?? 0;
-
-      // 設定新的優先順序 (若要插入在兩個專案之間，取其平均值)
-      let newPriority: number;
-      if (change < 0 && targetIndex > 0) { // 向上移動
-        // 目標位置與其上一位置的平均值
-        const prevPriority = sortedProjects[targetIndex - 1].priority ?? 0;
-        newPriority = Math.max(0, Math.floor((prevPriority + targetPriority) / 2));
-      } else if (change > 0 && targetIndex < sortedProjects.length - 1) { // 向下移動
-        // 目標位置與其下一位置的平均值
-        const nextPriority = sortedProjects[targetIndex + 1].priority ?? 0;
-        newPriority = Math.min(9, Math.ceil((targetPriority + nextPriority) / 2));
-      } else {
-        // 移到最前或最後
-        newPriority = targetPriority;
-      }
+      // 如果值沒變，不需要更新
+      if (newPriority === currentPriority) return;
 
       // 更新優先順序
       await updateProject(id, { priority: newPriority });
@@ -158,6 +137,14 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
     );
   }
 
+  // 按優先級排序專案列表（數字越小優先度越高）
+  const sortedProjectInstances = [...projectInstances].sort((a, b) => {
+    // 主要按優先級排序
+    const priorityDiff = (a.priority ?? 0) - (b.priority ?? 0);
+    // 優先級相同時，按建立時間降序排序
+    return priorityDiff !== 0 ? priorityDiff : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   return (
     <div>
       {error && (
@@ -181,7 +168,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {projectInstances.map((projectInstance) => {
+            {sortedProjectInstances.map((projectInstance) => {
               // 取得設備數量與實際完成數量
               const detail = tasksDetailsMap?.[projectInstance.id];
               const equipmentCount = detail?.equipmentCount ?? 0;
@@ -194,19 +181,32 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                     <td className="px-6 py-4">{projectInstance.description || '—'}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <span>{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '—'}</span>
+                        <div className="flex items-center">
+                          {/* 優先級視覺指示器 */}
+                          <div
+                            className={`w-3 h-3 rounded-full mr-1 ${(projectInstance.priority ?? 0) <= 2
+                                ? 'bg-red-500'    // 高優先級 (0-2)
+                                : (projectInstance.priority ?? 0) <= 5
+                                  ? 'bg-yellow-500' // 中優先級 (3-5)
+                                  : 'bg-green-500'  // 低優先級 (6-9)
+                              }`}
+                          ></div>
+                          <span className="tabular-nums">{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '—'}</span>
+                        </div>
                         <div className="flex flex-col">
                           <button
                             onClick={() => handlePriorityChange(projectInstance.id, -1)}
-                            disabled={isUpdating !== null}
+                            disabled={isUpdating !== null || (projectInstance.priority ?? 0) <= 0}
                             className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                            title="提高優先級"
                           >
                             ▲
                           </button>
                           <button
                             onClick={() => handlePriorityChange(projectInstance.id, 1)}
-                            disabled={isUpdating !== null}
+                            disabled={isUpdating !== null || (projectInstance.priority ?? 0) >= 9}
                             className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                            title="降低優先級"
                           >
                             ▼
                           </button>
