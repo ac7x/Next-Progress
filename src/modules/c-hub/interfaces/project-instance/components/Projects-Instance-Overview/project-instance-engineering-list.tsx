@@ -15,7 +15,8 @@ interface Props {
     onSubTaskActualEquipmentCountChange: (subTaskId: string, value: number, parentTaskId: string) => void;
 }
 
-export function EngineeringInstanceList({
+// 工程實例列表組件 - 僅以ProjectInstanceEngineeringList名稱導出
+function EngineeringInstanceList({
     engineeringInstances,
     taskInstancesByEngineering,
     subTaskInstancesMap,
@@ -66,7 +67,8 @@ export function EngineeringInstanceList({
     );
 }
 
-export function TaskWithSubTasks({
+// 子任務組件 - 不使用導出關鍵字定義，僅在底部統一導出
+function TaskWithSubTasks({
     taskInstance,
     subTaskInstances,
     taskUpdating,
@@ -147,5 +149,6 @@ export function TaskWithSubTasks({
     );
 }
 
-export { EngineeringInstanceList as ProjectInstanceEngineeringList };
+// 使用具名導出統一匯出組件
+export { EngineeringInstanceList as ProjectInstanceEngineeringList, TaskWithSubTasks };
 
