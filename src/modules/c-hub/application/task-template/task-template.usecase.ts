@@ -60,7 +60,7 @@ export async function createTaskTemplate(data: CreateTaskTemplateProps): Promise
             throw new Error('無效的任務模板數據');
         }
 
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
 
         return template;
     } catch (error) {
@@ -81,7 +81,7 @@ export async function updateTaskTemplate(
 
     try {
         const template = await templateService.updateTemplate(id, data);
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
         return template;
     } catch (error) {
         console.error('Failed to update task template:', error);
@@ -96,7 +96,7 @@ export async function deleteTaskTemplate(id: string): Promise<void> {
 
     try {
         await templateService.deleteTemplate(id);
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
     } catch (error) {
         console.error('Failed to delete task template:', error);
         throw error instanceof Error ? error : new Error('Failed to delete task template');

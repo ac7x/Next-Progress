@@ -91,7 +91,7 @@ export async function createEngineeringFromTemplate(
 
         // 重新驗證相關頁面
         revalidatePath(`/client/project/${data.projectId}`);
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
 
         // 將領域實體轉換為可序列化格式後返回
         return engineeringInstanceAdapter.toSerializable(engineering);

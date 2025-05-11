@@ -12,7 +12,7 @@ export async function createTaskTemplateCommand(data: CreateTaskTemplateProps): 
     if (!data.name?.trim()) throw new Error('任務模板名稱為必填項');
     const template = await templateService.createTemplate({ ...data, isActive: data.isActive ?? true });
     if (!isValidTaskTemplate(template)) throw new Error('無效的任務模板數據');
-    revalidatePath('/client/template');
+    revalidatePath('/client/template_management');
     return template;
 }
 
@@ -20,7 +20,7 @@ export async function createTaskTemplateCommand(data: CreateTaskTemplateProps): 
 export async function updateTaskTemplateCommand(id: string, data: UpdateTaskTemplateProps): Promise<TaskTemplate> {
     if (!id?.trim()) throw new Error('模板 ID 為必填項');
     const template = await templateService.updateTemplate(id, data);
-    revalidatePath('/client/template');
+    revalidatePath('/client/template_management');
     return template;
 }
 
@@ -28,5 +28,5 @@ export async function updateTaskTemplateCommand(id: string, data: UpdateTaskTemp
 export async function deleteTaskTemplateCommand(id: string): Promise<void> {
     if (!id?.trim()) throw new Error('模板 ID 為必填項');
     await templateService.deleteTemplate(id);
-    revalidatePath('/client/template');
+    revalidatePath('/client/template_management');
 }

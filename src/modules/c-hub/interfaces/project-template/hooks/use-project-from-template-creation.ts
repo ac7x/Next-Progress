@@ -63,7 +63,7 @@ export function useProjectFromTemplateCreation(
       );
 
       setSuccess(true);
-      router.push('/client/manage');
+      router.push('/client/instance_management');
     } catch (error) {
       setError(error instanceof Error ? error.message : '從模板創建專案失敗');
     } finally {

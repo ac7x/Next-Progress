@@ -36,7 +36,7 @@ export async function createEngineering(data: CreateEngineeringInstanceProps): P
         const engineering = await engineeringService.create(data);
 
         revalidatePath(`/client/project/${data.projectId}`);
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
         return engineering;
     } catch (error) {
         console.error('創建工程失敗:', error);
@@ -119,7 +119,7 @@ export async function createEngineeringFromTemplate(
         );
 
         revalidatePath(`/client/project/${data.projectId}`);
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
         return engineering;
     } catch (error) {
         console.error('從模板創建工程失敗:', error);

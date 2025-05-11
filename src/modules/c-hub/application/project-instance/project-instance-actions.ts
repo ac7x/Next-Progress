@@ -19,9 +19,9 @@ export async function createProject(data: CreateProjectInstanceProps): Promise<P
     const project = await projectInstanceService.create(data);
 
     // 確保在數據修改後重新驗證頁面數據
-    revalidatePath('/client/manage');
+    revalidatePath('/client/instance_management');
     revalidatePath('/client/dashboard');
-    revalidatePath('/client/template'); // P46a3
+    revalidatePath('/client/template_management'); // P46a3
 
     return project;
   } catch (error) {
@@ -53,9 +53,9 @@ export async function createProjectFromTemplate(
     const project = await CreateProjectInstanceFromTemplateCommandHandler(templateId, projectData);
 
     // 確保在數據修改後重新驗證頁面數據
-    revalidatePath('/client/manage');
+    revalidatePath('/client/instance_management');
     revalidatePath('/client/dashboard');
-    revalidatePath('/client/template'); // P46a3
+    revalidatePath('/client/template_management'); // P46a3
 
     return project;
   } catch (error) {
@@ -78,9 +78,9 @@ export async function updateProject(
     const project = await projectInstanceService.update(id, data);
 
     // 確保在數據修改後重新驗證頁面數據
-    revalidatePath('/client/manage');
+    revalidatePath('/client/instance_management');
     revalidatePath('/client/dashboard');
-    revalidatePath('/client/template'); // P46a3
+    revalidatePath('/client/template_management'); // P46a3
 
     return project;
   } catch (error) {
@@ -98,9 +98,9 @@ export async function deleteProject(id: string): Promise<void> {
     await projectInstanceService.delete(id);
 
     // 確保在數據修改後重新驗證頁面數據
-    revalidatePath('/client/manage');
+    revalidatePath('/client/instance_management');
     revalidatePath('/client/dashboard');
-    revalidatePath('/client/template'); // P46a3
+    revalidatePath('/client/template_management'); // P46a3
   } catch (error) {
     console.error('刪除專案失敗:', error);
     throw error instanceof Error ? error : new Error('刪除專案失敗');

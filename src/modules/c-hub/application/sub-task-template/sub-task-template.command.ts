@@ -31,8 +31,8 @@ export async function createSubTaskTemplateCommand(data: CreateSubTaskTemplatePr
             throw new Error('無效的子任務模板數據');
         }
 
-        revalidatePath('/client/template');
-        revalidatePath(`/client/template/subtask-template/${data.taskTemplateId}`);
+        revalidatePath('/client/template_management');
+        revalidatePath(`/client/template_management/subtask-template/${data.taskTemplateId}`);
 
         return template;
     } catch (error) {
@@ -58,10 +58,10 @@ export async function updateSubTaskTemplateCommand(
 
     try {
         const template = await templateService.updateTemplate(id, data);
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
 
         if (data.taskTemplateId) {
-            revalidatePath(`/client/template/subtask-template/${data.taskTemplateId}`);
+            revalidatePath(`/client/template_management/subtask-template/${data.taskTemplateId}`);
         }
 
         return template;
@@ -80,9 +80,9 @@ export async function deleteSubTaskTemplateCommand(id: string, taskTemplateId?: 
     try {
         await templateService.deleteTemplate(id);
 
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
         if (taskTemplateId) {
-            revalidatePath(`/client/template/subtask-template/${taskTemplateId}`);
+            revalidatePath(`/client/template_management/subtask-template/${taskTemplateId}`);
         }
     } catch (error) {
         console.error('刪除子任務模板失敗:', error);

@@ -89,7 +89,7 @@ export function EngineeringTemplateCard({ template, projects = [] }: Engineering
       // 自動刷新：失效相關查詢緩存
       queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
       // 使用 router.replace 而不是 refresh，更新 URL 但不刷新整個頁面
-      router.replace('/client/template');
+      router.replace('/client/template_management');
     } catch (err) {
       setError(err instanceof Error ? err.message : '刪除失敗');
       console.error('Failed to delete template:', err);

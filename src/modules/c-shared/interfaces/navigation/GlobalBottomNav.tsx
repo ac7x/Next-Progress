@@ -17,7 +17,7 @@ export const GlobalBottomNav = () => {
 
           <li>
             <Link
-              href="/client/manage"
+              href="/client/instance_management"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">📋</span>
@@ -27,7 +27,7 @@ export const GlobalBottomNav = () => {
 
           <li>
             <Link
-              href="/client/template"
+              href="/client/template_management"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">🧩</span>

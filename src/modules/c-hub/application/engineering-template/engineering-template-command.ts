@@ -24,7 +24,7 @@ export async function createEngineeringTemplate(
         if (!isValidEngineeringTemplate(template)) {
             throw new Error('無效的模板資料');
         }
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
         return template;
     } catch (error) {
         console.error('建立工程模板失敗:', error);
@@ -44,7 +44,7 @@ export async function updateEngineeringTemplate(
     }
     try {
         const template = await templateService.updateTemplate(id, data);
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
         return template;
     } catch (error) {
         console.error('更新工程模板失敗:', error);
@@ -59,7 +59,7 @@ export async function deleteEngineeringTemplate(id: string): Promise<void> {
     }
     try {
         await templateService.deleteTemplate(id);
-        revalidatePath('/client/template');
+        revalidatePath('/client/template_management');
     } catch (error) {
         console.error('刪除工程模板失敗:', error);
         if (error instanceof Error && error.message.includes('找不到ID')) {

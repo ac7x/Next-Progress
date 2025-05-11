@@ -34,7 +34,7 @@ export async function createEngineeringCommand(data: CreateEngineeringInstancePr
 
         // 重新驗證相關頁面
         revalidatePath(`/client/project/${data.projectId}`);
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
 
         // 返回可序列化的數據
         return engineeringInstanceAdapter.toSerializable(engineering);
@@ -69,7 +69,7 @@ export async function updateEngineeringInstance(
         if (projectId) {
             revalidatePath(`/client/project/${projectId}`);
         }
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
 
         // 返回可序列化的數據
         return engineeringInstanceAdapter.toSerializable(engineering);
@@ -98,7 +98,7 @@ export async function deleteEngineeringInstance(id: string, projectId?: string):
         if (projectId) {
             revalidatePath(`/client/project/${projectId}`);
         }
-        revalidatePath('/client/manage');
+        revalidatePath('/client/instance_management');
     } catch (error) {
         console.error('刪除工程實例失敗:', error);
         throw error instanceof Error
