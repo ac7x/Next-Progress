@@ -69,7 +69,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
     setSelectedProjectInstance(selectedProjectInstance?.id === projectInstance.id ? null : projectInstance);
   };
 
-  // 處理優先順序調整
+  // 處理優先順序調整 - 使用絕對優先順序而非相對調整
   const handlePriorityChange = async (id: string, change: number) => {
     setIsUpdating({ id, field: 'priority' });
     setError(null);
@@ -78,7 +78,38 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
       const project = projectInstances.find(p => p.id === id);
       if (!project) return;
 
-      const newPriority = Math.max(0, (project.priority || 0) + change);
+      // 獲取所有專案並按優先順序排序
+      const sortedProjects = [...projectInstances].sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
+
+      // 找出當前專案在排序後的位置
+      const currentIndex = sortedProjects.findIndex(p => p.id === id);
+      if (currentIndex === -1) return;
+
+      // 計算目標位置（確保在有效範圍內）
+      const targetIndex = Math.max(0, Math.min(sortedProjects.length - 1, currentIndex + change));
+
+      // 如果位置沒變，不需要更新
+      if (targetIndex === currentIndex) return;
+
+      // 取得目標位置的優先順序值
+      const targetPriority = sortedProjects[targetIndex].priority ?? 0;
+
+      // 設定新的優先順序 (若要插入在兩個專案之間，取其平均值)
+      let newPriority: number;
+      if (change < 0 && targetIndex > 0) { // 向上移動
+        // 目標位置與其上一位置的平均值
+        const prevPriority = sortedProjects[targetIndex - 1].priority ?? 0;
+        newPriority = Math.max(0, Math.floor((prevPriority + targetPriority) / 2));
+      } else if (change > 0 && targetIndex < sortedProjects.length - 1) { // 向下移動
+        // 目標位置與其下一位置的平均值
+        const nextPriority = sortedProjects[targetIndex + 1].priority ?? 0;
+        newPriority = Math.min(9, Math.ceil((targetPriority + nextPriority) / 2));
+      } else {
+        // 移到最前或最後
+        newPriority = targetPriority;
+      }
+
+      // 更新優先順序
       await updateProject(id, { priority: newPriority });
       router.refresh();
     } catch (err) {
