@@ -1,7 +1,7 @@
 'use server';
 
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
-import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
+import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/adapter/project-template-repository';
 
 export async function listProjectTemplates(): Promise<ProjectTemplate[]> {
   try {

@@ -1,7 +1,7 @@
 import { CreateTaskTemplateProps, ITaskTemplateRepository, TaskTemplate, UpdateTaskTemplateProps } from '@/modules/c-hub/domain/task-template';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { Prisma } from '@prisma/client';
-import { taskTemplateAdapter } from './task-template-adapter';
+import { taskTemplateAdapter } from '../adapter/task-template-adapter';
 
 /**
  * 任務模板存儲庫實現

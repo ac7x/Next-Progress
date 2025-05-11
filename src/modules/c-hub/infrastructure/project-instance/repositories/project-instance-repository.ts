@@ -1,7 +1,7 @@
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { IProjectInstanceRepository } from '@/modules/c-hub/domain/project-instance/repositories/project-instance-repository';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { projectInstanceAdapter } from './project-instance-adapters';
+import { projectInstanceAdapter } from '../adapter/project-instance-adapters';
 
 export class ProjectInstanceRepository implements IProjectInstanceRepository {
   async create(data: CreateProjectInstanceProps): Promise<ProjectInstance> {

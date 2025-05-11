@@ -1,7 +1,7 @@
 import { CreateTaskInstanceProps, TaskInstance, UpdateTaskInstanceProps } from '@/modules/c-hub/domain/task-instance/entities';
 import { TaskInstanceRepository as ITaskInstanceRepository } from '@/modules/c-hub/domain/task-instance/repositories';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { taskInstanceAdapter } from './task-instance-adapter';
+import { taskInstanceAdapter } from '../adapter/task-instance-adapter';
 
 /**
  * 任務實例儲存庫實現

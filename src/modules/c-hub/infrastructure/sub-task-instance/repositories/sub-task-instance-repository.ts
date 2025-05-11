@@ -1,7 +1,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { CreateSubTaskInstanceProps, SubTaskInstance, UpdateSubTaskInstanceProps } from '../../domain/sub-task-instance/entities/sub-task-instance-entity';
-import { ISubTaskInstanceRepository } from '../../domain/sub-task-instance/repositories/sub-task-instance-repository-interface';
-import { subTaskAdapter } from './sub-task-instance-adapter';
+import { CreateSubTaskInstanceProps, SubTaskInstance, UpdateSubTaskInstanceProps } from '../../../domain/sub-task-instance/entities/sub-task-instance-entity';
+import { ISubTaskInstanceRepository } from '../../../domain/sub-task-instance/repositories/sub-task-instance-repository-interface';
+import { subTaskAdapter } from '../adapter/sub-task-instance-adapter';
 
 /**
  * 子任務實體倉儲實現

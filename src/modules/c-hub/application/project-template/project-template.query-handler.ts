@@ -1,5 +1,5 @@
 import { ProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
-import { ProjectTemplateQueryService } from '@/modules/c-hub/infrastructure/project-template/project-template.query-service';
+import { ProjectTemplateQueryService } from '@/modules/c-hub/infrastructure/project-template/repositories/project-template.query-service';
 
 // Application QueryHandler: 查詢專案模板列表
 export async function GetProjectTemplateListQueryHandler(): Promise<ProjectTemplate[]> {

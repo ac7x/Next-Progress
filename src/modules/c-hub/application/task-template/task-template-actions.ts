@@ -1,7 +1,7 @@
 'use server';
 
 import { CreateTaskTemplateProps, TaskTemplate, TaskTemplateDomainService, UpdateTaskTemplateProps, isValidTaskTemplate } from '@/modules/c-hub/domain/task-template';
-import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
+import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/repositories/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
 const templateService = new TaskTemplateDomainService(taskTemplateRepository);

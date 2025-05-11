@@ -5,7 +5,7 @@ import {
 } from '../../domain/sub-task-instance/entities/sub-task-instance-entity';
 import { SubTaskInstanceDomainService } from '../../domain/sub-task-instance/services/sub-task-instance-service';
 import { SubTaskInstanceStatusType } from '../../domain/sub-task-instance/value-objects/sub-task-instance-status.vo';
-import { subTaskInstanceRepository } from '../../infrastructure/sub-task-instance/sub-task-instance-repository';
+import { subTaskInstanceRepository } from '../../infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
 
 /**
  * 子任務實體應用服務

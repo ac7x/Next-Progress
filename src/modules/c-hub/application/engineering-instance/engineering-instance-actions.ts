@@ -2,12 +2,12 @@
 
 import { CreateEngineeringInstanceProps, EngineeringInstance, EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance';
 import { CreateEngineeringFromTemplateProps } from '@/modules/c-hub/domain/engineering-template';
-import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/engineering-instance-repository';
+import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
-import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
+import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
 import { subTaskTemplateRepository } from '@/modules/c-hub/infrastructure/sub-task-template/sub-task-template-repository';
-import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
-import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
+import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/repositories/task-instance-repository';
+import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/repositories/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
 // 僅注入單一 repository，符合 DDD 原則

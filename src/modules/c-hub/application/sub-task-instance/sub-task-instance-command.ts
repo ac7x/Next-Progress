@@ -2,8 +2,8 @@
 
 import { CreateSubTaskInstanceProps, SubTaskInstance, SubTaskInstanceDomainService, SubTaskInstanceStatusType, UpdateSubTaskInstanceProps } from '@/modules/c-hub/domain/sub-task-instance';
 import { TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance';
-import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/sub-task-instance-repository';
-import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
+import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
+import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/repositories/task-instance-repository';
 import { revalidatePath } from 'next/cache';
 
 const subTaskInstanceService = new SubTaskInstanceDomainService(subTaskInstanceRepository);

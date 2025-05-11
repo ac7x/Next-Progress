@@ -8,10 +8,10 @@
 
 import { CreateEngineeringInstanceProps, EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
 import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/services/engineering-instance-service';
-import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/engineering-instance-repository';
+import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
-import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
-import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
+import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/repositories/task-instance-repository';
+import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/repositories/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
 /**

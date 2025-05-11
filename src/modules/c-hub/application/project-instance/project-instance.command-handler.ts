@@ -1,6 +1,6 @@
 import { getProjectTemplate } from '@/modules/c-hub/application/project-template/project-template-queries'; // Query Concern
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
-import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/project-instance-repository';
+import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/repositories/project-instance-repository';
 
 export async function CreateProjectInstanceCommandHandler(
     data: CreateProjectInstanceProps

@@ -6,7 +6,7 @@
 import { CreateEngineeringInstanceProps, EngineeringInstance, UpdateEngineeringInstanceProps } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
 import { IEngineeringInstanceRepository } from '@/modules/c-hub/domain/engineering-instance/repositories/engineering-instance-repository-interface';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { engineeringInstanceAdapter } from './engineering-instance-adapter';
+import { engineeringInstanceAdapter } from '../adapter/engineering-instance-adapter';
 
 export class EngineeringInstanceRepository implements IEngineeringInstanceRepository {
   /**

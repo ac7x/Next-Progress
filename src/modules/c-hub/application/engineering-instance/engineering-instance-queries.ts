@@ -8,7 +8,7 @@
 
 import { EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
 import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/services/engineering-instance-service';
-import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/engineering-instance-repository';
+import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 
 // 初始化領域服務
 const engineeringInstanceService = new EngineeringInstanceDomainService(engineeringInstanceRepository);

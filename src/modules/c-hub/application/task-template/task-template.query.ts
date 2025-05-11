@@ -1,7 +1,7 @@
 'use server';
 
 import { TaskTemplate, TaskTemplateDomainService } from '@/modules/c-hub/domain/task-template';
-import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/task-template-repository';
+import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/repositories/task-template-repository';
 
 const templateService = new TaskTemplateDomainService(taskTemplateRepository);
 

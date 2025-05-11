@@ -1,4 +1,4 @@
-import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/project-instance-repository';
+import { projectInstanceRepository } from '@/modules/c-hub/infrastructure/project-instance/repositories/project-instance-repository';
 import { CreateProjectInstanceProps, ProjectInstance } from '../entities/project-instance-entity';
 
 export const projectInstanceService = {

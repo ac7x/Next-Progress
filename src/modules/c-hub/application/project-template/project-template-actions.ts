@@ -1,7 +1,7 @@
 'use server';
 
 import { CreateProjectTemplateProps, ProjectTemplate, isValidProjectTemplate } from '@/modules/c-hub/domain/project-template/entities/project-template-entity';
-import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/project-template-repository';
+import { projectTemplateRepository } from '@/modules/c-hub/infrastructure/project-template/adapter/project-template-repository';
 import { revalidatePath } from 'next/cache';
 import { CreateProjectTemplateCommandHandler, UpdateProjectTemplateCommandHandler } from './project-template.command-handler';
 

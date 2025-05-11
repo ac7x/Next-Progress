@@ -1,8 +1,7 @@
 'use server';
 
-import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
-import { TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance';
-import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/task-instance-repository';
+import { TaskInstance, TaskInstanceDomainService } from '@/modules/c-hub/domain/task-instance';
+import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/repositories/task-instance-repository';
 
 const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
 
