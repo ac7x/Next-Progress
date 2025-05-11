@@ -20,7 +20,7 @@ export async function createProject(data: CreateProjectInstanceProps): Promise<P
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/instance_management');
-    revalidatePath('/client/dashboard');
+    revalidatePath('/client/dashboard_management');
     revalidatePath('/client/template_management'); // P46a3
 
     return project;
@@ -54,7 +54,7 @@ export async function createProjectFromTemplate(
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/instance_management');
-    revalidatePath('/client/dashboard');
+    revalidatePath('/client/dashboard_management');
     revalidatePath('/client/template_management'); // P46a3
 
     return project;
@@ -79,7 +79,7 @@ export async function updateProject(
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/instance_management');
-    revalidatePath('/client/dashboard');
+    revalidatePath('/client/dashboard_management');
     revalidatePath('/client/template_management'); // P46a3
 
     return project;
@@ -99,7 +99,7 @@ export async function deleteProject(id: string): Promise<void> {
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/instance_management');
-    revalidatePath('/client/dashboard');
+    revalidatePath('/client/dashboard_management');
     revalidatePath('/client/template_management'); // P46a3
   } catch (error) {
     console.error('刪除專案失敗:', error);

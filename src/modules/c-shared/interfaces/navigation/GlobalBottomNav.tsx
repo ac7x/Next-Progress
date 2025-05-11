@@ -7,7 +7,7 @@ export const GlobalBottomNav = () => {
         <ul className="flex justify-around items-center h-16">
           <li>
             <Link
-              href="/client/dashboard"
+              href="/client/dashboard_management"
               className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600"
             >
               <span className="text-2xl" aria-hidden="true">📊</span>

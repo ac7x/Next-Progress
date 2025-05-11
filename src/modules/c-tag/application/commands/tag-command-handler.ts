@@ -20,7 +20,7 @@ export async function CreateTagCommandHandler(data: CreateTagProps): Promise<Tag
     try {
         const tag = await commandService.createTag(data);
         // 重新驗證相關頁面
-        revalidatePath('/client/dashboard');
+        revalidatePath('/client/dashboard_management');
         revalidatePath('/client/tag');
         return tag;
     } catch (error) {
@@ -41,7 +41,7 @@ export async function UpdateTagCommandHandler(id: string, data: UpdateTagProps):
     try {
         const tag = await commandService.updateTag(id, data);
         // 重新驗證相關頁面
-        revalidatePath('/client/dashboard');
+        revalidatePath('/client/dashboard_management');
         revalidatePath('/client/tag');
         return tag;
     } catch (error) {
@@ -60,7 +60,7 @@ export async function DeleteTagCommandHandler(id: string): Promise<void> {
     try {
         await commandService.deleteTag(id);
         // 重新驗證相關頁面
-        revalidatePath('/client/dashboard');
+        revalidatePath('/client/dashboard_management');
         revalidatePath('/client/tag');
     } catch (error) {
         console.error('刪除標籤失敗:', error);

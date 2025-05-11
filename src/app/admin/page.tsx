@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { name: '儀表板', href: '/admin/dashboard', icon: '📊' },
+  { name: '儀表板', href: '/admin/dashboard_management', icon: '📊' },
   { name: '統計分析', href: '/admin/stats', icon: '📈' },
 ];
 
@@ -32,7 +32,7 @@ function AdminNav() {
         </ul>
       </nav>
       <Link
-        href="/dashboard/profile"
+        href="/dashboard_management/profile"
         className="absolute bottom-4 flex w-52 items-center rounded-lg p-3 text-gray-600 hover:bg-gray-50"
       >
         <span className="mr-3">👈</span>
