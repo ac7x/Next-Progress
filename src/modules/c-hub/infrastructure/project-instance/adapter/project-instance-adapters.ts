@@ -1,4 +1,8 @@
 import { CreateProjectInstanceProps, ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
+import { isValidProjectInstanceCreatedBy } from '@/modules/c-hub/domain/project-instance/value-objects/project-instance-created-by.vo';
+import { isValidProjectInstanceDescription } from '@/modules/c-hub/domain/project-instance/value-objects/project-instance-description.vo';
+import { isValidProjectInstanceName } from '@/modules/c-hub/domain/project-instance/value-objects/project-instance-name.vo';
+import { isValidProjectInstancePriority } from '@/modules/c-hub/domain/project-instance/value-objects/project-instance-priority.vo';
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import type { Prisma } from '@prisma/client';
 
@@ -7,14 +11,35 @@ const DEFAULT_SYSTEM_USER_ID = 'system';
 
 export const projectInstanceAdapter = {
   toDomain(prismaProject: any): ProjectInstance {
+    // 確保原始數據符合值物件的要求
+    const name = prismaProject.name;
+    if (!isValidProjectInstanceName(name)) {
+      throw new Error(`Invalid project name: ${name}`);
+    }
+
+    const description = prismaProject.description;
+    if (description !== null && !isValidProjectInstanceDescription(description)) {
+      throw new Error(`Invalid project description`);
+    }
+
+    const createdBy = prismaProject.createdBy ?? prismaProject.creator?.userId ?? '';
+    if (!isValidProjectInstanceCreatedBy(createdBy)) {
+      throw new Error(`Invalid project createdBy: ${createdBy}`);
+    }
+
+    const priority = prismaProject.priority ?? 0;
+    if (!isValidProjectInstancePriority(priority)) {
+      throw new Error(`Invalid project priority: ${priority}`);
+    }
+
     return {
       id: prismaProject.id,
-      name: prismaProject.name,
-      description: prismaProject.description,
-      priority: prismaProject.priority ?? 0, // 確保為 number
+      name,
+      description,
+      priority,
       startDate: prismaProject.startDate,
       endDate: prismaProject.endDate,
-      createdBy: prismaProject.createdBy ?? prismaProject.creator?.userId ?? '', // 修正型別
+      createdBy,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
     };

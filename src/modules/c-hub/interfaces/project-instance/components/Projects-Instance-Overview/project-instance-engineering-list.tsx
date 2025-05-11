@@ -36,9 +36,26 @@ function EngineeringInstanceList({
                 <ul className="list-disc pl-5">
                     {engineeringInstances.map(engineeringInstance => (
                         <li key={engineeringInstance.id} className="mb-2">
-                            <div className="font-medium">{engineeringInstance.name.getValue()}</div>
-                            {engineeringInstance.description &&
-                                <div className="text-gray-600 text-sm">{engineeringInstance.description.getValue()}</div>}
+                            <div className="font-medium">
+                                {/* 安全地訪問工程名稱，處理可能是值物件或字串的情況 */}
+                                {typeof engineeringInstance.name === 'string'
+                                    ? engineeringInstance.name
+                                    : (engineeringInstance.name && typeof engineeringInstance.name.getValue === 'function'
+                                        ? engineeringInstance.name.getValue()
+                                        : '未命名工程')}
+                            </div>
+
+                            {/* 安全地訪問工程描述，處理可能是值物件或字串或null的情況 */}
+                            {engineeringInstance.description && (
+                                <div className="text-gray-600 text-sm">
+                                    {typeof engineeringInstance.description === 'string'
+                                        ? engineeringInstance.description
+                                        : (typeof engineeringInstance.description.getValue === 'function'
+                                            ? engineeringInstance.description.getValue()
+                                            : '')}
+                                </div>
+                            )}
+
                             {taskInstancesByEngineering[engineeringInstance.id] && taskInstancesByEngineering[engineeringInstance.id].length > 0 && (
                                 <div className="mt-1 ml-4">
                                     <p className="text-sm text-gray-700 font-medium">相關任務:</p>
