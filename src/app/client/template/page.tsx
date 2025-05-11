@@ -47,38 +47,41 @@ export default async function TemplatePage() {
 
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
-        {/* 一致性區塊：專案模板 */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">專案模板管理</h2>
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">建立新專案模板</h3>
-            <CreateProjectTemplateForm />
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold mb-4">現有專案模板</h3>
-            <ProjectTemplateList templates={projectTemplates} />
-          </div>
-        </section>
+        {/* 並排顯示專案模板與工程模板 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          {/* 專案模板管理 */}
+          <section>
+            <h2 className="text-2xl font-bold mb-6">專案模板管理</h2>
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold mb-4">建立新專案模板</h3>
+              <CreateProjectTemplateForm />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-4">現有專案模板</h3>
+              <ProjectTemplateList templates={projectTemplates} />
+            </div>
+          </section>
 
-        {/* 一致性區塊：工程模板 */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">工程模板管理</h2>
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">建立新工程模板</h3>
-            <EngineeringTemplateForm />
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold mb-4">現有工程模板與任務</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              點擊「生成至專案」可以選擇專案並將工程模板和相關任務直接生成到專案中
-            </p>
-            <Suspense fallback={<p className="text-gray-500">載入工程模板中...</p>}>
-              <EngineeringTemplateList projects={projects} />
-            </Suspense>
-          </div>
-        </section>
+          {/* 工程模板管理 */}
+          <section>
+            <h2 className="text-2xl font-bold mb-6">工程模板管理</h2>
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold mb-4">建立新工程模板</h3>
+              <EngineeringTemplateForm />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-4">現有工程模板與任務</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                點擊「生成至專案」可以選擇專案並將工程模板和相關任務直接生成到專案中
+              </p>
+              <Suspense fallback={<p className="text-gray-500">載入工程模板中...</p>}>
+                <EngineeringTemplateList projects={projects} />
+              </Suspense>
+            </div>
+          </section>
+        </div>
 
-        {/* 一致性區塊：任務模板 */}
+        {/* 任務模板 */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6">任務模板管理</h2>
           {engineeringTemplates.length === 0 ? (
@@ -117,7 +120,7 @@ export default async function TemplatePage() {
           )}
         </section>
 
-        {/* 一致性區塊：子任務模板 */}
+        {/* 子任務模板 */}
         <section>
           <h2 className="text-2xl font-bold mb-6">子任務模板管理</h2>
           {taskTemplates.length === 0 ? (
