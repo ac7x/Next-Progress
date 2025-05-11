@@ -39,5 +39,32 @@ export const engineeringInstanceAdapter = {
     if (domainModel.description !== undefined) data.description = domainModel.description;
 
     return data;
+  },
+
+  /**
+   * 將領域實體轉換為可序列化的純JavaScript對象
+   * 用於跨越伺服器-客戶端邊界時的數據傳遞
+   * @param domainEntity 領域實體
+   * @returns 可序列化的純JavaScript對象
+   */
+  toSerializable(domainEntity: EngineeringInstance): any {
+    return {
+      id: domainEntity.id,
+      name: domainEntity.name.getValue(),
+      description: domainEntity.description.getValue(),
+      projectId: domainEntity.projectId,
+      userId: domainEntity.userId,
+      createdAt: domainEntity.createdAt,
+      updatedAt: domainEntity.updatedAt
+    };
+  },
+
+  /**
+   * 批量將領域實體轉換為可序列化格式
+   * @param entities 領域實體陣列
+   * @returns 可序列化對象陣列
+   */
+  toSerializableList(entities: EngineeringInstance[]): any[] {
+    return entities.map(entity => this.toSerializable(entity));
   }
 };

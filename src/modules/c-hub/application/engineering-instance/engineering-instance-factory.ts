@@ -6,8 +6,9 @@
  * 跨越多個聚合根邊界，協調工程模板、工程實例、任務模板和任務實例
  */
 
-import { CreateEngineeringInstanceProps, EngineeringInstance } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
+import { CreateEngineeringInstanceProps } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
 import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/services/engineering-instance-service';
+import { engineeringInstanceAdapter } from '@/modules/c-hub/infrastructure/engineering-instance/adapter/engineering-instance-adapter';
 import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
 import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-instance/repositories/task-instance-repository';
@@ -34,11 +35,11 @@ const engineeringService = new EngineeringInstanceDomainService(engineeringInsta
  * 協調多個聚合根的特殊工廠方法
  * 
  * @param data 創建所需資料
- * @returns 創建的工程實例
+ * @returns 創建的工程實例（可序列化格式）
  */
 export async function createEngineeringFromTemplate(
     data: CreateEngineeringFromTemplateProps
-): Promise<EngineeringInstance> {
+): Promise<any> {
     try {
         if (!data.engineeringTemplateId?.trim()) {
             throw new Error('工程模板ID不能為空');
@@ -56,8 +57,8 @@ export async function createEngineeringFromTemplate(
 
         // 2. 準備創建工程實例的數據
         const createData: CreateEngineeringInstanceProps = {
-            name: data.name || template.name, // 修正：直接使用字串值，而非 getValue()
-            description: data.description !== undefined ? data.description : template.description, // 修正：直接使用字串或 null 值
+            name: data.name || template.name, // 使用字串值
+            description: data.description !== undefined ? data.description : template.description, // 使用字串或 null 值
             projectId: data.projectId,
             userId: data.userId
         };
@@ -83,7 +84,6 @@ export async function createEngineeringFromTemplate(
                         description: taskTemplate.description,
                         engineeringId: engineering.id,
                         projectId: data.projectId
-                        // 移除 userId，因為 taskInstanceRepository.create 不接受此參數
                     });
                 }
             }
@@ -93,7 +93,8 @@ export async function createEngineeringFromTemplate(
         revalidatePath(`/client/project/${data.projectId}`);
         revalidatePath('/client/manage');
 
-        return engineering;
+        // 將領域實體轉換為可序列化格式後返回
+        return engineeringInstanceAdapter.toSerializable(engineering);
     } catch (error) {
         console.error('從模板創建工程實例失敗:', error);
         throw error instanceof Error

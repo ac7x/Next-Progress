@@ -1,7 +1,13 @@
 'use server';
 
-import { CreateEngineeringInstanceProps, EngineeringInstance, EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance';
+/**
+ * 工程實例行動服務 (Action Service)
+ * 提供 Server Action 功能，處理工程實例的各種操作
+ */
+
+import { CreateEngineeringInstanceProps, EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance';
 import { CreateEngineeringFromTemplateProps } from '@/modules/c-hub/domain/engineering-template';
+import { engineeringInstanceAdapter } from '@/modules/c-hub/infrastructure/engineering-instance/adapter/engineering-instance-adapter';
 import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 import { engineeringTemplateRepository } from '@/modules/c-hub/infrastructure/engineering-template/engineering-template-repository';
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
@@ -10,28 +16,70 @@ import { taskInstanceRepository } from '@/modules/c-hub/infrastructure/task-inst
 import { taskTemplateRepository } from '@/modules/c-hub/infrastructure/task-template/repositories/task-template-repository';
 import { revalidatePath } from 'next/cache';
 
-// 僅注入單一 repository，符合 DDD 原則
+// 初始化領域服務
 const engineeringService = new EngineeringInstanceDomainService(engineeringInstanceRepository);
 
-export async function listEngineerings(): Promise<EngineeringInstance[]> {
-  return engineeringService.list();
+/**
+ * 獲取所有工程實例列表
+ * @returns 工程實例列表（可序列化格式）
+ */
+export async function listEngineerings(): Promise<any[]> {
+  try {
+    const instances = await engineeringService.list();
+    // 將領域實體轉換為可序列化格式
+    return engineeringInstanceAdapter.toSerializableList(instances);
+  } catch (error) {
+    console.error('獲取工程實例列表失敗:', error);
+    return [];
+  }
 }
 
-export async function getEngineeringById(id: string): Promise<EngineeringInstance | null> {
+/**
+ * 根據ID獲取工程實例
+ * @param id 工程實例ID
+ * @returns 工程實例（可序列化格式）或null
+ */
+export async function getEngineeringById(id: string): Promise<any | null> {
   if (!id?.trim()) {
     throw new Error('工程ID不能為空');
   }
-  return engineeringService.getById(id);
+
+  try {
+    const instance = await engineeringService.getById(id);
+    // 將領域實體轉換為可序列化格式
+    return instance ? engineeringInstanceAdapter.toSerializable(instance) : null;
+  } catch (error) {
+    console.error(`獲取工程實例(ID: ${id})失敗:`, error);
+    return null;
+  }
 }
 
-export async function listEngineeringsByProject(projectId: string): Promise<EngineeringInstance[]> {
+/**
+ * 獲取特定專案的工程實例列表
+ * @param projectId 專案ID
+ * @returns 工程實例列表（可序列化格式）
+ */
+export async function listEngineeringsByProject(projectId: string): Promise<any[]> {
   if (!projectId?.trim()) {
     throw new Error('專案ID不能為空');
   }
-  return engineeringInstanceRepository.listByProject(projectId);
+
+  try {
+    const instances = await engineeringInstanceRepository.listByProject(projectId);
+    // 將領域實體轉換為可序列化格式
+    return engineeringInstanceAdapter.toSerializableList(instances);
+  } catch (error) {
+    console.error(`獲取專案(ID: ${projectId})工程實例列表失敗:`, error);
+    return [];
+  }
 }
 
-export async function createEngineering(data: CreateEngineeringInstanceProps): Promise<EngineeringInstance> {
+/**
+ * 創建新工程實例
+ * @param data 工程實例創建資料
+ * @returns 創建的工程實例（可序列化格式）
+ */
+export async function createEngineering(data: CreateEngineeringInstanceProps): Promise<any> {
   try {
     if (!data.name?.trim()) {
       throw new Error('工程名稱不能為空');
@@ -47,7 +95,8 @@ export async function createEngineering(data: CreateEngineeringInstanceProps): P
     revalidatePath(`/client/project/${data.projectId}`);
     revalidatePath('/client/manage');
 
-    return engineering;
+    // 將領域實體轉換為可序列化格式
+    return engineeringInstanceAdapter.toSerializable(engineering);
   } catch (error) {
     console.error('創建工程失敗:', error);
     throw error instanceof Error
@@ -56,10 +105,14 @@ export async function createEngineering(data: CreateEngineeringInstanceProps): P
   }
 }
 
-// 從模板創建工程（聚合協調應在 UseCase 層）
+/**
+ * 從模板創建工程實例
+ * @param data 從模板創建工程實例所需資料
+ * @returns 創建的工程實例（可序列化格式）
+ */
 export async function createEngineeringFromTemplate(
   data: CreateEngineeringFromTemplateProps
-): Promise<EngineeringInstance> {
+): Promise<any> {
   try {
     if (!data.engineeringTemplateId?.trim()) {
       throw new Error('工程模板ID不能為空');
@@ -136,7 +189,8 @@ export async function createEngineeringFromTemplate(
     revalidatePath(`/client/project/${data.projectId}`);
     revalidatePath('/client/manage');
 
-    return engineering;
+    // 將領域實體轉換為可序列化格式
+    return engineeringInstanceAdapter.toSerializable(engineering);
   } catch (error) {
     console.error('從模板創建工程失敗:', error);
     throw error instanceof Error

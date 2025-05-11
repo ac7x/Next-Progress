@@ -6,8 +6,9 @@
  * 遵循 CQRS 原則，僅執行命令，不執行查詢
  */
 
-import { CreateEngineeringInstanceProps, EngineeringInstance, UpdateEngineeringInstanceProps } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
+import { CreateEngineeringInstanceProps, UpdateEngineeringInstanceProps } from '@/modules/c-hub/domain/engineering-instance/entities/engineering-instance-entity';
 import { EngineeringInstanceDomainService } from '@/modules/c-hub/domain/engineering-instance/services/engineering-instance-service';
+import { engineeringInstanceAdapter } from '@/modules/c-hub/infrastructure/engineering-instance/adapter/engineering-instance-adapter';
 import { engineeringInstanceRepository } from '@/modules/c-hub/infrastructure/engineering-instance/repositories/engineering-instance-repository';
 import { revalidatePath } from 'next/cache';
 
@@ -17,9 +18,9 @@ const engineeringInstanceService = new EngineeringInstanceDomainService(engineer
 /**
  * 創建新工程實例 - 命令處理函數
  * @param data 創建工程實例所需資料
- * @returns 創建的工程實例
+ * @returns 創建的工程實例（可序列化格式）
  */
-export async function createEngineeringCommand(data: CreateEngineeringInstanceProps): Promise<EngineeringInstance> {
+export async function createEngineeringCommand(data: CreateEngineeringInstanceProps): Promise<any> {
     try {
         if (!data.name?.trim()) {
             throw new Error('工程名稱不能為空');
@@ -35,7 +36,8 @@ export async function createEngineeringCommand(data: CreateEngineeringInstancePr
         revalidatePath(`/client/project/${data.projectId}`);
         revalidatePath('/client/manage');
 
-        return engineering;
+        // 返回可序列化的數據
+        return engineeringInstanceAdapter.toSerializable(engineering);
     } catch (error) {
         console.error('創建工程實例失敗:', error);
         throw error instanceof Error
@@ -48,13 +50,14 @@ export async function createEngineeringCommand(data: CreateEngineeringInstancePr
  * 更新工程實例
  * @param id 工程實例ID
  * @param data 更新資料
- * @returns 更新後的工程實例
+ * @param projectId 關聯的專案ID（用於頁面重新驗證）
+ * @returns 更新後的工程實例（可序列化格式）
  */
 export async function updateEngineeringInstance(
     id: string,
     data: UpdateEngineeringInstanceProps,
     projectId: string
-): Promise<EngineeringInstance> {
+): Promise<any> {
     try {
         if (!id?.trim()) {
             throw new Error('工程ID不能為空');
@@ -68,7 +71,8 @@ export async function updateEngineeringInstance(
         }
         revalidatePath('/client/manage');
 
-        return engineering;
+        // 返回可序列化的數據
+        return engineeringInstanceAdapter.toSerializable(engineering);
     } catch (error) {
         console.error('更新工程實例失敗:', error);
         throw error instanceof Error
