@@ -8,9 +8,6 @@ import { useEffect, useState } from 'react';
 export interface ProjectTemplateFormState {
   name: string;
   description: string;
-  priority: string;
-  startDate: string;
-  endDate: string;
 }
 
 export function useProjectFromTemplateCreation(
@@ -21,9 +18,6 @@ export function useProjectFromTemplateCreation(
   const [formState, setFormState] = useState<ProjectTemplateFormState>({
     name: template.name,
     description: template.description || '',
-    priority: String(template.priority ?? 0),
-    startDate: '',
-    endDate: '',
   });
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +28,6 @@ export function useProjectFromTemplateCreation(
     setFormState({
       name: template.name,
       description: template.description || '',
-      priority: String(template.priority ?? 0),
-      startDate: '',
-      endDate: '',
     });
     setError(null);
     setSuccess(false);
@@ -48,22 +39,6 @@ export function useProjectFromTemplateCreation(
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormState(prev => ({ ...prev, description: e.target.value }));
-  };
-
-  const handlePriorityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState(prev => ({ ...prev, priority: e.target.value })); // 保持 string
-  };
-
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState(prev => ({
-      ...prev,
-      startDate: e.target.value,
-      endDate: prev.endDate && new Date(e.target.value) > new Date(prev.endDate) ? '' : prev.endDate
-    }));
-  };
-
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState(prev => ({ ...prev, endDate: e.target.value }));
   };
 
   const handleCreateFromTemplate = async (e: React.FormEvent) => {
@@ -83,9 +58,6 @@ export function useProjectFromTemplateCreation(
         {
           name: formState.name,
           description: formState.description || null,
-          priority: formState.priority ? parseInt(formState.priority, 10) : 0,
-          startDate: formState.startDate ? new Date(formState.startDate) : null,
-          endDate: formState.endDate ? new Date(formState.endDate) : null,
           createdBy: currentUserId
         }
       );
@@ -103,9 +75,6 @@ export function useProjectFromTemplateCreation(
     formState,
     handleNameChange,
     handleDescriptionChange,
-    handlePriorityChange,
-    handleStartDateChange,
-    handleEndDateChange,
     handleCreateFromTemplate,
     isCreating,
     error,

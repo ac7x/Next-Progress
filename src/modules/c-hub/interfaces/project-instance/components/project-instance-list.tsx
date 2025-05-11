@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteProject } from '@/modules/c-hub/application/project-instance/project-instance-actions';
+import { deleteProject, updateProject } from '@/modules/c-hub/application/project-instance/project-instance-actions';
 import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { useQuery } from '@tanstack/react-query';
@@ -34,8 +34,11 @@ function useProjectInstancesTasksDetails(projectInstanceIds: string[]) {
 // 調整元件名稱與 props
 export function ProjectInstanceList({ projectInstances }: ProjectInstanceListProps) {
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState<{ id: string, field: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedProjectInstance, setSelectedProjectInstance] = useState<ProjectInstance | null>(null);
+  const [endDateEditing, setEndDateEditing] = useState<string | null>(null);
+  const [endDateValue, setEndDateValue] = useState<string>('');
   const router = useRouter();
 
   // 任務數量
@@ -64,6 +67,56 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
 
   const handleShowDetails = (projectInstance: ProjectInstance) => {
     setSelectedProjectInstance(selectedProjectInstance?.id === projectInstance.id ? null : projectInstance);
+  };
+
+  // 處理優先順序調整
+  const handlePriorityChange = async (id: string, change: number) => {
+    setIsUpdating({ id, field: 'priority' });
+    setError(null);
+
+    try {
+      const project = projectInstances.find(p => p.id === id);
+      if (!project) return;
+
+      const newPriority = Math.max(0, (project.priority || 0) + change);
+      await updateProject(id, { priority: newPriority });
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '更新優先順序失敗');
+      console.error('更新優先順序失敗:', err);
+    } finally {
+      setIsUpdating(null);
+    }
+  };
+
+  // 處理結束日期編輯
+  const handleEndDateClick = (projectInstance: ProjectInstance) => {
+    const currentDate = projectInstance.endDate
+      ? new Date(projectInstance.endDate).toISOString().split('T')[0]
+      : '';
+    setEndDateValue(currentDate);
+    setEndDateEditing(projectInstance.id);
+  };
+
+  const handleEndDateSave = async (id: string) => {
+    setIsUpdating({ id, field: 'endDate' });
+    setError(null);
+
+    try {
+      const endDate = endDateValue ? new Date(endDateValue) : null;
+      await updateProject(id, { endDate });
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '更新結束日期失敗');
+      console.error('更新結束日期失敗:', err);
+    } finally {
+      setIsUpdating(null);
+      setEndDateEditing(null);
+    }
+  };
+
+  const handleEndDateCancel = () => {
+    setEndDateEditing(null);
   };
 
   if (projectInstances.length === 0) {
@@ -108,7 +161,30 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                   <tr key={projectInstance.id}>
                     <td className="px-6 py-4 whitespace-nowrap">{projectInstance.name}</td>
                     <td className="px-6 py-4">{projectInstance.description || '—'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '—'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center space-x-2">
+                        <span>{projectInstance.priority !== null && projectInstance.priority !== undefined ? projectInstance.priority : '—'}</span>
+                        <div className="flex flex-col">
+                          <button
+                            onClick={() => handlePriorityChange(projectInstance.id, -1)}
+                            disabled={isUpdating !== null}
+                            className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            onClick={() => handlePriorityChange(projectInstance.id, 1)}
+                            disabled={isUpdating !== null}
+                            className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                          >
+                            ▼
+                          </button>
+                        </div>
+                        {isUpdating?.id === projectInstance.id && isUpdating?.field === 'priority' && (
+                          <span className="text-xs text-blue-500">更新中...</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {tasksCountMap?.[projectInstance.id] ?? '—'}
                     </td>
@@ -138,12 +214,48 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                       {projectInstance.startDate ? new Date(projectInstance.startDate).toLocaleDateString() : '—'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {projectInstance.endDate ? new Date(projectInstance.endDate).toLocaleDateString() : '—'}
+                      {endDateEditing === projectInstance.id ? (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="date"
+                            value={endDateValue}
+                            onChange={(e) => setEndDateValue(e.target.value)}
+                            className="border rounded px-2 py-1 w-32"
+                          />
+                          <button
+                            onClick={() => handleEndDateSave(projectInstance.id)}
+                            className="text-green-600 hover:text-green-800 text-sm"
+                            disabled={isUpdating !== null}
+                          >
+                            ✓
+                          </button>
+                          <button
+                            onClick={handleEndDateCancel}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                            disabled={isUpdating !== null}
+                          >
+                            ✗
+                          </button>
+                          {isUpdating?.id === projectInstance.id && isUpdating?.field === 'endDate' && (
+                            <span className="text-xs text-blue-500">更新中...</span>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <span>{projectInstance.endDate ? new Date(projectInstance.endDate).toLocaleDateString() : '—'}</span>
+                          <button
+                            onClick={() => handleEndDateClick(projectInstance)}
+                            className="text-gray-500 hover:text-gray-700 ml-2"
+                          >
+                            ✎
+                          </button>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleDelete(projectInstance.id)}
-                        disabled={isDeleting === projectInstance.id}
+                        disabled={isDeleting === projectInstance.id || isUpdating !== null}
                         className="text-red-600 hover:text-red-900 mr-4 disabled:opacity-50"
                       >
                         {isDeleting === projectInstance.id ? '刪除中...' : '刪除'}

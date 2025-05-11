@@ -6,8 +6,8 @@ import { ProjectTemplateFormFields } from './project-template-form-fields';
 
 interface ProjectTemplateCreateModalProps {
   template: ProjectTemplate;
-  onCloseAction: () => void; // 重命名為 onCloseAction 以符合 Server Action 的命名規則
-  currentUserId: string; // 新增
+  onCloseAction: () => void;
+  currentUserId: string;
 }
 
 export function ProjectTemplateCreateModal({ template, onCloseAction, currentUserId }: ProjectTemplateCreateModalProps) {
@@ -15,9 +15,6 @@ export function ProjectTemplateCreateModal({ template, onCloseAction, currentUse
     formState,
     handleNameChange,
     handleDescriptionChange,
-    handlePriorityChange, // 使用新增的 handlePriorityChange
-    handleStartDateChange,
-    handleEndDateChange,
     handleCreateFromTemplate,
     isCreating,
     error,
@@ -55,27 +52,24 @@ export function ProjectTemplateCreateModal({ template, onCloseAction, currentUse
               formState={formState}
               onNameChangeAction={handleNameChange}
               onDescriptionChangeAction={handleDescriptionChange}
-              onPriorityChangeAction={handlePriorityChange} // 確保傳遞正確
-              onStartDateChangeAction={handleStartDateChange}
-              onEndDateChangeAction={handleEndDateChange}
               disabled={isCreating}
             />
 
-            <div className="flex justify-end space-x-3 pt-2">
+            <div className="flex justify-between mt-6">
               <button
                 type="button"
                 onClick={onCloseAction}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded hover:bg-gray-50"
+                className="px-4 py-2 border rounded bg-gray-100"
                 disabled={isCreating}
               >
                 取消
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                 disabled={isCreating}
               >
-                {isCreating ? '建立中...' : '建立專案'}
+                {isCreating ? '建立中...' : '建立'}
               </button>
             </div>
           </form>
