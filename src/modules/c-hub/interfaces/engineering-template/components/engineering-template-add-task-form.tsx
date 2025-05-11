@@ -2,6 +2,7 @@
 
 import { createTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ export function EngineeringTemplateAddTaskForm({
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,7 +44,10 @@ export function EngineeringTemplateAddTaskForm({
 
       setName('');
       setDescription('');
-      router.refresh();
+
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['taskTemplates'] });
+      queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
 
       if (onSuccessAction) {
         onSuccessAction();

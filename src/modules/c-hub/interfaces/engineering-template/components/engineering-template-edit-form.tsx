@@ -2,6 +2,7 @@
 
 import { updateEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template-command';
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ export function EngineeringTemplateEditForm({
   const [error, setError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +43,8 @@ export function EngineeringTemplateEditForm({
         priority
       });
 
-      router.refresh();
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
 
       if (onSuccessAction) {
         onSuccessAction();

@@ -5,6 +5,7 @@ import { listTaskTemplatesByEngineeringId } from '@/modules/c-hub/application/ta
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { EngineeringTemplateAddTaskForm } from './engineering-template-add-task-form';
@@ -27,6 +28,7 @@ export function EngineeringTemplateCard({ template, projects = [] }: Engineering
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -84,7 +86,10 @@ export function EngineeringTemplateCard({ template, projects = [] }: Engineering
 
     try {
       await deleteEngineeringTemplate(template.id);
-      router.refresh();
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
+      // 使用 router.replace 而不是 refresh，更新 URL 但不刷新整個頁面
+      router.replace('/client/template');
     } catch (err) {
       setError(err instanceof Error ? err.message : '刪除失敗');
       console.error('Failed to delete template:', err);

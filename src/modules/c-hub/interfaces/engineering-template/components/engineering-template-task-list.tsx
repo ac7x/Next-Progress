@@ -2,7 +2,7 @@
 
 import { deleteTaskTemplate, updateTaskTemplate } from '@/modules/c-hub/application/task-template/task-template-actions';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
-import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 interface EngineeringTemplateTaskListProps {
@@ -20,7 +20,7 @@ export function EngineeringTemplateTaskList({
   const [editDescription, setEditDescription] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleDelete = async (id: string) => {
     if (!id || isDeleting) return;
@@ -34,10 +34,14 @@ export function EngineeringTemplateTaskList({
 
     try {
       await deleteTaskTemplate(id);
+
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['taskTemplates'] });
+      queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
+
       if (onTaskDeleted) {
         onTaskDeleted();
       }
-      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : '刪除任務模板失敗');
       console.error('Failed to delete task template:', err);
@@ -68,11 +72,16 @@ export function EngineeringTemplateTaskList({
         name: editName,
         description: editDescription
       });
+
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['taskTemplates'] });
+      queryClient.invalidateQueries({ queryKey: ['engineeringTemplates'] });
+
       setEditingTaskId(null);
       setEditName('');
       setEditDescription('');
+
       if (onTaskDeleted) onTaskDeleted();
-      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : '更新任務模板失敗');
     } finally {

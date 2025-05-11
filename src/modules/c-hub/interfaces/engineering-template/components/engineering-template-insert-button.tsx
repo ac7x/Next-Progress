@@ -4,6 +4,7 @@ import { listTaskTemplatesByEngineeringId } from '@/modules/c-hub/application/ta
 import { EngineeringTemplate } from '@/modules/c-hub/domain/engineering-template';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { TaskTemplate } from '@/modules/c-hub/domain/task-template';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useCreateEngineeringFromTemplate } from '../hooks/use-create-engineering-from-template';
@@ -31,6 +32,7 @@ export function EngineeringTemplateInsertButton({
   const [taskCounts, setTaskCounts] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useCreateEngineeringFromTemplate();
 
@@ -98,11 +100,13 @@ export function EngineeringTemplateInsertButton({
 
       setIsModalOpen(false);
 
+      // 自動刷新：失效相關查詢緩存
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['engineerings'] });
+
       if (onSuccess) {
         onSuccess();
       }
-
-      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : '插入工程模板失敗');
     }

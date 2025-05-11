@@ -3,7 +3,7 @@
 import { createEngineeringTemplate } from '@/modules/c-hub/application/engineering-template/engineering-template-command';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function EngineeringTemplateForm() {
   const [name, setName] = useState('');
@@ -14,6 +14,18 @@ export function EngineeringTemplateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // 成功建立後自動刷新頁面
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.refresh();
+        setSuccess(false);
+      }, 1500); // 1.5秒後自動刷新，讓用戶能看到成功訊息
+
+      return () => clearTimeout(timer);
+    }
+  }, [success, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,18 +67,8 @@ export function EngineeringTemplateForm() {
       )}
 
       {success && (
-        <div className="p-2 text-green-600 bg-green-50 rounded border border-green-200 flex justify-between items-center">
-          <span>工程模板建立成功!</span>
-          <button
-            type="button"
-            onClick={() => {
-              router.refresh();
-              setSuccess(false);
-            }}
-            className="text-blue-600 underline text-sm"
-          >
-            手動刷新
-          </button>
+        <div className="p-2 text-green-600 bg-green-50 rounded border border-green-200">
+          <span>工程模板建立成功! 頁面將自動更新...</span>
         </div>
       )}
 
