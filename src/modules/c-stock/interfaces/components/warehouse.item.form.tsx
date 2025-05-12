@@ -1,7 +1,7 @@
 'use client';
 
-import { createWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain';
+import { useCreateWarehouseItem } from '@/modules/c-stock/interfaces/hooks';
 import { getTags, getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';
@@ -17,11 +17,11 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
-  const [type, setType] = useState<string>(WarehouseItemTypeEnum.TOOL); // 使用枚舉值作為字串
+  const [type, setType] = useState<string>(WarehouseItemTypeEnum.TOOL);
   const router = useRouter();
+  const { mutate, isPending } = useCreateWarehouseItem();
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,7 +46,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
     loadData();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name.trim()) {
@@ -54,35 +54,36 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
       return;
     }
 
-    setIsSubmitting(true);
     setError(null);
 
-    try {
-      await createWarehouseItem({
+    mutate(
+      {
         name,
         description: description || null,
         quantity,
         warehouseId,
-        type, // 直接傳遞 string 型別
+        type,
         tags: selectedTags.length > 0 ? selectedTags : null
-      });
+      },
+      {
+        onSuccess: () => {
+          // 重置表單
+          setName('');
+          setDescription('');
+          setQuantity(1);
+          setSelectedTags([]);
 
-      setName('');
-      setDescription('');
-      setQuantity(1);
-      setSelectedTags([]);
-
-      if (onSuccess) {
-        onSuccess();
+          // 通知父元件（例如切換到列表頁籤）
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
+        onError: (err) => {
+          setError(err instanceof Error ? err.message : '建立倉庫物品失敗');
+          console.error('建立倉庫物品失敗:', err);
+        }
       }
-
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '建立倉庫物品失敗');
-      console.error('建立倉庫物品失敗:', err);
-    } finally {
-      setIsSubmitting(false);
-    }
+    );
   };
 
   const handleTagToggle = (tagId: string) => {
@@ -113,7 +114,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           placeholder="物品名稱"
           required
           className="w-full p-2 border rounded"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
       </div>
 
@@ -128,7 +129,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           onChange={(e) => setDescription(e.target.value)}
           placeholder="描述"
           className="w-full p-2 border rounded"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
       </div>
 
@@ -143,7 +144,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           className="w-full p-2 border rounded"
-          disabled={isSubmitting}
+          disabled={isPending}
         />
       </div>
 
@@ -156,7 +157,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="w-full p-2 border rounded"
-          disabled={isSubmitting}
+          disabled={isPending}
         >
           {Object.values(WarehouseItemTypeEnum).map((itemType) => (
             <option key={itemType} value={itemType}>
@@ -178,8 +179,8 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
                 key={tag.id}
                 onClick={() => handleTagToggle(tag.id)}
                 className={`px-2 py-1 text-sm rounded-full transition-colors ${selectedTags.includes(tag.id)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 {tag.name}
@@ -192,9 +193,9 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-        disabled={isSubmitting}
+        disabled={isPending}
       >
-        {isSubmitting ? '建立中...' : '建立物品'}
+        {isPending ? '建立中...' : '建立物品'}
       </button>
     </form>
   );

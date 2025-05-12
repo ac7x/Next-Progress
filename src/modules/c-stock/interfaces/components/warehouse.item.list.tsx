@@ -1,7 +1,8 @@
 'use client';
 
-import { addTagToWarehouseItem, deleteWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
+import { addTagToWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItem } from '@/modules/c-stock/domain';
+import { useDeleteWarehouseItem } from '@/modules/c-stock/interfaces/hooks';
 import { getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';
@@ -61,7 +62,9 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const { mutate: deleteMutate, isPending: isDeletePending } = useDeleteWarehouseItem();
+
+  const handleDelete = (id: string) => {
     if (!confirm('確定要刪除此物品嗎？')) {
       return;
     }
@@ -69,20 +72,20 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     setIsDeleting(id);
     setError(null);
 
-    try {
-      await deleteWarehouseItem(id);
-
-      if (onDelete) {
-        onDelete();
+    deleteMutate(id, {
+      onSuccess: () => {
+        if (onDelete) {
+          onDelete();
+        }
+      },
+      onError: (err) => {
+        setError(err instanceof Error ? err.message : '刪除物品失敗');
+        console.error('刪除物品失敗:', err);
+      },
+      onSettled: () => {
+        setIsDeleting(null);
       }
-
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '刪除物品失敗');
-      console.error('刪除物品失敗:', err);
-    } finally {
-      setIsDeleting(null);
-    }
+    });
   };
 
   if (items.length === 0) {

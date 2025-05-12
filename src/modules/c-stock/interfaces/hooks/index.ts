@@ -195,3 +195,37 @@ export function useWarehouseItemMutations(warehouseId?: string) {
         deleteWarehouseItem: deleteMutation,
     };
 }
+
+/**
+ * 具名 Hook：建立倉庫物品
+ */
+export function useCreateWarehouseItem() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: CreateWarehouseItemDTO) => createWarehouseItem(data),
+        onSuccess: (_, variables) => {
+            // 無效化指定倉庫的物品查詢
+            queryClient.invalidateQueries({ queryKey: ['warehouseItems', variables.warehouseId] });
+            // 同時無效化所有倉庫查詢，以更新相關計數
+            queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+        }
+    });
+}
+
+/**
+ * 具名 Hook：刪除倉庫物品
+ */
+export function useDeleteWarehouseItem() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => deleteWarehouseItem(id),
+        onSuccess: () => {
+            // 由於我們不知道要刪除哪個倉庫的物品，所以我們無效化所有相關查詢
+            queryClient.invalidateQueries({ queryKey: ['warehouseItems'] });
+            // 同時無效化所有倉庫查詢，以更新相關計數
+            queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+        }
+    });
+}
