@@ -1,8 +1,10 @@
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { WarehouseItemDescription } from '../value-objects/warehouse.item.description.vo';
-import { WarehouseItemName } from '../value-objects/warehouse.item.name.vo';
-import { WarehouseItemQuantity } from '../value-objects/warehouse.item.quantity.vo';
-import { WarehouseItemType, WarehouseItemTypeEnum } from '../value-objects/warehouse.item.type.vo';
+import {
+    WarehouseItemDescription,
+    WarehouseItemName,
+    WarehouseItemQuantity,
+    WarehouseItemType
+} from '../value-objects/warehouse.item.vo';
 
 /**
  * 基礎倉庫物品實體（資料庫層級）
@@ -138,7 +140,4 @@ export function isValidWarehouseItem(item: unknown): item is WarehouseItem {
         'updatedAt' in item
     );
 }
-
-// 為保持向後兼容性，同時匯出舊的接口
-export { WarehouseItemTypeEnum };
 
