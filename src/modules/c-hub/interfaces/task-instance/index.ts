@@ -26,4 +26,8 @@
 export * from './components/task-instance-details';
 export { default as TaskInstanceSubTaskInstancesSection } from './components/task-instance-sub-task-instances-section';
 export * from './components/task-instance-summary-card';
+export * from './components/task-instance.dashboard.component';
+
+// 匯出 hooks
+export * from './hooks/task-instance.use-query.hook';
 
