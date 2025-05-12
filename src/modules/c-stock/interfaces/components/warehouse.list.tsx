@@ -13,17 +13,17 @@ interface WarehouseInstanceListProps {
 export function WarehouseInstanceList({ warehouseInstances, onDelete }: WarehouseInstanceListProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedWarehouseInstance, setSelectedWarehouseInstance] = useState<WarehouseInstance | null>(null);
-  const { mutateAsync: deleteMutate, isPending: deleting } = useDeleteWarehouse();
+  const { mutate: deleteMutate, isPending: deleting } = useDeleteWarehouse();
 
+  // 簡化刪除處理
   const handleDelete = async (id: string) => {
     if (!confirm('確定要刪除此倉庫嗎？這將同時刪除所有倉庫內的物品。')) return;
+
     setError(null);
-    try {
-      await deleteMutate(id);
-      onDelete?.(); // SRP: 只通知外部刷新
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '刪除倉庫失敗');
-    }
+    deleteMutate(id, {
+      onSuccess: () => onDelete?.(),
+      onError: (err) => setError(err instanceof Error ? err.message : '刪除倉庫失敗')
+    });
   };
 
   if (warehouseInstances.length === 0) {
@@ -32,12 +32,14 @@ export function WarehouseInstanceList({ warehouseInstances, onDelete }: Warehous
 
   return (
     <div className="mb-12">
+      {/* 錯誤提示 */}
       {error && (
         <div className="mb-4 p-2 text-red-600 bg-red-50 rounded border border-red-200">
           {error}
         </div>
       )}
 
+      {/* 倉庫列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {warehouseInstances.map((warehouseInstance) => (
           <div key={warehouseInstance.id} className="border rounded-lg p-4">
@@ -67,6 +69,7 @@ export function WarehouseInstanceList({ warehouseInstances, onDelete }: Warehous
         ))}
       </div>
 
+      {/* 物品彈窗 */}
       {selectedWarehouseInstance && (
         <WarehouseItemsModal
           warehouseInstance={selectedWarehouseInstance}

@@ -18,8 +18,12 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
   const [error, setError] = useState<string | null>(null);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const router = useRouter();
-  const { addTag, removeTag } = useWarehouseItemTagMutations();
 
+  // 使用上已有的標籤管理相關hooks
+  const { addTag, removeTag } = useWarehouseItemTagMutations();
+  const { mutate: deleteMutate } = useDeleteWarehouseItem();
+
+  // 載入可用標籤
   useEffect(() => {
     async function fetchTags() {
       try {
@@ -32,7 +36,15 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     fetchTags();
   }, []);
 
-  const handleAddTag = async (itemId: string) => {
+  // 統一錯誤處理函數
+  const handleError = (err: unknown, context: string) => {
+    const message = err instanceof Error ? err.message : `${context}失敗`;
+    setError(message);
+    console.error(`${context}:`, err);
+  };
+
+  // 處理添加標籤
+  const handleAddTag = (itemId: string) => {
     const tagId = prompt('請選擇標籤 ID:');
     if (!tagId) return;
 
@@ -42,60 +54,37 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     addTag.mutate(
       { itemId, tagId },
       {
-        onSuccess: () => {
-          router.refresh();
-        },
-        onError: (err) => {
-          setError(err instanceof Error ? err.message : '新增標籤失敗');
-          console.error('新增標籤失敗:', err);
-        },
-        onSettled: () => {
-          setIsAddingTag(null);
-        }
+        onSuccess: () => router.refresh(),
+        onError: (err) => handleError(err, '新增標籤'),
+        onSettled: () => setIsAddingTag(null)
       }
     );
   };
 
-  const handleRemoveTag = async (itemId: string, tagId: string) => {
+  // 處理移除標籤
+  const handleRemoveTag = (itemId: string, tagId: string) => {
     setError(null);
 
     removeTag.mutate(
       { itemId, tagId },
       {
-        onSuccess: () => {
-          router.refresh();
-        },
-        onError: (err) => {
-          setError(err instanceof Error ? err.message : '移除標籤失敗');
-          console.error('移除標籤失敗:', err);
-        }
+        onSuccess: () => router.refresh(),
+        onError: (err) => handleError(err, '移除標籤')
       }
     );
   };
 
-  const { mutate: deleteMutate, isPending: isDeletePending } = useDeleteWarehouseItem();
-
+  // 處理刪除物品
   const handleDelete = (id: string) => {
-    if (!confirm('確定要刪除此物品嗎？')) {
-      return;
-    }
+    if (!confirm('確定要刪除此物品嗎？')) return;
 
     setIsDeleting(id);
     setError(null);
 
     deleteMutate(id, {
-      onSuccess: () => {
-        if (onDelete) {
-          onDelete();
-        }
-      },
-      onError: (err) => {
-        setError(err instanceof Error ? err.message : '刪除物品失敗');
-        console.error('刪除物品失敗:', err);
-      },
-      onSettled: () => {
-        setIsDeleting(null);
-      }
+      onSuccess: () => onDelete?.(),
+      onError: (err) => handleError(err, '刪除物品'),
+      onSettled: () => setIsDeleting(null)
     });
   };
 
@@ -105,12 +94,14 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
 
   return (
     <div>
+      {/* 錯誤提示 */}
       {error && (
         <div className="mb-4 p-2 text-red-600 bg-red-50 rounded border border-red-200">
           {error}
         </div>
       )}
 
+      {/* 物品列表表格 */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

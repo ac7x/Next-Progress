@@ -12,16 +12,19 @@ interface WarehouseItemsModalProps {
 }
 
 export function WarehouseItemsModal({ warehouseInstance, onCloseAction }: WarehouseItemsModalProps) {
-  const { data: items = [], isLoading, error } = useWarehouseItems(warehouseInstance.id);
+  const { data: items = [], isLoading, error, refetch } = useWarehouseItems(warehouseInstance.id);
   const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
 
+  // 物品新增後處理
   const handleItemAdded = () => {
+    refetch(); // 直接使用查詢的refetch方法重新載入資料
     setActiveTab('list');
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+        {/* 標題與關閉按鈕 */}
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-2xl font-bold">{warehouseInstance.name} - 倉庫物品</h2>
           <button
@@ -35,6 +38,7 @@ export function WarehouseItemsModal({ warehouseInstance, onCloseAction }: Wareho
           </button>
         </div>
 
+        {/* 頁籤 */}
         <div className="flex border-b">
           <button
             className={`py-4 px-6 ${activeTab === 'list' ? 'border-b-2 border-blue-500 font-medium' : 'text-gray-500'}`}
@@ -50,6 +54,7 @@ export function WarehouseItemsModal({ warehouseInstance, onCloseAction }: Wareho
           </button>
         </div>
 
+        {/* 內容 */}
         <div className="p-6 flex-grow overflow-auto">
           {activeTab === 'list' ? (
             <>
@@ -59,10 +64,13 @@ export function WarehouseItemsModal({ warehouseInstance, onCloseAction }: Wareho
                 </div>
               ) : error ? (
                 <div className="p-4 bg-red-50 text-red-700 rounded">
-                  {error.message}
+                  {error instanceof Error ? error.message : '載入物品失敗'}
                 </div>
               ) : (
-                <WarehouseItemList items={items} />
+                <WarehouseItemList
+                  items={items}
+                  onDelete={refetch} // 直接使用refetch替代外部回調
+                />
               )}
             </>
           ) : (
@@ -73,6 +81,7 @@ export function WarehouseItemsModal({ warehouseInstance, onCloseAction }: Wareho
           )}
         </div>
 
+        {/* 底部按鈕 */}
         <div className="p-4 border-t flex justify-end">
           <button
             onClick={onCloseAction}

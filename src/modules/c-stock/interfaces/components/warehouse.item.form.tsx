@@ -4,7 +4,6 @@ import { WarehouseItemTypeEnum } from '@/modules/c-stock/domain';
 import { useCreateWarehouseItem } from '@/modules/c-stock/interfaces/hooks';
 import { getTags, getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface WarehouseItemFormProps {
@@ -13,6 +12,7 @@ interface WarehouseItemFormProps {
 }
 
 export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormProps) {
+  // 表單狀態
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -20,15 +20,20 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
   const [error, setError] = useState<string | null>(null);
   const [tags, setTags] = useState<Tag[]>([]);
   const [type, setType] = useState<string>(WarehouseItemTypeEnum.TOOL);
-  const router = useRouter();
+
+  // 使用 hook
   const { mutate, isPending } = useCreateWarehouseItem();
 
+  // 載入標籤資料
   useEffect(() => {
-    const loadData = async () => {
+    const loadTags = async () => {
       try {
-        const itemTags = await getTagsByType(TagType.WAREHOUSE_ITEM);
-        const generalTags = await getTags();
+        const [itemTags, generalTags] = await Promise.all([
+          getTagsByType(TagType.WAREHOUSE_ITEM),
+          getTags()
+        ]);
 
+        // 合併並去除重複標籤
         const uniqueTags = [...itemTags];
         generalTags.forEach(tag => {
           if (!uniqueTags.some(t => t.id === tag.id)) {
@@ -43,9 +48,10 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
       }
     };
 
-    loadData();
+    loadTags();
   }, []);
 
+  // 提交表單處理
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -72,20 +78,16 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           setDescription('');
           setQuantity(1);
           setSelectedTags([]);
-
-          // 通知父元件（例如切換到列表頁籤）
-          if (onSuccess) {
-            onSuccess();
-          }
+          onSuccess?.();
         },
         onError: (err) => {
           setError(err instanceof Error ? err.message : '建立倉庫物品失敗');
-          console.error('建立倉庫物品失敗:', err);
         }
       }
     );
   };
 
+  // 切換標籤選擇
   const handleTagToggle = (tagId: string) => {
     setSelectedTags(prev =>
       prev.includes(tagId)
@@ -96,12 +98,14 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* 錯誤提示 */}
       {error && (
         <div className="p-2 text-red-600 bg-red-50 rounded border border-red-200">
           {error}
         </div>
       )}
 
+      {/* 表單欄位 */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1">
           物品名稱
@@ -142,7 +146,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
           type="number"
           min="1"
           value={quantity}
-          onChange={(e) => setQuantity(parseInt(e.target.value))}
+          onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
           className="w-full p-2 border rounded"
           disabled={isPending}
         />
@@ -169,6 +173,7 @@ export function WarehouseItemForm({ warehouseId, onSuccess }: WarehouseItemFormP
         </select>
       </div>
 
+      {/* 標籤選擇 */}
       {tags.length > 0 && (
         <div>
           <label className="block text-sm font-medium mb-1">標籤（選填）</label>

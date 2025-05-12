@@ -1,13 +1,10 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useCreateWarehouse } from '../hooks';
 
 export function WarehouseInstanceForm() {
-  const qc = useQueryClient();
-  const { mutate, isPending, error: mutateError, isError, isSuccess } = useCreateWarehouse();
-  const submitting = isPending;
+  const { mutate, isPending } = useCreateWarehouse();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -15,30 +12,32 @@ export function WarehouseInstanceForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 簡化表單驗證
     if (!name.trim()) {
       setError('倉庫名稱不能為空');
       return;
     }
+
     setError(null);
     mutate(
       { name, description: description || null },
       {
         onSuccess: () => {
-          qc.invalidateQueries({ queryKey: ['warehouseInstances'] });
+          // 重設表單並顯示成功訊息
           setName('');
           setDescription('');
           setSuccess(true);
           setTimeout(() => setSuccess(false), 3000);
         },
-        onError(err) {
-          setError(err.message);
-        }
+        onError: (err) => setError(err.message)
       }
     );
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* 訊息顯示 */}
       {error && (
         <div className="p-2 text-red-600 bg-red-50 rounded border border-red-200">
           {error}
@@ -51,6 +50,7 @@ export function WarehouseInstanceForm() {
         </div>
       )}
 
+      {/* 表單欄位 */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1">
           倉庫名稱
@@ -62,7 +62,7 @@ export function WarehouseInstanceForm() {
           onChange={(e) => setName(e.target.value)}
           placeholder="輸入倉庫名稱"
           className="w-full p-2 border rounded"
-          disabled={submitting}
+          disabled={isPending}
           required
         />
       </div>
@@ -78,16 +78,16 @@ export function WarehouseInstanceForm() {
           placeholder="輸入倉庫描述"
           className="w-full p-2 border rounded"
           rows={3}
-          disabled={submitting}
+          disabled={isPending}
         ></textarea>
       </div>
 
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-        disabled={submitting}
+        disabled={isPending}
       >
-        {submitting ? '建立中...' : '建立倉庫'}
+        {isPending ? '建立中...' : '建立倉庫'}
       </button>
     </form>
   );
