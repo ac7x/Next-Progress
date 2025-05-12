@@ -1,6 +1,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse.entity';
 import { IWarehouseRepository } from '../../domain/repositories/warehouse.repository.interface';
+import { warehouseAdapter } from '../adapter/warehouse.adapter';
 import { transactionManager } from '../persistence/transaction.manager';
 
 /**
@@ -16,7 +17,9 @@ export class WarehouseInstanceRepository implements IWarehouseRepository {
       where: { id }
     });
 
-    return warehouse;
+    if (!warehouse) return null;
+
+    return warehouseAdapter.toDomain(warehouse);
   }
 
   /**
@@ -34,7 +37,7 @@ export class WarehouseInstanceRepository implements IWarehouseRepository {
       orderBy: options?.orderBy
     });
 
-    return warehouses;
+    return Promise.all(warehouses.map(warehouse => warehouseAdapter.toDomain(warehouse)));
   }
 
   /**
@@ -46,7 +49,9 @@ export class WarehouseInstanceRepository implements IWarehouseRepository {
       where: { name }
     });
 
-    return warehouse;
+    if (!warehouse) return null;
+
+    return warehouseAdapter.toDomain(warehouse);
   }
 
   /**

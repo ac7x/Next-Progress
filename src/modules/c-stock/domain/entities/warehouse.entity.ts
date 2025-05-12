@@ -16,6 +16,7 @@ export interface Warehouse {
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
+    tags?: { id: string; name: string; type: any }[]; // 添加標籤支持，符合 adapter 已實現的功能
 }
 
 /**
