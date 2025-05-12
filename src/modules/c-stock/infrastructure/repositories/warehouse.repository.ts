@@ -2,7 +2,7 @@ import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/cli
 import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities';
 import { IWarehouseRepository } from '../../domain/repositories';
 import { warehouseAdapter } from '../adapter';
-import { transactionManager } from '../persistence/transaction.manager';
+import { transactionManager } from '../persistence';
 
 /**
  * 倉庫儲存庫 - 實現倉庫實體在Prisma/MongoDB的持久化操作

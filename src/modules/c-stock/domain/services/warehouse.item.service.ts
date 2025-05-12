@@ -8,11 +8,11 @@ import {
     WarehouseItemCreatedEvent,
     WarehouseItemDeletedEvent,
     WarehouseItemUpdatedEvent
-} from '../events/warehouse.events';
+} from '../events';
 import {
     IWarehouseItemRepository,
     IWarehouseRepository
-} from '../repositories/warehouse.repositories';
+} from '../repositories';
 
 /**
  * 倉庫物品領域服務 - 封裝與倉庫物品相關的業務邏輯

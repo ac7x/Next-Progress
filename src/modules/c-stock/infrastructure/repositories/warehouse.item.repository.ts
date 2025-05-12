@@ -3,7 +3,7 @@ import { CreateWarehouseItemProps, IWarehouseItemRepository, UpdateWarehouseItem
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { WarehouseItemType } from '@prisma/client';
 import { warehouseItemAdapter } from '../adapter';
-import { transactionManager } from '../persistence/transaction.manager';
+import { transactionManager } from '../persistence';
 
 export class WarehouseItemRepository implements IWarehouseItemRepository {
   async findById(id: string): Promise<WarehouseItem | null> {

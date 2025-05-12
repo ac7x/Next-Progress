@@ -8,8 +8,8 @@ import {
     WarehouseCreatedEvent,
     WarehouseDeletedEvent,
     WarehouseUpdatedEvent
-} from '../events/warehouse.events';
-import { IWarehouseRepository } from '../repositories/warehouse.repositories';
+} from '../events';
+import { IWarehouseRepository } from '../repositories';
 
 /**
  * 倉庫領域服務 - 封裝與倉庫相關的業務邏輯

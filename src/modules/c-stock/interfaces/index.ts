@@ -16,7 +16,7 @@ export * from './components/warehouse.item.list';
 export * from './components/warehouse.items.modal';
 export * from './components/warehouse.list';
 
-export * from './utils/warehouse.display.utils';
+export * from './utils';
 
 // 使用範例：
 // import { useWarehouseInstances, WarehouseInstanceList } from '@/modules/c-stock/interfaces';
