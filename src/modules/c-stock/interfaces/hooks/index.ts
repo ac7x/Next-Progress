@@ -3,11 +3,13 @@
 'use client';
 
 import {
+    addTagToWarehouseItem,
     createManyWarehouseItems,
     createWarehouse,
     createWarehouseItem,
     deleteWarehouse,
     deleteWarehouseItem,
+    removeTagFromWarehouseItem,
     updateWarehouse,
     updateWarehouseItem,
     updateWarehouseItemQuantity,
@@ -228,4 +230,38 @@ export function useDeleteWarehouseItem() {
             queryClient.invalidateQueries({ queryKey: ['warehouses'] });
         }
     });
+}
+
+/* =========================
+   WarehouseItem Tag Mutations
+========================= */
+
+/**
+ * 倉庫物品標籤操作 Hook
+ */
+export function useWarehouseItemTagMutations() {
+    const queryClient = useQueryClient();
+
+    const addTagMutation = useMutation({
+        mutationFn: ({ itemId, tagId }: { itemId: string; tagId: string }) =>
+            addTagToWarehouseItem(itemId, tagId),
+        onSuccess: () => {
+            // 無效化所有倉庫物品查詢
+            queryClient.invalidateQueries({ queryKey: ['warehouseItems'] });
+        }
+    });
+
+    const removeTagMutation = useMutation({
+        mutationFn: ({ itemId, tagId }: { itemId: string; tagId: string }) =>
+            removeTagFromWarehouseItem(itemId, tagId),
+        onSuccess: () => {
+            // 無效化所有倉庫物品查詢
+            queryClient.invalidateQueries({ queryKey: ['warehouseItems'] });
+        }
+    });
+
+    return {
+        addTag: addTagMutation,
+        removeTag: removeTagMutation
+    };
 }

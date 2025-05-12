@@ -1,8 +1,7 @@
 'use client';
 
-import { addTagToWarehouseItem, removeTagFromWarehouseItem } from '@/modules/c-stock/application';
 import { WarehouseItem } from '@/modules/c-stock/domain';
-import { useDeleteWarehouseItem } from '@/modules/c-stock/interfaces/hooks';
+import { useDeleteWarehouseItem, useWarehouseItemTagMutations } from '@/modules/c-stock/interfaces/hooks';
 import { getTagsByType } from '@/modules/c-tag/application/queries/tag-query-handler';
 import { Tag, TagType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { useRouter } from 'next/navigation';
@@ -19,6 +18,7 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
   const [error, setError] = useState<string | null>(null);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
   const router = useRouter();
+  const { addTag, removeTag } = useWarehouseItemTagMutations();
 
   useEffect(() => {
     async function fetchTags() {
@@ -39,27 +39,38 @@ export function WarehouseItemList({ items, onDelete }: WarehouseItemListProps) {
     setIsAddingTag(itemId);
     setError(null);
 
-    try {
-      await addTagToWarehouseItem(itemId, tagId);
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '新增標籤失敗');
-      console.error('新增標籤失敗:', err);
-    } finally {
-      setIsAddingTag(null);
-    }
+    addTag.mutate(
+      { itemId, tagId },
+      {
+        onSuccess: () => {
+          router.refresh();
+        },
+        onError: (err) => {
+          setError(err instanceof Error ? err.message : '新增標籤失敗');
+          console.error('新增標籤失敗:', err);
+        },
+        onSettled: () => {
+          setIsAddingTag(null);
+        }
+      }
+    );
   };
 
   const handleRemoveTag = async (itemId: string, tagId: string) => {
     setError(null);
 
-    try {
-      await removeTagFromWarehouseItem(itemId, tagId); // 修正呼叫
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '移除標籤失敗');
-      console.error('移除標籤失敗:', err);
-    }
+    removeTag.mutate(
+      { itemId, tagId },
+      {
+        onSuccess: () => {
+          router.refresh();
+        },
+        onError: (err) => {
+          setError(err instanceof Error ? err.message : '移除標籤失敗');
+          console.error('移除標籤失敗:', err);
+        }
+      }
+    );
   };
 
   const { mutate: deleteMutate, isPending: isDeletePending } = useDeleteWarehouseItem();
