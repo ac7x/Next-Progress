@@ -3,7 +3,7 @@
 import { WarehouseInstance } from '@/modules/c-stock/domain';
 import { useState } from 'react';
 import { useDeleteWarehouseInstance } from '../hooks/useWarehouseMutations';
-import { WarehouseItemsModal } from './warehouse-items-modal';
+import { WarehouseItemsModal } from './warehouse.items.modal';
 
 interface WarehouseInstanceListProps {
   warehouseInstances: WarehouseInstance[];

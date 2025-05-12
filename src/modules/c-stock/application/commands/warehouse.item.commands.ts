@@ -3,7 +3,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { revalidatePath } from 'next/cache';
-import { CreateWarehouseItemProps, UpdateWarehouseItemProps } from '../../domain/entities/warehouse-item-entity';
+import { CreateWarehouseItemProps, UpdateWarehouseItemProps } from '../../domain/entities/warehouse.item.entity';
 import { warehouseItemService } from '../services';
 
 /**

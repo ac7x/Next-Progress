@@ -1,5 +1,5 @@
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
-import { WarehouseItem, WarehouseItemTypeEnum } from '../../domain/entities/warehouse-item-entity';
+import { WarehouseItem, WarehouseItemTypeEnum } from '../../domain/entities/warehouse.item.entity';
 
 /**
  * 倉庫物品資料傳輸物件

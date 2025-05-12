@@ -1,4 +1,4 @@
-import { Warehouse } from '../../domain/entities/warehouse-entity';
+import { Warehouse } from '../../domain/entities/warehouse.entity';
 
 /**
  * 倉庫資料傳輸物件

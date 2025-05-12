@@ -1,6 +1,6 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse-entity';
-import { IWarehouseRepository } from '../../domain/repositories/warehouse-repository-interface';
-import { WarehouseService as DomainWarehouseService } from '../../domain/services/warehouse-service';
+import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse.entity';
+import { IWarehouseRepository } from '../../domain/repositories/warehouse.repository.interface';
+import { WarehouseService as DomainWarehouseService } from '../../domain/services/warehouse.service';
 
 /**
  * 倉庫應用服務 - 協調領域服務和基礎設施

@@ -1,4 +1,4 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../entities/warehouse-entity';
+import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../entities/warehouse.entity';
 
 /**
  * 倉庫儲存庫介面 - 定義倉庫實體的持久化操作

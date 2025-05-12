@@ -1,7 +1,7 @@
-import { warehouseItemRepository } from '../../infrastructure/repositories/warehouse-item-repository';
-import { WarehouseInstanceRepository } from '../../infrastructure/repositories/warehouse-repository';
-import { WarehouseItemApplicationService } from './warehouse-item-service';
-import { WarehouseApplicationService } from './warehouse-service';
+import { warehouseItemRepository } from '../../infrastructure/repositories/warehouse.item.repository';
+import { WarehouseInstanceRepository } from '../../infrastructure/repositories/warehouse.repository';
+import { WarehouseItemApplicationService } from './warehouse.item.service';
+import { WarehouseApplicationService } from './warehouse.service';
 
 // 初始化服務實例
 const warehouseRepository = new WarehouseInstanceRepository();
@@ -14,6 +14,6 @@ const warehouseItemApplicationService = new WarehouseItemApplicationService(
 export const warehouseService = warehouseApplicationService;
 export const warehouseItemService = warehouseItemApplicationService;
 
-export * from './warehouse-item-service';
-export * from './warehouse-service';
+export * from './warehouse.item.service';
+export * from './warehouse.service';
 

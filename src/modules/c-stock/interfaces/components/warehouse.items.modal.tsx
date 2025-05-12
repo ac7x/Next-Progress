@@ -3,8 +3,8 @@
 import { WarehouseInstance } from '@/modules/c-stock/domain';
 import { useState } from 'react';
 import { useWarehouseItems } from '../hooks/useWarehouseItems';
-import { WarehouseItemForm } from './warehouse-item-form';
-import { WarehouseItemList } from './warehouse-item-list';
+import { WarehouseItemForm } from './warehouse.item.form';
+import { WarehouseItemList } from './warehouse.item.list';
 
 interface WarehouseItemsModalProps {
   warehouseInstance: WarehouseInstance;

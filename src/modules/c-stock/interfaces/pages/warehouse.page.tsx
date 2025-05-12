@@ -1,7 +1,7 @@
 'use client';
 
-import { WarehouseInstanceForm } from '@/modules/c-stock/interfaces/components/warehouse-form';
-import { WarehouseInstanceList } from '@/modules/c-stock/interfaces/components/warehouse-list';
+import { WarehouseInstanceForm } from '@/modules/c-stock/interfaces/components/warehouse.form';
+import { WarehouseInstanceList } from '@/modules/c-stock/interfaces/components/warehouse.list';
 import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouseInstances';
 import { useQueryClient } from '@tanstack/react-query';
 

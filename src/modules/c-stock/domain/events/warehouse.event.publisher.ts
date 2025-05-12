@@ -1,4 +1,4 @@
-import { DomainEvent } from './base-event';
+import { DomainEvent } from './warehouse.base.event';
 
 /**
  * 領域事件發布者介面 - 定義事件發布機制

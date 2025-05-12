@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { CreateWarehouseProps, UpdateWarehouseProps } from '../../domain/entities/warehouse-entity';
+import { CreateWarehouseProps, UpdateWarehouseProps } from '../../domain/entities/warehouse.entity';
 import { warehouseService } from '../services';
 
 /**

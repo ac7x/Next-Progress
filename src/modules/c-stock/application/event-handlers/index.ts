@@ -1,1 +1,1 @@
-export * from './warehouse-event-handlers';
+export * from './warehouse.event.handlers';

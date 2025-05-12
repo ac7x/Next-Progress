@@ -1,2 +1,3 @@
-export * from './warehouse-entity';
-export * from './warehouse-item-entity';
+export * from './warehouse.entity';
+export * from './warehouse.item.entity';
+

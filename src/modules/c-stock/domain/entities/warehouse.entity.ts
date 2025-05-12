@@ -1,7 +1,7 @@
-import { WarehouseActiveStatus } from '../value-objects/warehouse-active-status.vo';
-import { WarehouseDescription } from '../value-objects/warehouse-description.vo';
-import { WarehouseLocation } from '../value-objects/warehouse-location.vo';
-import { WarehouseName } from '../value-objects/warehouse-name.vo';
+import { WarehouseActiveStatus } from '../value-objects/warehouse.active.status.vo';
+import { WarehouseDescription } from '../value-objects/warehouse.description.vo';
+import { WarehouseLocation } from '../value-objects/warehouse.location.vo';
+import { WarehouseName } from '../value-objects/warehouse.name.vo';
 
 /**
  * 基礎倉庫實體（資料庫層級）

@@ -1,5 +1,5 @@
-import { Warehouse } from '../entities/warehouse-entity';
-import { DomainEvent } from './base-event';
+import { Warehouse } from '../entities/warehouse.entity';
+import { DomainEvent } from './warehouse.base.event';
 
 /**
  * 倉庫創建事件 - 當新倉庫創建時觸發

@@ -1,8 +1,8 @@
-import { domainEventPublisher } from '@/modules/c-stock/domain/events/event-publisher';
-import { WarehouseCreatedEvent } from '@/modules/c-stock/domain/events/warehouse-created-event';
-import { WarehouseDeletedEvent } from '@/modules/c-stock/domain/events/warehouse-deleted-event';
-import { WarehouseItemCreatedEvent } from '@/modules/c-stock/domain/events/warehouse-item-created-event';
-import { WarehouseItemDeletedEvent } from '@/modules/c-stock/domain/events/warehouse-item-deleted-event';
+import { WarehouseCreatedEvent } from '@/modules/c-stock/domain/events/warehouse.created.event';
+import { WarehouseDeletedEvent } from '@/modules/c-stock/domain/events/warehouse.deleted.event';
+import { domainEventPublisher } from '@/modules/c-stock/domain/events/warehouse.event.publisher';
+import { WarehouseItemCreatedEvent } from '@/modules/c-stock/domain/events/warehouse.item.created.event';
+import { WarehouseItemDeletedEvent } from '@/modules/c-stock/domain/events/warehouse.item.deleted.event';
 
 /**
  * 註冊倉庫相關的事件處理程序

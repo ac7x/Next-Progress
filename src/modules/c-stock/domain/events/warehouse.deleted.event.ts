@@ -1,4 +1,4 @@
-import { DomainEvent } from './base-event';
+import { DomainEvent } from './warehouse.base.event';
 
 /**
  * 倉庫刪除事件 - 當倉庫被刪除時觸發

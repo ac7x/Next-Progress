@@ -13,13 +13,13 @@ export * from './hooks/useWarehouseItemMutations';
 export * from './hooks/useWarehouseItems';
 export * from './hooks/useWarehouseMutations';
 
-export * from './components/warehouse-form';
-export * from './components/warehouse-item-form';
-export * from './components/warehouse-item-list';
-export * from './components/warehouse-items-modal';
-export * from './components/warehouse-list';
+export * from './components/warehouse.form';
+export * from './components/warehouse.item.form';
+export * from './components/warehouse.item.list';
+export * from './components/warehouse.items.modal';
+export * from './components/warehouse.list';
 
-export * from './utils/warehouse-display-utils';
+export * from './utils/warehouse.display.utils';
 
 // 使用範例：
 // import { useWarehouseInstances, WarehouseInstanceList } from '@/modules/c-stock/interfaces';
