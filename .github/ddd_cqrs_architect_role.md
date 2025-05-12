@@ -78,8 +78,7 @@ src/
 ├── modules/            # 按業務領域組織的模組
 │   ├── c-user/         # 使用者模組
 │   ├── c-payment/      # 支付模組
-│   └── ...
-└── shared/             # 跨模組共享功能
+│   └── c-shared/        # 共享模組
 ```
 
 ### 模組內部結構
@@ -88,25 +87,29 @@ src/
 
 ```
 c-{module}/
-├── domain/             # 領域層
+├── domain/             
 │   ├── entities/       # 實體定義
-│   ├── value-objects/  # 值物件定義
+│   ├── valueObjects/   # 值物件定義
 │   ├── services/       # 領域服務
 │   ├── events/         # 領域事件
 │   └── repositories/   # 持久化介面
-├── application/        # 應用層
+│   └── index.ts        # 導出所有領域層模組
+├── application/        
 │   ├── commands/       # 命令用例
 │   ├── queries/        # 查詢用例
 │   └── services/       # 應用服務
-├── infrastructure/     # 基礎設施層
+│   └── index.ts        # 導出所有應用層模組
+├── infrastructure/     
 │   ├── repositories/   # 實現領域層定義的持久化介面
 │   ├── services/       # 外部服務整合
 │   └── mappers/        # 數據映射器
-└── interfaces/         # 介面層
+│   └── index.ts        # 導出所有基礎設施層模組
+└── interfaces/         
     ├── components/     # UI元件
     ├── hooks/          # React hooks
     ├── actions/        # Server Actions
     └── dtos/           # 數據傳輸物件
+    └── index.ts        # 導出所有介面層模組
 ```
 
 ## 命名規範
@@ -119,21 +122,22 @@ c-{module}/
 
 ### 類型與組件命名規範
 
-| 類型 | 前綴/後綴 | 說明 | 檔案命名範例 |
-|------|----------|------|-------------|
-| Command | create-, update-, delete- | 修改資料的操作 | `createUser.command.ts` |
-| Query | get-, list- | 讀取資料的操作 | `getUser.query.ts` |
-| Entity | - | 實體類別 | `user.entity.ts` |
-| Value Object | -VO | 值物件類別 | `address.vo.ts` |
-| Repository Interface | -Repository | 資料存取介面 | `userRepository.interface.ts` |
-| Repository Impl | -RepositoryImpl | 資料存取實現 | `prismaUserRepository.impl.ts` |
-| DTO | -DTO | 數據傳輸物件 | `userProfile.dto.ts` |
-| React Hook | use- | 客戶端鉤子 | `useUserProfile.hook.ts` |
-| Server Action | - | 伺服器操作 | `createUser.action.ts` |
-| React Component | - | UI元件 | `UserForm.component.tsx` |
-| Domain Event | -Event | 領域事件 | `userCreated.event.ts` |
-| Domain Service | -Service | 領域服務 | `authentication.service.ts` |
-
+| 類型                | 前綴/後綴        | 說明               | 檔案命名範例                     |
+|---------------------|------------------|--------------------|----------------------------------|
+| Command             | create-, update-, delete- | 修改資料的操作      | `createUser.command.ts`          |
+| Query               | get-, list-       | 讀取資料的操作      | `getUser.query.ts`               |
+| Entity              | -                 | 實體類別            | `user.entity.ts`                 |
+| Value Object        | -VO               | 值物件類別          | `address.vo.ts`                  |
+| Repository Interface| -Repository       | 資料存取介面        | `userRepository.repository.ts`   |
+| Repository Impl     | -RepositoryImpl   | 資料存取實現        | `prismaUserRepository.repositoryImpl.ts` |
+| DTO                 | -DTO              | 數據傳輸物件        | `userProfile.dto.ts`             |
+| React Hook          | use-              | 客戶端鉤子          | `useUserProfile.hook.ts`         |
+| Server Action       | -                 | 伺服器操作          | `createUser.action.ts`           |
+| React Component     | -                 | UI元件              | `userForm.component.tsx`         |
+| Domain Event        | -Event            | 領域事件            | `userCreated.event.ts`           |
+| Domain Service      | -Service          | 領域服務            | `authentication.service.ts`      |
+| Application Service | -Service          | 應用服務            | `userService.service.ts`         |
+| Infrastructure Service | -Service      | 基礎設施服務        | `linePay.service.ts`             |
 ## 數據流交互模式
 
 ### 1. 命令(Command)流程

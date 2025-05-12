@@ -23,14 +23,14 @@ try {
 
   // 按順序讀取和合併領域模型檔案 - 修改合成順序，先載入核心模型
   const modelOrder = [
-    'User.prisma',            // 首先載入 User 模型，因為許多其他模型依賴它
-    'Tag.prisma',            // Tag 模型被多個其他模型引用
-    'Asset.prisma',          // Asset 相關模型
-    'Instance.prisma',        // 支付相關模型
-    'Attachment.prisma',     // 附件模型
-    'Warehouse.prisma',      // 倉庫相關模型
-    'Linepay.prisma',        // 支付相關模型
-    'Template.prisma',        // 支付相關模型
+    'user.prisma',            // 首先載入 User 模型，因為許多其他模型依賴它
+    'tag.prisma',             // Tag 模型被多個其他模型引用
+    'asset.prisma',           // Asset 相關模型
+    'instance.prisma',        // 支付相關模型
+    'attachment.prisma',      // 附件模型
+    'warehouse.prisma',       // 倉庫相關模型
+    'linepay.prisma',         // 支付相關模型
+    'template.prisma',        // 支付相關模型
   ];
 
   // 檢查檔案是否存在並顯示警告
