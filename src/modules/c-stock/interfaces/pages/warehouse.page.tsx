@@ -2,11 +2,11 @@
 
 import { WarehouseInstanceForm } from '@/modules/c-stock/interfaces/components/warehouse.form';
 import { WarehouseInstanceList } from '@/modules/c-stock/interfaces/components/warehouse.list';
-import { useWarehouseInstances } from '@/modules/c-stock/interfaces/hooks/useWarehouseInstances';
+import { useWarehouses } from '@/modules/c-stock/interfaces/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function WarehouseInstancePage() {
-  const { data: warehouseInstances = [], isLoading, error } = useWarehouseInstances();
+  const { data: warehouseInstances = [], isLoading, error } = useWarehouses();
   const qc = useQueryClient();
 
   if (isLoading) return null;
@@ -14,7 +14,7 @@ export default function WarehouseInstancePage() {
 
   // 刪除後刷新列表
   const handleDelete = () => {
-    qc.invalidateQueries({ queryKey: ['warehouseInstances'] });
+    qc.invalidateQueries({ queryKey: ['warehouses'] });
   };
 
   return (

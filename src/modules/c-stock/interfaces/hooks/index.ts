@@ -1,4 +1,197 @@
-export * from './useWarehouseInstances';
-export * from './useWarehouseItemMutations';
-export * from './useWarehouseItems';
-export * from './useWarehouseMutations';
+// filepath: /workspaces/Next-Progress/src/modules/c-stock/interfaces/hooks/useWarehouse.ts
+
+'use client';
+
+import {
+    createManyWarehouseItems,
+    createWarehouse,
+    createWarehouseItem,
+    deleteWarehouse,
+    deleteWarehouseItem,
+    updateWarehouse,
+    updateWarehouseItem,
+    updateWarehouseItemQuantity,
+} from '@/modules/c-stock/application/commands';
+import {
+    CreateWarehouseDTO,
+    CreateWarehouseItemDTO,
+    UpdateWarehouseDTO,
+    UpdateWarehouseItemDTO,
+} from '@/modules/c-stock/application/dto';
+import {
+    getAllWarehouses,
+    getItemsByWarehouseId,
+    searchWarehouseItems,
+} from '@/modules/c-stock/application/queries';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+/* =========================
+   Utilities
+========================= */
+
+// 統一 invalidate 倉庫相關快取
+function invalidateWarehouses(queryClient: ReturnType<typeof useQueryClient>) {
+    queryClient.invalidateQueries({ queryKey: ['warehouses'] });
+}
+
+// 統一 invalidate 倉庫物品快取
+function invalidateWarehouseItems(queryClient: ReturnType<typeof useQueryClient>, warehouseId?: string) {
+    if (warehouseId) {
+        queryClient.invalidateQueries({ queryKey: ['warehouseItems', warehouseId] });
+    }
+}
+
+/* =========================
+   Warehouse Queries
+========================= */
+
+/**
+ * 獲取所有倉庫 Hook
+ */
+export function useWarehouses() {
+    return useQuery({
+        queryKey: ['warehouses'],
+        queryFn: () => getAllWarehouses(),
+    });
+}
+
+/* =========================
+   WarehouseItem Queries
+========================= */
+
+/**
+ * 獲取特定倉庫的物品 Hook
+ * @param warehouseId 倉庫ID
+ */
+export function useWarehouseItems(warehouseId: string) {
+    return useQuery({
+        queryKey: ['warehouseItems', warehouseId],
+        queryFn: () => getItemsByWarehouseId(warehouseId),
+        enabled: !!warehouseId,
+    });
+}
+
+/**
+ * 搜索倉庫物品 Hook
+ * @param query 搜索關鍵詞
+ * @param options 搜索選項
+ */
+export function useSearchWarehouseItems(query: string, options?: { warehouseId?: string; skip?: number; take?: number }) {
+    return useQuery({
+        queryKey: ['searchWarehouseItems', query, options],
+        queryFn: () => searchWarehouseItems(query, options),
+        enabled: query.length > 0,
+    });
+}
+
+/* =========================
+   Warehouse Mutations
+========================= */
+
+/**
+ * 倉庫變更操作 Hook
+ */
+export function useWarehouseMutations() {
+    const queryClient = useQueryClient();
+
+    const createMutation = useMutation({
+        mutationFn: (data: CreateWarehouseDTO) => createWarehouse(data),
+        onSuccess: () => invalidateWarehouses(queryClient),
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: UpdateWarehouseDTO }) => updateWarehouse(id, data),
+        onSuccess: () => invalidateWarehouses(queryClient),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => deleteWarehouse(id),
+        onSuccess: () => invalidateWarehouses(queryClient),
+    });
+
+    return {
+        createWarehouse: createMutation,
+        updateWarehouse: updateMutation,
+        deleteWarehouse: deleteMutation,
+    };
+}
+
+/**
+ * 具名 Hook：建立倉庫
+ */
+export function useCreateWarehouse() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: CreateWarehouseDTO) => createWarehouse(data),
+        onSuccess: () => invalidateWarehouses(queryClient),
+    });
+}
+
+/**
+ * 具名 Hook：刪除倉庫
+ */
+export function useDeleteWarehouse() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => deleteWarehouse(id),
+        onSuccess: () => invalidateWarehouses(queryClient),
+    });
+}
+
+/* =========================
+   WarehouseItem Mutations
+========================= */
+
+/**
+ * 倉庫物品變更操作 Hook
+ */
+export function useWarehouseItemMutations(warehouseId?: string) {
+    const queryClient = useQueryClient();
+
+    const invalidateAll = () => {
+        invalidateWarehouseItems(queryClient, warehouseId);
+        invalidateWarehouses(queryClient);
+    };
+
+    const createMutation = useMutation({
+        mutationFn: (data: CreateWarehouseItemDTO) => createWarehouseItem(data),
+        onSuccess: invalidateAll,
+    });
+
+    const createManyMutation = useMutation({
+        mutationFn: ({
+            items,
+            warehouseId: targetWarehouseId,
+        }: {
+            items: Omit<CreateWarehouseItemDTO, 'warehouseId'>[];
+            warehouseId: string;
+        }) => createManyWarehouseItems(items, targetWarehouseId),
+        onSuccess: invalidateAll,
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: UpdateWarehouseItemDTO }) =>
+            updateWarehouseItem(id, data),
+        onSuccess: invalidateAll,
+    });
+
+    const updateQuantityMutation = useMutation({
+        mutationFn: ({ id, quantity }: { id: string; quantity: number }) =>
+            updateWarehouseItemQuantity(id, quantity),
+        onSuccess: invalidateAll,
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => deleteWarehouseItem(id),
+        onSuccess: invalidateAll,
+    });
+
+    return {
+        createWarehouseItem: createMutation,
+        createManyWarehouseItems: createManyMutation,
+        updateWarehouseItem: updateMutation,
+        updateWarehouseItemQuantity: updateQuantityMutation,
+        deleteWarehouseItem: deleteMutation,
+    };
+}

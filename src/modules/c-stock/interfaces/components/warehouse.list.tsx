@@ -2,7 +2,7 @@
 
 import { WarehouseInstance } from '@/modules/c-stock/domain';
 import { useState } from 'react';
-import { useDeleteWarehouseInstance } from '../hooks/useWarehouseMutations';
+import { useDeleteWarehouse } from '../hooks';
 import { WarehouseItemsModal } from './warehouse.items.modal';
 
 interface WarehouseInstanceListProps {
@@ -13,7 +13,7 @@ interface WarehouseInstanceListProps {
 export function WarehouseInstanceList({ warehouseInstances, onDelete }: WarehouseInstanceListProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedWarehouseInstance, setSelectedWarehouseInstance] = useState<WarehouseInstance | null>(null);
-  const { mutateAsync: deleteMutate, isPending: deleting } = useDeleteWarehouseInstance();
+  const { mutateAsync: deleteMutate, isPending: deleting } = useDeleteWarehouse();
 
   const handleDelete = async (id: string) => {
     if (!confirm('確定要刪除此倉庫嗎？這將同時刪除所有倉庫內的物品。')) return;
