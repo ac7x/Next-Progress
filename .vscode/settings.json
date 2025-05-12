@@ -118,5 +118,7 @@
     "titleBar.activeForeground": "#ffffff"
   },
 
-  "editor.largeFileOptimizations": true
+  "editor.largeFileOptimizations": true,
+
+  "css.lint.unknownAtRules": "ignore"
 }
