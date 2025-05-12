@@ -1,5 +1,5 @@
-import { Warehouse } from '../entities/warehouse.entity';
-import { WarehouseItem } from '../entities/warehouse.item.entity';
+import { Warehouse } from '../entities';
+import { WarehouseItem } from '../entities';
 
 /**
  * 領域事件基類 - 所有領域事件的基礎

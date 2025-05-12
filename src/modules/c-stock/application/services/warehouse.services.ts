@@ -1,8 +1,8 @@
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse.entity';
-import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '../../domain/entities/warehouse.item.entity';
+import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities';
+import { CreateWarehouseItemProps, UpdateWarehouseItemProps, WarehouseItem } from '../../domain/entities';
 import { IWarehouseItemRepository, IWarehouseRepository } from '../../domain/repositories';
-import { WarehouseItemService as DomainWarehouseItemService } from '../../domain/services/warehouse.item.service';
-import { WarehouseService as DomainWarehouseService } from '../../domain/services/warehouse.service';
+import { WarehouseItemService as DomainWarehouseItemService } from '../../domain/services';
+import { WarehouseService as DomainWarehouseService } from '../../domain/services';
 
 /**
  * 倉庫應用服務 - 協調領域服務和基礎設施

@@ -1,5 +1,5 @@
-import { warehouseItemRepository } from '../../infrastructure/repositories/warehouse.item.repository';
-import { WarehouseInstanceRepository } from '../../infrastructure/repositories/warehouse.repository';
+import { warehouseItemRepository } from '../../infrastructure/repositories';
+import { WarehouseInstanceRepository } from '../../infrastructure/repositories';
 import { WarehouseApplicationService, WarehouseItemApplicationService } from './warehouse.services';
 
 // 初始化服務實例
