@@ -62,18 +62,20 @@ export const projectInstanceAdapter = {
       (data as any).priority = domainProject.priority;
     }
 
-    if (domainProject.startDate !== undefined) {
-      // 只有當 startDate 不是 null 時才設置它
-      if (domainProject.startDate !== null) {
-        data.startDate = domainProject.startDate;
-      }
+    // 修正: 處理 startDate 欄位，符合 Prisma 型別要求
+    if ('startDate' in domainProject) {
+      // 使用 set 操作符來明確設定值（包括 null）
+      data.startDate = domainProject.startDate === null
+        ? { set: null as any } // 使用 as any 避免 TypeScript 的型別錯誤
+        : domainProject.startDate;
     }
 
-    if (domainProject.endDate !== undefined) {
-      // 只有當 endDate 不是 null 時才設置它
-      if (domainProject.endDate !== null) {
-        data.endDate = domainProject.endDate;
-      }
+    // 修正: 處理 endDate 欄位，符合 Prisma 型別要求
+    if ('endDate' in domainProject) {
+      // 使用 set 操作符來明確設定值（包括 null）
+      data.endDate = domainProject.endDate === null
+        ? { set: null as any } // 使用 as any 避免 TypeScript 的型別錯誤
+        : domainProject.endDate;
     }
 
     // 對於創建操作，需要處理必要的 creator 關聯
@@ -110,6 +112,8 @@ export const projectInstanceAdapter = {
     const createInput: Prisma.ProjectInstanceCreateInput = {
       name: data.name,
       description: data.description,
+      // 修正: 根據 Prisma 的類型定義，startDate 是必須的欄位，不能省略
+      // 如果 data.startDate 存在則使用，不存在則設為當前時間
       startDate: data.startDate || new Date(),
       creator: {
         connect: { id: user.id }
@@ -117,8 +121,8 @@ export const projectInstanceAdapter = {
       priority: data.priority ?? 0,
     };
 
-    // 添加 endDate 欄位（如果存在）
-    if (data.endDate !== null && data.endDate !== undefined) {
+    // 修正: 有條件地添加 endDate 欄位
+    if (data.endDate) {
       createInput.endDate = data.endDate;
     }
 

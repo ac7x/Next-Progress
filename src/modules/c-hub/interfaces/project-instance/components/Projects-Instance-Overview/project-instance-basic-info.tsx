@@ -24,6 +24,14 @@ export function ProjectInstanceBasicInfo({ projectInstance }: Props) {
                 </p>
             </div>
             <div>
+                <p className="text-sm text-gray-500">預計開始日期</p>
+                <p>{projectInstance.startDate ? new Date(projectInstance.startDate).toLocaleString() : '未設定'}</p>
+            </div>
+            <div>
+                <p className="text-sm text-gray-500">預計結束日期</p>
+                <p>{projectInstance.endDate ? new Date(projectInstance.endDate).toLocaleString() : '未設定'}</p>
+            </div>
+            <div>
                 <p className="text-sm text-gray-500">建立時間</p>
                 <p>{new Date(projectInstance.createdAt).toLocaleString()}</p>
             </div>

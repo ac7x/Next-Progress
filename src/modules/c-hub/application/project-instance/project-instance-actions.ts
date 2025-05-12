@@ -74,8 +74,11 @@ export async function updateProject(
     throw new Error('專案 ID 不能為空');
   }
 
+  // 確保日期欄位處理符合 Prisma 型別要求
+  const processedData = { ...data };
+
   try {
-    const project = await projectInstanceService.update(id, data);
+    const project = await projectInstanceService.update(id, processedData);
 
     // 確保在數據修改後重新驗證頁面數據
     revalidatePath('/client/instance_management');

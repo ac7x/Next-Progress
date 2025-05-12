@@ -11,11 +11,11 @@ export interface ProjectInstance {
   description: ProjectInstanceDescription;
   priority: ProjectInstancePriority;
   status?: ProjectStatus;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date | null;  // 專案預計開始日期，可以為 null (未設定)
+  endDate: Date | null;    // 專案預計結束日期，可以為 null (未設定)
   createdBy: ProjectInstanceCreatedBy;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date;         // 專案建立時間，系統自動設置，一定有值
+  updatedAt: Date;         // 專案最後更新時間，系統自動設置，一定有值
 }
 
 export interface CreateProjectInstanceProps {
@@ -23,8 +23,8 @@ export interface CreateProjectInstanceProps {
   description?: ProjectInstanceDescription;
   priority?: ProjectInstancePriority;
   status?: ProjectStatus;
-  startDate?: Date | null;
-  endDate?: Date | null;
+  startDate?: Date | null; // 專案預計開始日期，可選參數
+  endDate?: Date | null;   // 專案預計結束日期，可選參數
   createdBy: ProjectInstanceCreatedBy;
   templateId?: string | null;
 }

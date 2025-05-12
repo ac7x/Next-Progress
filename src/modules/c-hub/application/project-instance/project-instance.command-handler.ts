@@ -18,14 +18,15 @@ export async function CreateProjectInstanceFromTemplateCommandHandler(
     if (!template) throw new Error('找不到指定的專案模板');
 
     // 合併模板資料與 projectData，projectData 優先
-    // 自動使用當前時間作為開始日期
+    // 注意：startDate 為預計開始日期，可能是未來的日期，初始為空
+    // createdAt 為專案建立時間，由系統自動設置為當前時間
     return projectInstanceRepository.create({
         ...projectData,
         name: projectData.name || template.name,
         description: projectData.description ?? template.description,
         priority: projectData.priority ?? template.priority ?? 0,
         createdBy: projectData.createdBy, // 確保傳遞正確
-        startDate: new Date(), // 開始日期直接使用當前時間
+        // startDate 初始為空，將在專案列表中提供編輯功能
         // 結束日期初始為空，將在專案列表中提供編輯功能
     });
 }

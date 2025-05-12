@@ -28,10 +28,13 @@ export class ProjectInstanceRepository implements IProjectInstanceRepository {
   }
 
   async update(id: string, data: Partial<CreateProjectInstanceProps>): Promise<ProjectInstance> {
+    // 使用 projectInstanceAdapter.toPersistence 方法處理 null 值
+    const updateData = projectInstanceAdapter.toPersistence(data);
+
     const result = await prisma.projectInstance.update({
       where: { id },
       data: {
-        ...projectInstanceAdapter.toPersistence(data),
+        ...updateData,
         updatedAt: new Date(),
       },
     });

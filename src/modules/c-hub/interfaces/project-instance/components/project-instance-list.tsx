@@ -40,6 +40,9 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
   const [selectedProjectInstance, setSelectedProjectInstance] = useState<ProjectInstance | null>(null);
   const [endDateEditing, setEndDateEditing] = useState<string | null>(null);
   const [endDateValue, setEndDateValue] = useState<string>('');
+  // 新增：開始日期編輯狀態和值
+  const [startDateEditing, setStartDateEditing] = useState<string | null>(null);
+  const [startDateValue, setStartDateValue] = useState<string>('');
   const router = useRouter();
 
   // 任務數量
@@ -114,6 +117,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
     setError(null);
 
     try {
+      // 修正: 確保日期處理正確
       const endDate = endDateValue ? new Date(endDateValue) : null;
       await updateProject(id, { endDate });
       router.refresh();
@@ -128,6 +132,39 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
 
   const handleEndDateCancel = () => {
     setEndDateEditing(null);
+  };
+
+  // 新增：處理開始日期編輯功能
+  const handleStartDateClick = (projectInstance: ProjectInstance) => {
+    const currentDate = projectInstance.startDate
+      ? new Date(projectInstance.startDate).toISOString().split('T')[0]
+      : '';
+    setStartDateValue(currentDate);
+    setStartDateEditing(projectInstance.id);
+  };
+
+  const handleStartDateSave = async (id: string) => {
+    setIsUpdating({ id, field: 'startDate' });
+    setError(null);
+
+    try {
+      // 修正: 確保日期處理正確
+      // 若輸入為空字串，則設為 null (表示未設定)
+      // 若有輸入，則建立 Date 物件
+      const startDate = startDateValue ? new Date(startDateValue) : null;
+      await updateProject(id, { startDate });
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '更新開始日期失敗');
+      console.error('更新開始日期失敗:', err);
+    } finally {
+      setIsUpdating(null);
+      setStartDateEditing(null);
+    }
+  };
+
+  const handleStartDateCancel = () => {
+    setStartDateEditing(null);
   };
 
   if (projectInstances.length === 0) {
@@ -163,8 +200,9 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">優先順序</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">任務數量</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">設備數量/完成</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">起始日期</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">開始日期</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">結束日期</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">建立時間</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
             </tr>
           </thead>
@@ -240,8 +278,46 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                         </div>
                       </div>
                     </td>
+                    {/* 新增：開始日期欄位 */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {projectInstance.startDate ? new Date(projectInstance.startDate).toLocaleDateString() : '—'}
+                      {startDateEditing === projectInstance.id ? (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="date"
+                            value={startDateValue}
+                            onChange={(e) => setStartDateValue(e.target.value)}
+                            className="border rounded px-2 py-1 w-32"
+                          />
+                          <button
+                            onClick={() => handleStartDateSave(projectInstance.id)}
+                            className="text-green-600 hover:text-green-800 text-sm"
+                            disabled={isUpdating !== null}
+                          >
+                            ✓
+                          </button>
+                          <button
+                            onClick={handleStartDateCancel}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                            disabled={isUpdating !== null}
+                          >
+                            ✗
+                          </button>
+                          {isUpdating?.id === projectInstance.id && isUpdating?.field === 'startDate' && (
+                            <span className="text-xs text-blue-500">更新中...</span>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <span>{projectInstance.startDate ? new Date(projectInstance.startDate).toLocaleDateString() : '—'}</span>
+                          <button
+                            onClick={() => handleStartDateClick(projectInstance)}
+                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            title="設置專案預計開始日期"
+                          >
+                            ✎
+                          </button>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {endDateEditing === projectInstance.id ? (
@@ -276,11 +352,16 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                           <button
                             onClick={() => handleEndDateClick(projectInstance)}
                             className="text-gray-500 hover:text-gray-700 ml-2"
+                            title="設置專案預計結束日期"
                           >
                             ✎
                           </button>
                         </div>
                       )}
+                    </td>
+                    {/* 新增：專案建立時間欄位 */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(projectInstance.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
@@ -300,7 +381,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                   </tr>
                   {selectedProjectInstance?.id === projectInstance.id && (
                     <tr>
-                      <td colSpan={8} className="px-6 py-4 bg-gray-50">
+                      <td colSpan={9} className="px-6 py-4 bg-gray-50">
                         <ProjectInstanceDetails projectInstance={selectedProjectInstance} />
                       </td>
                     </tr>
