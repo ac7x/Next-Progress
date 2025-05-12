@@ -105,9 +105,9 @@ export class WarehouseItemService {
         // 更新物品
         const updatedItem = await this.warehouseItemRepository.update(id, data);
 
-        // 觸發事件
+        // 透過事件發布者觸發倉庫物品更新事件
         const event = new WarehouseItemUpdatedEvent(updatedItem, previousValues);
-        console.log('倉庫物品更新事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return updatedItem;
     }
@@ -135,9 +135,9 @@ export class WarehouseItemService {
         // 更新數量
         const updatedItem = await this.warehouseItemRepository.updateQuantity(id, quantity);
 
-        // 觸發事件
+        // 透過事件發布者觸發倉庫物品數量更新事件
         const event = new WarehouseItemUpdatedEvent(updatedItem, previousValues);
-        console.log('倉庫物品數量更新事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return updatedItem;
     }
@@ -159,9 +159,9 @@ export class WarehouseItemService {
         // 刪除物品
         const result = await this.warehouseItemRepository.delete(id);
 
-        // 觸發事件
+        // 透過事件發布者觸發倉庫物品刪除事件
         const event = new WarehouseItemDeletedEvent(id, warehouseId);
-        console.log('倉庫物品刪除事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return result;
     }
@@ -183,10 +183,10 @@ export class WarehouseItemService {
         // 批量刪除
         const deletedCount = await this.warehouseItemRepository.deleteByWarehouseId(warehouseId);
 
-        // 為每個物品觸發刪除事件
+        // 為每個物品透過事件發布者觸發刪除事件
         items.forEach(item => {
             const event = new WarehouseItemDeletedEvent(item.id, warehouseId);
-            console.log('倉庫物品刪除事件已觸發:', event);
+            domainEventPublisher.publish(event);
         });
 
         return deletedCount;
