@@ -119,7 +119,45 @@ c-{module}/
 - 檔案命名格式：`{模組名}.{功能}.{類型}.ts` (無連字符)
 - 使用小駝峰式命名法(camelCase)
 - 使用點符號區分用途，便於按類型分組
+```
+具體命名範例
+engineering-instance 資料夾
 
+檔案命名應以 engineering-instance 為開頭，然後根據功能描述命名。
+
+範例：
+
+engineering-instance.create.command.ts
+
+engineering-instance.update.command.ts
+
+engineering-instance.delete.command.ts
+
+engineering-instance/components 資料夾
+
+檔案名稱應該以 engineering-instance 為開頭，並根據 UI 元件的功能來命名。
+
+範例：
+
+engineering-instance.form.component.tsx
+
+engineering-instance.card.component.tsx
+
+engineering-instance.list.component.tsx
+
+engineering-instance/hooks 資料夾
+
+檔案名稱應該以 engineering-instance 開頭，並以 use 開頭來表示 React hook。
+
+範例：
+
+engineering-instance.useFetch.hook.ts
+
+engineering-instance.useSubmit.hook.ts
+
+engineering-instance.useUpdate.hook.ts
+
+```
 ### 類型與組件命名規範
 
 | 類型                | 前綴/後綴        | 說明               | 檔案命名範例                     |

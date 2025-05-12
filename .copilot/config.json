@@ -3,7 +3,7 @@
     "settings": {
         "enableCodeCompletion": true,
         "enableInlineSuggestions": true,
-        "maxSuggestions": 1,
+        "maxSuggestions": 3,
         "enablePrismaSupport": true,
         "enableTailwindSupport": true,
         "enableProjectContext": true,
