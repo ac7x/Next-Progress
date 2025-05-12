@@ -205,6 +205,49 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
     });
   }
 
+  /**
+   * 添加標籤到倉庫物品
+   * @param itemId 物品ID
+   * @param tagId 標籤ID
+   */
+  async addTag(itemId: string, tagId: string): Promise<boolean> {
+    try {
+      await prisma.tagRelation.create({
+        data: {
+          tagId,
+          targetId: itemId,
+          targetType: TagRelationType.WAREHOUSE_ITEM,
+          priority: 0
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error adding tag to warehouse item:', error);
+      return false;
+    }
+  }
+
+  /**
+   * 從倉庫物品移除標籤
+   * @param itemId 物品ID
+   * @param tagId 標籤ID
+   */
+  async removeTag(itemId: string, tagId: string): Promise<boolean> {
+    try {
+      await prisma.tagRelation.deleteMany({
+        where: {
+          tagId,
+          targetId: itemId,
+          targetType: TagRelationType.WAREHOUSE_ITEM
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error removing tag from warehouse item:', error);
+      return false;
+    }
+  }
+
   async search(query: string, options?: {
     warehouseId?: string;
     skip?: number;

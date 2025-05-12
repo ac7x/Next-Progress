@@ -3,12 +3,16 @@ import {
     UpdateWarehouseItemProps,
     WarehouseItem
 } from '../entities/warehouse.item.entity';
-import { domainEventPublisher } from '../events/warehouse.event.publisher';
-import { WarehouseItemCreatedEvent } from '../events/warehouse.item.created.event';
-import { WarehouseItemDeletedEvent } from '../events/warehouse.item.deleted.event';
-import { WarehouseItemUpdatedEvent } from '../events/warehouse.item.updated.event';
-import { IWarehouseItemRepository } from '../repositories/warehouse.item.repository.interface';
-import { IWarehouseRepository } from '../repositories/warehouse.repository.interface';
+import {
+    domainEventPublisher,
+    WarehouseItemCreatedEvent,
+    WarehouseItemDeletedEvent,
+    WarehouseItemUpdatedEvent
+} from '../events/warehouse.events';
+import {
+    IWarehouseItemRepository,
+    IWarehouseRepository
+} from '../repositories/warehouse.repositories';
 
 /**
  * 倉庫物品領域服務 - 封裝與倉庫物品相關的業務邏輯

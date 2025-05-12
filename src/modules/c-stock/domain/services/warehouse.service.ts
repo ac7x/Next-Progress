@@ -3,11 +3,13 @@ import {
     UpdateWarehouseProps,
     Warehouse
 } from '../entities/warehouse.entity';
-import { WarehouseCreatedEvent } from '../events/warehouse.created.event';
-import { WarehouseDeletedEvent } from '../events/warehouse.deleted.event';
-import { domainEventPublisher } from '../events/warehouse.event.publisher';
-import { WarehouseUpdatedEvent } from '../events/warehouse.updated.event';
-import { IWarehouseRepository } from '../repositories/warehouse.repository.interface';
+import {
+    domainEventPublisher,
+    WarehouseCreatedEvent,
+    WarehouseDeletedEvent,
+    WarehouseUpdatedEvent
+} from '../events/warehouse.events';
+import { IWarehouseRepository } from '../repositories/warehouse.repositories';
 
 /**
  * 倉庫領域服務 - 封裝與倉庫相關的業務邏輯
@@ -131,6 +133,6 @@ export class WarehouseService {
      * @param onlyActive 是否僅計算活動倉庫
      */
     async getWarehouseCount(onlyActive?: boolean): Promise<number> {
-        return this.warehouseRepository.count(onlyActive ? { isActive: true } : undefined);
+        return this.warehouseRepository.count(onlyActive !== undefined ? { isActive: onlyActive } : undefined);
     }
 }

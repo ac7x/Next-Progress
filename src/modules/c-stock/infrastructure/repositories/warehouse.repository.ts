@@ -1,6 +1,6 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
-import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse.entity';
-import { IWarehouseRepository } from '../../domain/repositories/warehouse.repository.interface';
+import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities';
+import { IWarehouseRepository } from '../../domain/repositories';
 import { warehouseAdapter } from '../adapter/warehouse.adapter';
 import { transactionManager } from '../persistence/transaction.manager';
 
