@@ -25,18 +25,6 @@
       "@/app/*": [
         "./src/app/*"
       ],
-      "@/domain/*": [
-        "./src/domain/*"
-      ],
-      "@/application/*": [
-        "./src/application/*"
-      ],
-      "@/infrastructure/*": [
-        "./src/infrastructure/*"
-      ],
-      "@/interfaces/*": [
-        "./src/interfaces/*"
-      ],
       "@/modules/*": [
         "./src/modules/*"
       ]
