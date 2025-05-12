@@ -1,6 +1,6 @@
 'use client';
 
-import { TaskInstanceDashboard } from '@/modules/c-hub/interfaces/task-instance';
+import { TaskInstanceDashboard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance.dashboard.component';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
