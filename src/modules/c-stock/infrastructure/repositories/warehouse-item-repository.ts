@@ -3,6 +3,7 @@ import { CreateWarehouseItemProps, IWarehouseItemRepository, UpdateWarehouseItem
 import { TagRelationType } from '@/modules/c-tag/domain/entities/tag-entity';
 import { WarehouseItemType } from '@prisma/client';
 import { warehouseItemAdapter } from '../adapter/warehouse-item-adapter';
+import { transactionManager } from '../persistence/transaction-manager';
 
 export class WarehouseItemRepository implements IWarehouseItemRepository {
   async findById(id: string): Promise<WarehouseItem | null> {
@@ -138,13 +139,23 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
 
   async delete(id: string): Promise<boolean> {
     try {
-      await prisma.tagRelation.deleteMany({
-        where: { targetId: id, targetType: TagRelationType.WAREHOUSE_ITEM }
+      // 使用事務確保刪除操作的一致性
+      return await transactionManager.runInTransaction(async (tx) => {
+        // 刪除相關的標籤關係
+        await tx.tagRelation.deleteMany({
+          where: {
+            targetId: id,
+            targetType: TagRelationType.WAREHOUSE_ITEM
+          }
+        });
+
+        // 刪除倉庫物品
+        await tx.warehouseItem.delete({
+          where: { id }
+        });
+
+        return true;
       });
-      await prisma.warehouseItem.delete({
-        where: { id }
-      });
-      return true;
     } catch (error) {
       console.error('Error deleting warehouse item:', error);
       return false;
@@ -152,16 +163,37 @@ export class WarehouseItemRepository implements IWarehouseItemRepository {
   }
 
   async deleteByWarehouseId(warehouseId: string): Promise<number> {
-    const items = await prisma.warehouseItem.findMany({
-      where: { warehouseId },
-      select: { id: true }
-    });
+    try {
+      // 使用事務確保批量刪除的一致性
+      return await transactionManager.runInTransaction(async (tx) => {
+        // 獲取需要刪除的所有物品ID
+        const items = await tx.warehouseItem.findMany({
+          where: { warehouseId },
+          select: { id: true }
+        });
 
-    for (const item of items) {
-      await this.delete(item.id);
+        // 批量刪除標籤關係
+        if (items.length > 0) {
+          const itemIds = items.map(item => item.id);
+          await tx.tagRelation.deleteMany({
+            where: {
+              targetId: { in: itemIds },
+              targetType: TagRelationType.WAREHOUSE_ITEM
+            }
+          });
+        }
+
+        // 批量刪除倉庫物品
+        await tx.warehouseItem.deleteMany({
+          where: { warehouseId }
+        });
+
+        return items.length;
+      });
+    } catch (error) {
+      console.error('Error deleting items by warehouse ID:', error);
+      return 0;
     }
-
-    return items.length;
   }
 
   async count(filter?: { warehouseId?: string; type?: string }): Promise<number> {

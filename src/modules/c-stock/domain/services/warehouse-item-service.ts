@@ -3,6 +3,7 @@ import {
     UpdateWarehouseItemProps,
     WarehouseItem
 } from '../entities/warehouse-item-entity';
+import { domainEventPublisher } from '../events/event-publisher';
 import { WarehouseItemCreatedEvent } from '../events/warehouse-item-created-event';
 import { WarehouseItemDeletedEvent } from '../events/warehouse-item-deleted-event';
 import { WarehouseItemUpdatedEvent } from '../events/warehouse-item-updated-event';
@@ -37,9 +38,9 @@ export class WarehouseItemService {
         // 創建倉庫物品
         const item = await this.warehouseItemRepository.create(data);
 
-        // 觸發事件 (實際項目可能會使用事件總線)
+        // 透過事件發布者觸發倉庫物品創建事件
         const event = new WarehouseItemCreatedEvent(item);
-        console.log('倉庫物品創建事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return item;
     }

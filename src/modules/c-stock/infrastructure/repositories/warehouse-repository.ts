@@ -1,6 +1,7 @@
 import { prisma } from '@/modules/c-shared/infrastructure/persistence/prisma/client';
 import { CreateWarehouseProps, UpdateWarehouseProps, Warehouse } from '../../domain/entities/warehouse-entity';
 import { IWarehouseRepository } from '../../domain/repositories/warehouse-repository-interface';
+import { transactionManager } from '../persistence/transaction-manager';
 
 /**
  * 倉庫儲存庫 - 實現倉庫實體在Prisma/MongoDB的持久化操作
@@ -90,10 +91,23 @@ export class WarehouseInstanceRepository implements IWarehouseRepository {
    */
   async delete(id: string): Promise<boolean> {
     try {
-      await prisma.warehouseInstance.delete({
-        where: { id }
+      // 使用事務確保刪除操作的一致性
+      return await transactionManager.runInTransaction(async (tx) => {
+        // 先刪除所有關聯的標籤關係
+        await tx.tagRelation.deleteMany({
+          where: {
+            targetId: id,
+            targetType: 'WAREHOUSE_INSTANCE'
+          }
+        });
+
+        // 刪除倉庫
+        await tx.warehouseInstance.delete({
+          where: { id }
+        });
+
+        return true;
       });
-      return true;
     } catch (error) {
       console.error('刪除倉庫失敗:', error);
       return false;

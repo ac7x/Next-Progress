@@ -3,6 +3,7 @@ import {
     UpdateWarehouseProps,
     Warehouse
 } from '../entities/warehouse-entity';
+import { domainEventPublisher } from '../events/event-publisher';
 import { WarehouseCreatedEvent } from '../events/warehouse-created-event';
 import { WarehouseDeletedEvent } from '../events/warehouse-deleted-event';
 import { WarehouseUpdatedEvent } from '../events/warehouse-updated-event';
@@ -28,9 +29,9 @@ export class WarehouseService {
         // 創建倉庫
         const warehouse = await this.warehouseRepository.create(data);
 
-        // 觸發事件 (實際項目可能會使用事件總線)
+        // 透過事件發布者觸發倉庫創建事件
         const event = new WarehouseCreatedEvent(warehouse);
-        console.log('倉庫創建事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return warehouse;
     }
@@ -61,9 +62,9 @@ export class WarehouseService {
         // 更新倉庫
         const updatedWarehouse = await this.warehouseRepository.update(id, data);
 
-        // 觸發事件
+        // 透過事件發布者觸發倉庫更新事件
         const event = new WarehouseUpdatedEvent(updatedWarehouse, previousValues);
-        console.log('倉庫更新事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return updatedWarehouse;
     }
@@ -82,9 +83,9 @@ export class WarehouseService {
         // 刪除倉庫
         const result = await this.warehouseRepository.delete(id);
 
-        // 觸發事件
+        // 透過事件發布者觸發倉庫刪除事件
         const event = new WarehouseDeletedEvent(id);
-        console.log('倉庫刪除事件已觸發:', event);
+        domainEventPublisher.publish(event);
 
         return result;
     }
