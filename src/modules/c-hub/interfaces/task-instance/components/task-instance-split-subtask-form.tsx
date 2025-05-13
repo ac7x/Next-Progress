@@ -1,6 +1,6 @@
 'use client';
 
-import { createSubTaskInstanceCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
+import { taskSplitSubtaskCommand } from '@/modules/c-hub/application/task-instance/task-split-command';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -34,12 +34,6 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
         e.preventDefault();
         if (isSubmitting) return;
 
-        // 驗證設備數量不能超過父任務剩餘可分配數量
-        if (equipmentCount !== undefined && equipmentCount > remainingEquipment) {
-            setError(`設備數量不能超過父任務剩餘可分配數量 (${remainingEquipment})`);
-            return;
-        }
-
         // 驗證結束時間不能早於開始時間
         if (plannedStart && plannedEnd && new Date(plannedEnd) < new Date(plannedStart)) {
             setError('預計結束時間不能早於開始時間');
@@ -50,19 +44,18 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
             setIsSubmitting(true);
             setError(null);
 
-            // 構建子任務數據
+            // 構建子任務數據 - 移除驗證邏輯，由 Command 層統一處理
             const subTaskData = {
-                name: `${taskInstance.name} - 子任務`, // 預設名稱，實際會由領域服務生成
-                description: description,
+                name: `${taskInstance.name} - 子任務`, // 可以由使用者自訂，但也可由領域服務自動生成
+                description,
                 plannedStart: plannedStart ? new Date(plannedStart) : null,
                 plannedEnd: plannedEnd ? new Date(plannedEnd) : null,
-                equipmentCount: equipmentCount,
-                taskId: taskInstance.id,
-                parentTaskId: taskInstance.id, // 設置父任務ID
+                equipmentCount,
+                actualEquipmentCount: 0 // 新分割的子任務，實際使用數量默認為 0
             };
 
-            // 調用 Command 創建子任務
-            await createSubTaskInstanceCommand(subTaskData);
+            // 調用專用的任務分割命令
+            await taskSplitSubtaskCommand(taskInstance.id, subTaskData);
 
             // 重新驗證查詢
             await queryClient.invalidateQueries({

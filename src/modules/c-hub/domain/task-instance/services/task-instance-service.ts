@@ -1,3 +1,5 @@
+import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
+import { SubTaskInstance } from '../../sub-task-instance/entities/sub-task-instance-entity';
 import {
     CreateTaskInstanceProps,
     RichTaskInstance,
@@ -13,6 +15,7 @@ import {
 } from '../events';
 import { TaskInstanceRepository } from '../repositories';
 import { TaskInstanceStatusType } from '../value-objects';
+import { calculateEquipmentDistribution, calculateParentTaskProgress } from './task-split-service';
 
 /**
  * 任務實例領域服務
@@ -187,6 +190,53 @@ export class TaskInstanceService {
      */
     toRichModels(taskInstances: TaskInstance[]): RichTaskInstance[] {
         return taskInstances.map(taskInstance => this.toRichModel(taskInstance));
+    }
+
+    /**
+     * 根據子任務情況重新計算並更新任務狀態
+     * 當子任務被創建、更新或刪除時調用
+     * @param taskId 父任務ID
+     * @returns 更新後的任務實例
+     */
+    async recalculateTaskStatus(taskId: string): Promise<TaskInstance | null> {
+        // 獲取父任務
+        const parentTask = await this.getTaskInstanceById(taskId);
+        if (!parentTask) {
+            return null;
+        }
+
+        // 獲取此任務所有的子任務
+        // 使用子任務存儲庫查詢所有相關子任務
+        const subTasks: SubTaskInstance[] = await subTaskInstanceRepository.findByTaskId(taskId);
+
+        // 如果沒有子任務，則不需要更新
+        if (subTasks.length === 0) {
+            return parentTask;
+        }
+
+        // 計算設備分配情況
+        const equipmentDistribution = calculateEquipmentDistribution(parentTask, subTasks);
+
+        // 計算進度和時間範圍
+        const progressInfo = calculateParentTaskProgress(subTasks);
+
+        // 構建更新數據
+        const updateData: UpdateTaskInstanceProps = {
+            // 實際設備數量為子任務實際使用設備總和
+            actualEquipmentCount: equipmentDistribution.actualUsedEquipment,
+
+            // 更新計劃開始時間（如果有子任務設置了計劃時間）
+            plannedStart: progressInfo.earliestPlannedStart || parentTask.plannedStart,
+
+            // 更新計劃結束時間（如果有子任務設置了計劃時間）
+            plannedEnd: progressInfo.latestPlannedEnd || parentTask.plannedEnd,
+
+            // 更新完成率為子任務加權平均完成率
+            completionRate: progressInfo.completionRate
+        };
+
+        // 更新父任務
+        return this.updateTaskInstance(taskId, updateData);
     }
 }
 
