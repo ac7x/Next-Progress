@@ -213,7 +213,7 @@ model TaskInstance {
   equipmentCount       Int? /// 預計設備數量
   actualEquipmentCount Int?         @default(0) /// 實際設備數量
   priority             Int?         @default(0) /// 優先順序，數字越小優先度越高
-  status               String?      @default("pending") /// 任務狀態，預設為待處理
+  status               String?      @default("TODO") /// 任務狀態，預設為待處理
   completionRate       Float?       @default(0) /// 任務完成率，0～100%
   engineeringId        String        @db.ObjectId /// 所屬工程 ID
   engineering          EngineeringInstance @relation(fields: [engineeringId], references: [id]) /// 所屬工程關聯
@@ -240,7 +240,7 @@ model SubTaskInstance {
   actualStart          DateTime? /// 實際開始日期
   actualEnd            DateTime? /// 實際結束日期
   priority             Int?         @default(0) /// 優先順序
-  status               String?      @default("pending") /// 子任務狀態
+  status               String?      @default("TODO") /// 子任務狀態
   completionRate       Float?       @default(0) /// 子任務完成率
   taskId               String       @db.ObjectId /// 所屬任務 ID
   parentTaskId         String?      @db.ObjectId /// 父任務 ID
