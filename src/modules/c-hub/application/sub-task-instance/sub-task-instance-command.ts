@@ -44,6 +44,7 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
             if (parentTask?.projectId) {
                 revalidatePath(`/client/project/${parentTask.projectId}`);
                 revalidatePath(`/client/dashboard_management`);
+                revalidatePath(`/client/instance_management`);
             }
         }
         return subTaskInstance;

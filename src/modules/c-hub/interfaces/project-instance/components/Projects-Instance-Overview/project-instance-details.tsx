@@ -90,13 +90,17 @@ export function ProjectInstanceDetails({ projectInstance }: ProjectInstanceDetai
     setSubTaskUpdateError(prev => ({ ...prev, [subTaskId]: null }));
     try {
       await updateSubTaskInstanceCommand(subTaskId, { actualEquipmentCount: value });
-      // 更新本地狀態
+      // 更新子任務的本地狀態
       setSubTaskInstancesMap(prev => ({
         ...prev,
         [parentTaskId]: prev[parentTaskId].map(st =>
           st.id === subTaskId ? { ...st, actualEquipmentCount: value } : st
         )
       }));
+
+      // 由於父任務的actualEquipmentCount應該已經更新，需要重新載入任務列表
+      const updatedTasks = await listTaskInstancesByProject(projectInstance.id);
+      setTaskInstances(updatedTasks);
     } catch (err) {
       setSubTaskUpdateError(prev => ({
         ...prev,

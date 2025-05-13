@@ -183,6 +183,8 @@ export class SubTaskInstanceDomainService {
                     ? 'IN_PROGRESS'
                     : 'TODO';
 
+        console.log(`Syncing parent task ${taskId}, calculated actualEquipmentCount: ${totalActualEquipmentCount}`);
+
         // 更新父任務
         await this.taskInstanceService.updateTaskInstance(taskId, {
             actualEquipmentCount: totalActualEquipmentCount,

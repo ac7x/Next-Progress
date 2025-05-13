@@ -21,6 +21,8 @@ export async function updateTaskInstanceCommand(
         // 重新驗證相關頁面
         if (taskInstance.projectId) {
             revalidatePath(`/client/project/${taskInstance.projectId}`);
+            revalidatePath(`/client/dashboard_management`);
+            revalidatePath(`/client/instance_management`);
         }
 
         return taskInstance;
