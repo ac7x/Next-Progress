@@ -14,11 +14,12 @@ export function DashboardWrapper() {
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
             queries: {
-                staleTime: 30 * 1000, // 資料保鮮時間 30 秒
+                staleTime: 15 * 1000, // 降低資料保鮮時間至 15 秒，更快發現過期數據
                 refetchOnWindowFocus: true, // 視窗獲得焦點時重新獲取資料
                 retry: 2, // 失敗後重試次數
                 refetchOnMount: true, // 組件掛載時重新獲取資料
-                refetchInterval: 60 * 1000, // 每分鐘自動刷新一次
+                refetchInterval: 30 * 1000, // 每 30 秒自動刷新一次
+                refetchIntervalInBackground: false, // 僅在頁面活躍時進行自動刷新
             },
         },
     }));

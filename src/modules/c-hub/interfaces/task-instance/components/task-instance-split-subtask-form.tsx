@@ -2,9 +2,10 @@
 
 import { taskSplitSubtaskCommand } from '@/modules/c-hub/application/task-instance/task-split-command';
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
+import { useSubTaskInstancesByTaskInstance } from '@/modules/c-hub/interfaces/sub-task-instance/hooks/use-sub-task-instance';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface TaskInstanceSplitSubtaskFormProps {
     taskInstance: TaskInstance;
@@ -28,8 +29,18 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
     const [plannedStart, setPlannedStart] = useState<string>('');
     const [plannedEnd, setPlannedEnd] = useState<string>('');
 
+    // 獲取此任務的所有子任務
+    const { data: subTasks = [] } = useSubTaskInstancesByTaskInstance(taskInstance.id);
+
+    // 計算已分配給子任務的設備數量
+    const allocatedEquipment = useMemo(() => {
+        return subTasks.reduce((total, subTask) => total + (subTask.equipmentCount || 0), 0);
+    }, [subTasks]);
+
     // 當前父任務的可分配設備數量上限
-    const remainingEquipment = (taskInstance.equipmentCount || 0) - (taskInstance.actualEquipmentCount || 0);
+    const remainingEquipment = useMemo(() => {
+        return (taskInstance.equipmentCount || 0) - allocatedEquipment;
+    }, [taskInstance.equipmentCount, allocatedEquipment]);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -45,6 +56,11 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
             setIsSubmitting(true);
             setError(null);
 
+            // 提交前先刷新子任務數據，確保我們使用最新的數據進行分配
+            await queryClient.invalidateQueries({
+                queryKey: ['subTaskInstances', taskInstance.id]
+            });
+
             // 構建子任務數據 - 移除驗證邏輯，由 Command 層統一處理
             const subTaskData = {
                 name: name.trim(), // 使用者自訂名稱
@@ -58,17 +74,23 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
             // 調用專用的任務分割命令
             await taskSplitSubtaskCommand(taskInstance.id, subTaskData);
 
-            // 重新驗證查詢
+            // 重新驗證所有相關查詢，確保界面數據更新
+            // 先刷新子任務數據
             await queryClient.invalidateQueries({
                 queryKey: ['subTaskInstances', taskInstance.id]
             });
 
-            // 同時刷新父任務數據
+            // 同時刷新父任務相關數據
             await queryClient.invalidateQueries({
                 queryKey: ['taskInstances']
             });
 
             await queryClient.invalidateQueries({
+                queryKey: ['allTasks']
+            });
+
+            // 強制刷新儀表板數據
+            await queryClient.refetchQueries({
                 queryKey: ['allTasks']
             });
 
@@ -169,7 +191,7 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
                             placeholder="0"
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                            父任務總設備數量: {taskInstance.equipmentCount || 0}, 已使用: {taskInstance.actualEquipmentCount || 0}
+                            父任務總設備數量: {taskInstance.equipmentCount || 0}, 已分配給子任務: {allocatedEquipment}
                         </p>
                     </div>
 

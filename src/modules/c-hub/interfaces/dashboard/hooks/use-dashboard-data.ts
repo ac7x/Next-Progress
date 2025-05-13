@@ -29,7 +29,8 @@ export function useDashboardData() {
         },
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
-        staleTime: 30000, // 減少緩存時間到30秒
+        staleTime: 15000, // 減少緩存時間到15秒
+        refetchInterval: 30000, // 每30秒自動重新獲取一次數據
     });
 
     // 返回整合後的資料

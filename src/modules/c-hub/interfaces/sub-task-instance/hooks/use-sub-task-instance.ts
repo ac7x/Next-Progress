@@ -16,6 +16,8 @@ export function useSubTaskInstancesByTaskInstance(taskInstanceId: string) {
     enabled: !!taskInstanceId,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
+    refetchInterval: 25000, // 每25秒自動刷新
+    staleTime: 10000, // 10秒後認為數據已過期
   });
 }
 

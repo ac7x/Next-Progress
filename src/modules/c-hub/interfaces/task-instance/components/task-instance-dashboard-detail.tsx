@@ -34,6 +34,10 @@ export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashbo
 
     // 處理顯示分割表單的函數
     const handleSplitTask = () => {
+        // 在顯示表單前先刷新子任務數據，確保數據是最新的
+        queryClient.invalidateQueries({
+            queryKey: ['subTaskInstances', taskInstance.id]
+        });
         setShowSplitForm(true);
     };
 
