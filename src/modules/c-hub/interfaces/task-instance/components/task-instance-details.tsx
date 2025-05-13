@@ -181,7 +181,7 @@ export function TaskInstanceDetails({ taskInstance }: TaskInstanceDetailsProps) 
       {isSplitModalOpen && (
         <TaskInstanceSplitSubtaskForm
           taskInstance={taskInstance}
-          onClose={() => setIsSplitModalOpen(false)}
+          onCloseAction={() => setIsSplitModalOpen(false)}
         />
       )}
     </div>
