@@ -5,6 +5,7 @@ import { SubTaskInstanceList } from '@/modules/c-hub/interfaces/sub-task-instanc
 import { useSubTaskInstancesByTaskInstance } from '@/modules/c-hub/interfaces/sub-task-instance/hooks/use-sub-task-instance';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { TaskInstanceSplitSubtaskForm } from './task-instance-split-subtask-form';
 import { TaskInstanceSummaryCard } from './task-instance-summary-card';
 
 interface TaskInstanceDashboardDetailProps {
@@ -13,6 +14,7 @@ interface TaskInstanceDashboardDetailProps {
 
 export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashboardDetailProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showSplitForm, setShowSplitForm] = useState(false);
     const queryClient = useQueryClient();
 
     // 使用現有 hook 來查詢子任務資料
@@ -30,11 +32,29 @@ export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashbo
         return 'bg-red-500';
     };
 
+    const handleSplitTask = () => {
+        setShowSplitForm(true);
+    };
+
+    const handleCloseSplitForm = () => {
+        setShowSplitForm(false);
+        // 重新整理資料
+        queryClient.invalidateQueries({
+            queryKey: ['subTaskInstances', taskInstance.id]
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['taskInstances']
+        });
+    };
+
     return (
         <div className="border rounded-lg p-4 bg-white shadow-sm mb-4">
             {/* 任務摘要資訊 */}
             <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-                <TaskInstanceSummaryCard taskInstance={taskInstance} />
+                <TaskInstanceSummaryCard
+                    taskInstance={taskInstance}
+                    onSplitTask={() => handleSplitTask()}
+                />
 
                 {/* 進度條 */}
                 <div className="mt-2">
@@ -59,6 +79,14 @@ export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashbo
                         <SubTaskInstanceList subTaskInstances={subTasks} />
                     )}
                 </div>
+            )}
+
+            {/* 子任務分割表單 */}
+            {showSplitForm && (
+                <TaskInstanceSplitSubtaskForm
+                    taskInstance={taskInstance}
+                    onCloseAction={handleCloseSplitForm}
+                />
             )}
         </div>
     );

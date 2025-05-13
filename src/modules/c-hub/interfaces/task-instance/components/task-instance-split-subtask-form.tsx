@@ -8,20 +8,21 @@ import { useState } from 'react';
 
 interface TaskInstanceSplitSubtaskFormProps {
     taskInstance: TaskInstance;
-    onClose: () => void;
+    onCloseAction: () => void;
 }
 
 /**
  * 任務分割子任務表單元件
  * 允許從現有任務分割出子任務，可設置預計開始/結束時間和設備數量
  */
-export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInstanceSplitSubtaskFormProps) {
+export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: TaskInstanceSplitSubtaskFormProps) {
     const router = useRouter();
     const queryClient = useQueryClient();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // 表單狀態
+    const [name, setName] = useState<string>(`${taskInstance.name} - 子任務`);
     const [description, setDescription] = useState<string>('');
     const [equipmentCount, setEquipmentCount] = useState<number | undefined>(undefined);
     const [plannedStart, setPlannedStart] = useState<string>('');
@@ -46,7 +47,7 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
 
             // 構建子任務數據 - 移除驗證邏輯，由 Command 層統一處理
             const subTaskData = {
-                name: `${taskInstance.name} - 子任務`, // 可以由使用者自訂，但也可由領域服務自動生成
+                name: name.trim(), // 使用者自訂名稱
                 description,
                 plannedStart: plannedStart ? new Date(plannedStart) : null,
                 plannedEnd: plannedEnd ? new Date(plannedEnd) : null,
@@ -73,7 +74,7 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
 
             // 重置表單並關閉
             router.refresh();
-            onClose();
+            onCloseAction();
         } catch (err) {
             console.error('分割子任務失敗:', err);
             setError(err instanceof Error ? err.message : '分割子任務失敗');
@@ -88,6 +89,21 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
                 <h3 className="text-lg font-semibold mb-4">從任務「{taskInstance.name}」分割子任務</h3>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="name" className="block text-sm text-gray-700 mb-1">
+                            子任務名稱
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full border rounded p-2 text-sm"
+                            placeholder="請輸入子任務名稱"
+                            required
+                        />
+                    </div>
+
                     <div>
                         <label htmlFor="description" className="block text-sm text-gray-700 mb-1">
                             子任務描述
@@ -158,7 +174,7 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onClose }: TaskInst
                     <div className="flex justify-end space-x-2 pt-2">
                         <button
                             type="button"
-                            onClick={onClose}
+                            onClick={onCloseAction}
                             className="px-4 py-2 border rounded text-sm"
                         >
                             取消
