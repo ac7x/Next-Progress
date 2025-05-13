@@ -11,6 +11,7 @@ import { updateTaskInstanceCommand } from '@/modules/c-hub/application/task-inst
 import { TaskInstance } from '@/modules/c-hub/domain/task-instance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { TaskInstanceSplitSubtaskForm } from './task-instance-split-subtask-form';
 import TaskInstanceSubTaskInstancesSection from './task-instance-sub-task-instances-section';
 
 interface TaskInstanceDetailsProps {
@@ -20,6 +21,7 @@ interface TaskInstanceDetailsProps {
 export function TaskInstanceDetails({ taskInstance }: TaskInstanceDetailsProps) {
   const [isSubTasksVisible, setIsSubTasksVisible] = useState(false);
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
+  const [isSplitModalOpen, setIsSplitModalOpen] = useState(false);
 
   // React Query
   const queryClient = useQueryClient();
@@ -122,6 +124,17 @@ export function TaskInstanceDetails({ taskInstance }: TaskInstanceDetailsProps) 
             >▼</button>
           </div>
 
+          {/* 分割子任務按鈕 */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsSplitModalOpen(true);
+            }}
+            className="text-green-500 hover:text-green-700 text-sm"
+          >
+            分割子任務
+          </button>
+
           {/* 展開/收起子任務按鈕 */}
           <button
             onClick={(e) => {
@@ -162,6 +175,14 @@ export function TaskInstanceDetails({ taskInstance }: TaskInstanceDetailsProps) 
         <div className="mt-3 pt-3 border-t border-dashed">
           <TaskInstanceSubTaskInstancesSection taskInstanceId={taskInstance.id} />
         </div>
+      )}
+
+      {/* 分割子任務模態框 */}
+      {isSplitModalOpen && (
+        <TaskInstanceSplitSubtaskForm
+          taskInstance={taskInstance}
+          onClose={() => setIsSplitModalOpen(false)}
+        />
       )}
     </div>
   );

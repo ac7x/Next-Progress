@@ -22,7 +22,8 @@ export function SubTaskInstanceForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [equipmentCount, setEquipmentCount] = useState<number | undefined>(undefined);
-  const [plannedDate, setPlannedDate] = useState<string>('');
+  const [plannedStart, setPlannedStart] = useState<string>('');
+  const [plannedEnd, setPlannedEnd] = useState<string>('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,7 +50,8 @@ export function SubTaskInstanceForm({
       router.refresh();
       form.reset();
       setEquipmentCount(undefined);
-      setPlannedDate('');
+      setPlannedStart('');
+      setPlannedEnd('');
     } catch (err) {
       console.error('建立子任務失敗:', err);
       setError(err instanceof Error ? err.message : '建立子任務失敗');
@@ -100,8 +102,22 @@ export function SubTaskInstanceForm({
             type="date"
             id="plannedStart"
             name="plannedStart"
-            value={plannedDate}
-            onChange={(e) => setPlannedDate(e.target.value)}
+            value={plannedStart}
+            onChange={(e) => setPlannedStart(e.target.value)}
+            className="w-full p-1 border rounded text-sm"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="plannedEnd" className="block text-xs text-gray-600">
+            預計結束日期
+          </label>
+          <input
+            type="date"
+            id="plannedEnd"
+            name="plannedEnd"
+            value={plannedEnd}
+            onChange={(e) => setPlannedEnd(e.target.value)}
             className="w-full p-1 border rounded text-sm"
           />
         </div>
@@ -114,8 +130,8 @@ export function SubTaskInstanceForm({
           type="submit"
           disabled={isSubmitting}
           className={`px-3 py-1 rounded text-sm ${isSubmitting
-              ? 'bg-gray-300 cursor-not-allowed'
-              : 'bg-blue-500 text-white hover:bg-blue-600'
+            ? 'bg-gray-300 cursor-not-allowed'
+            : 'bg-blue-500 text-white hover:bg-blue-600'
             }`}
         >
           {isSubmitting ? '處理中...' : '新增子任務'}
