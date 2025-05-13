@@ -34,8 +34,18 @@ export async function taskSplitSubtaskCommand(
 
         // 3. 驗證設備數量邏輯
         const parentEquipmentCount = parentTask.equipmentCount || 0;
-        const parentActualEquipmentCount = parentTask.actualEquipmentCount || 0;
-        const remainingEquipment = parentEquipmentCount - parentActualEquipmentCount;
+
+        // 獲取現有子任務
+        const existingSubTasks = await subTaskInstanceRepository.findByTaskId(taskId);
+
+        // 計算已分配的設備數量
+        const allocatedEquipment = existingSubTasks.reduce(
+            (total, subTask) => total + (subTask.equipmentCount || 0),
+            0
+        );
+
+        // 計算剩餘可分配設備數量
+        const remainingEquipment = parentEquipmentCount - allocatedEquipment;
 
         // 如果子任務指定了設備數量，則必須檢查是否超過父任務的可用數量
         if (subTaskData.equipmentCount !== undefined && subTaskData.equipmentCount !== null) {
@@ -62,7 +72,10 @@ export async function taskSplitSubtaskCommand(
         // 5. 創建子任務
         const createdSubTask = await subTaskInstanceService.createSubTaskInstance(fullSubTaskData);
 
-        // 6. 重新驗證相關路徑
+        // 6. 重新計算並更新父任務狀態
+        await taskInstanceService.recalculateTaskStatus(taskId);
+
+        // 7. 重新驗證相關路徑
         if (parentTask.projectId) {
             revalidatePath(`/client/dashboard_management`);
             revalidatePath(`/client/project/${parentTask.projectId}`);

@@ -12,6 +12,13 @@ const subTaskInstanceService = new SubTaskInstanceDomainService(subTaskInstanceR
 export async function createSubTaskInstanceCommand(data: CreateSubTaskInstanceProps): Promise<SubTaskInstance> {
     try {
         const subTaskInstance = await subTaskInstanceService.createSubTaskInstance(data);
+
+        // 創建子任務後，更新父任務狀態
+        if (data.parentTaskId) {
+            const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
+            await taskInstanceService.recalculateTaskStatus(data.parentTaskId);
+        }
+
         return subTaskInstance;
     } catch (error) {
         console.error('建立子任務失敗:', error);
@@ -28,9 +35,15 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
         // 重新驗證專案頁面（聚合根同步後，父任務狀態已更新）
         if (subTaskInstance.taskId) {
             const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
+
+            // 使用任務分割服務重新計算父任務狀態
+            // 這將自動更新父任務的設備數量、實際設備數量和完成率
+            await taskInstanceService.recalculateTaskStatus(subTaskInstance.taskId);
+
             const parentTask = await taskInstanceService.getTaskInstanceById(subTaskInstance.taskId);
             if (parentTask?.projectId) {
                 revalidatePath(`/client/project/${parentTask.projectId}`);
+                revalidatePath(`/client/dashboard_management`);
             }
         }
         return subTaskInstance;
@@ -52,8 +65,15 @@ export async function deleteSubTaskInstanceCommand(id: string): Promise<{ id: st
         }
 
         const taskId = subTaskInstance.taskId;
+        const parentTaskId = subTaskInstance.parentTaskId;
 
         await subTaskInstanceService.deleteSubTaskInstance(id);
+
+        // 如果有父任務，更新父任務狀態
+        if (parentTaskId) {
+            const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
+            await taskInstanceService.recalculateTaskStatus(parentTaskId);
+        }
 
         // 返回已刪除的子任務ID和所屬任務ID，讓前端可以進行內聯更新
         return { id, taskId };
