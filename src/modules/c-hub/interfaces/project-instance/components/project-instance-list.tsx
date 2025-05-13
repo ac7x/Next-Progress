@@ -5,9 +5,10 @@ import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entitie
 import { PriorityFormatter } from '@/modules/c-hub/domain/project-instance/value-objects/priority-formatter';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useProjectInstanceTasksCountQuery } from '../hooks/use-project-instance-tasks-count-query';
 import { useProjectInstanceEquipmentStatsQuery } from '../hooks/use-project-instance-equipment-stats-query';
+import { useProjectInstanceTasksCountQuery } from '../hooks/use-project-instance-tasks-count-query';
 import { ProjectInstanceDetails } from './Projects-Instance-Overview/project-instance-details';
+import { EquipmentCompletionProgress } from './equipment-completion-progress';
 
 interface ProjectInstanceListProps {
   projectInstances: ProjectInstance[];
@@ -190,10 +191,10 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
           <tbody className="bg-white divide-y divide-gray-200">
             {sortedProjectInstances.map((projectInstance) => {
               // 取得設備數量與實際完成數量
-              const detail = equipmentStatsMap?.[projectInstance.id];
-              const equipmentCount = detail?.equipmentCount ?? 0;
-              const actualEquipmentCount = detail?.actualEquipmentCount ?? 0;
-              const percent = equipmentCount > 0 ? Math.round((actualEquipmentCount / equipmentCount) * 100) : 0;
+              const stats = equipmentStatsMap?.[projectInstance.id];
+              const equipmentCount = stats?.equipmentCount ?? 0;
+              const actualEquipmentCount = stats?.actualEquipmentCount ?? 0;
+              const percent = stats?.completionRate ?? 0; // 直接使用已計算好的完成率
               return (
                 <>
                   <tr key={projectInstance.id}>
@@ -238,26 +239,13 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
                       {tasksCountMap?.[projectInstance.id] ?? '—'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {/* 進度條顯示 */}
-                      <div className="flex flex-col gap-1 min-w-[120px]">
-                        <div className="flex justify-between text-xs text-gray-500">
-                          <span>完成率</span>
-                          <span>{equipmentCount > 0 ? `${percent}%` : '0%'}</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded h-2">
-                          <div
-                            className="bg-green-400 h-2 rounded"
-                            style={{
-                              width: `${percent}%`,
-                              transition: 'width 0.3s'
-                            }}
-                          />
-                        </div>
-                        <div className="flex justify-between text-xs text-gray-400">
-                          <span>設備數</span>
-                          <span>{equipmentCount} 台</span>
-                        </div>
-                      </div>
+                      {/* 使用新的設備完成進度元件 */}
+                      <EquipmentCompletionProgress
+                        equipmentCount={equipmentCount}
+                        actualEquipmentCount={actualEquipmentCount}
+                        completionRate={percent}
+                        className="min-w-[120px]"
+                      />
                     </td>
                     {/* 新增：開始日期欄位 */}
                     <td className="px-6 py-4 whitespace-nowrap">
