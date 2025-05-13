@@ -2,6 +2,7 @@
 
 import { TaskInstanceDashboard } from '@/modules/c-hub/interfaces/task-instance/components/task-instance.dashboard.component';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 
 /**
@@ -13,9 +14,11 @@ export function DashboardWrapper() {
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
             queries: {
-                staleTime: 60 * 1000, // 資料保鮮時間 1 分鐘
+                staleTime: 30 * 1000, // 資料保鮮時間 30 秒
                 refetchOnWindowFocus: true, // 視窗獲得焦點時重新獲取資料
-                retry: 1, // 失敗後重試次數
+                retry: 2, // 失敗後重試次數
+                refetchOnMount: true, // 組件掛載時重新獲取資料
+                refetchInterval: 60 * 1000, // 每分鐘自動刷新一次
             },
         },
     }));
@@ -23,6 +26,7 @@ export function DashboardWrapper() {
     return (
         <QueryClientProvider client={queryClient}>
             <TaskInstanceDashboard />
+            {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );
 }

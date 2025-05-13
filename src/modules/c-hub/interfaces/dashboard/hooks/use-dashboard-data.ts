@@ -16,9 +16,20 @@ export function useDashboardData() {
         error: tasksError
     } = useQuery<TaskInstance[]>({
         queryKey: ['allTasks'],
-        queryFn: () => getTaskInstancesByProjectQuery(''), // 空字串表示獲取所有任務
+        queryFn: async () => {
+            try {
+                console.log('正在獲取所有任務...');
+                const result = await getTaskInstancesByProjectQuery(''); // 空字串表示獲取所有任務
+                console.log('獲取任務結果:', result);
+                return result;
+            } catch (error) {
+                console.error('獲取任務失敗:', error);
+                throw error;
+            }
+        },
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
+        staleTime: 30000, // 減少緩存時間到30秒
     });
 
     // 返回整合後的資料

@@ -22,10 +22,21 @@ export async function getTaskInstanceQuery(id: string): Promise<TaskInstance | n
  */
 export async function getTaskInstancesByProjectQuery(projectId: string): Promise<TaskInstance[]> {
     try {
-        if (!projectId?.trim()) {
-            return await taskInstanceService.getAllTaskInstances();
+        console.log('獲取任務查詢: projectId =', projectId);
+
+        let tasks: TaskInstance[] = [];
+
+        // 如果沒有提供專案 ID 或為空字符串，獲取所有任務
+        if (!projectId || projectId.trim() === '') {
+            console.log('獲取所有任務...');
+            tasks = await taskInstanceService.getAllTaskInstances();
+        } else {
+            console.log('獲取特定專案任務...');
+            tasks = await taskInstanceService.getTaskInstancesByProjectId(projectId);
         }
-        return await taskInstanceService.getTaskInstancesByProjectId(projectId);
+
+        console.log(`成功獲取 ${tasks.length} 個任務`);
+        return tasks;
     } catch (error) {
         console.error('獲取專案任務列表失敗:', error);
         return [];

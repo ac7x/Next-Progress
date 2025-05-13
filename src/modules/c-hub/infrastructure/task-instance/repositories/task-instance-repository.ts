@@ -169,14 +169,22 @@ export class TaskInstanceRepositoryImpl implements ITaskInstanceRepository {
    */
   async findAll(): Promise<TaskInstance[]> {
     try {
+      console.log('Repository: 獲取所有任務...');
+
       const tasks = await prisma.taskInstance.findMany({
         include: {
           engineering: true,
           project: true
+        },
+        orderBy: {
+          createdAt: 'desc'  // 預設按創建時間降序排序
         }
       });
 
-      return tasks.map(taskInstanceAdapter.toDomain);
+      console.log(`Repository: 找到 ${tasks.length} 個任務`);
+
+      const domainTasks = tasks.map(taskInstanceAdapter.toDomain);
+      return domainTasks;
     } catch (error) {
       console.error('Failed to list tasks:', error);
       throw error;
