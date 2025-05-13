@@ -28,7 +28,11 @@ function useProjectInstancesTasksDetails(projectInstanceIds: string[]) {
       }
       return result;
     },
-    enabled: projectInstanceIds.length > 0
+    enabled: projectInstanceIds.length > 0,
+    staleTime: 10 * 1000, // 10 秒後視為過期數據
+    refetchInterval: 30 * 1000, // 每 30 秒自動重新獲取
+    refetchOnMount: true,
+    refetchOnWindowFocus: true
   });
 }
 
