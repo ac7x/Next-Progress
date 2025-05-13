@@ -25,6 +25,16 @@ export function useSubTaskInstanceUpdate() {
       // 優化：觸發 React Query 緩存更新
       queryClient.invalidateQueries({ queryKey: ['subTaskInstances'] });
 
+      // 重要: 刷新父任務相關查詢，確保儀表板會顯示更新後的數據
+      queryClient.invalidateQueries({ queryKey: ['taskInstances'] });
+      queryClient.invalidateQueries({ queryKey: ['allTasks'] });
+
+      // 對於涉及actualEquipmentCount或completionRate的變化，強制立即重新獲取數據
+      if (data.actualEquipmentCount !== undefined || data.completionRate !== undefined) {
+        await queryClient.refetchQueries({ queryKey: ['allTasks'] });
+        await queryClient.refetchQueries({ queryKey: ['taskInstances'] });
+      }
+
       return true;
     } catch (err) {
       console.error('更新子任務失敗:', err);
@@ -49,6 +59,16 @@ export function useSubTaskInstanceUpdate() {
 
       // 優化：觸發 React Query 緩存更新
       queryClient.invalidateQueries({ queryKey: ['subTaskInstances'] });
+
+      // 重要: 刷新父任務相關查詢，確保儀表板會顯示更新後的數據
+      queryClient.invalidateQueries({ queryKey: ['taskInstances'] });
+      queryClient.invalidateQueries({ queryKey: ['allTasks'] });
+
+      // 對於actualEquipmentCount的變化，強制立即重新獲取數據以更新儀表板
+      if (field === 'actualEquipmentCount') {
+        await queryClient.refetchQueries({ queryKey: ['allTasks'] });
+        await queryClient.refetchQueries({ queryKey: ['taskInstances'] });
+      }
 
       return true;
     } catch (err) {

@@ -17,7 +17,7 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
   const [isDeleting, setIsDeleting] = useState(false);
   const [completionRate, setCompletionRate] = useState(subTaskInstance.completionRate);
   const [actualEquipmentCount, setActualEquipmentCount] = useState(subTaskInstance.actualEquipmentCount ?? 0);
-  const { updateSubTaskInstanceField, isUpdating, error } = useSubTaskInstanceUpdate();
+  const { updateSubTaskInstance, updateSubTaskInstanceField, isUpdating, error } = useSubTaskInstanceUpdate();
   const queryClient = useQueryClient();
 
   const handleStatusChange = async (status: SubTaskInstanceStatusType) => {
@@ -43,8 +43,19 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
   const handleActualEquipmentCountChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCount = parseInt(e.target.value, 10) || 0;
     setActualEquipmentCount(newCount);
-    await updateSubTaskInstanceField(subTaskInstance.id, 'actualEquipmentCount', newCount);
-    // React Query 自動同步
+
+    // 計算新的完成率
+    const equipCount = subTaskInstance.equipmentCount || 1;
+    const newCompletionRate = equipCount > 0 ? Math.min(100, Math.round((newCount / equipCount) * 100)) : 0;
+
+    // 同時更新實際完成數量和完成率，確保兩者保持一致
+    await updateSubTaskInstance(subTaskInstance.id, {
+      actualEquipmentCount: newCount,
+      completionRate: newCompletionRate
+    });
+
+    // 更新前端狀態
+    setCompletionRate(newCompletionRate);
   };
 
   const handleDelete = async () => {
