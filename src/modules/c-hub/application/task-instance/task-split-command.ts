@@ -44,13 +44,27 @@ export async function taskSplitSubtaskCommand(
             0
         );
 
+        // 計算已使用的設備數量
+        const usedEquipment = existingSubTasks.reduce(
+            (total, subTask) => total + (subTask.actualEquipmentCount || 0),
+            0
+        );
+
         // 計算剩餘可分配設備數量
         const remainingEquipment = parentEquipmentCount - allocatedEquipment;
 
-        // 如果子任務指定了設備數量，則必須檢查是否超過父任務的可用數量
+        // 1. 如果子任務指定了設備數量，檢查是否超過父任務的可用數量
         if (subTaskData.equipmentCount !== undefined && subTaskData.equipmentCount !== null) {
             if (subTaskData.equipmentCount > remainingEquipment) {
                 throw new Error(`子任務設備數量 ${subTaskData.equipmentCount} 超過了父任務剩餘可分配數量 ${remainingEquipment}`);
+            }
+        }
+
+        // 2. 如果子任務指定了實際設備數量，檢查是否合理
+        if (subTaskData.actualEquipmentCount !== undefined && subTaskData.actualEquipmentCount !== null) {
+            if (subTaskData.equipmentCount !== undefined && subTaskData.equipmentCount !== null &&
+                subTaskData.actualEquipmentCount > subTaskData.equipmentCount) {
+                throw new Error(`子任務實際設備數量 ${subTaskData.actualEquipmentCount} 超過了計劃設備數量 ${subTaskData.equipmentCount}`);
             }
         }
 

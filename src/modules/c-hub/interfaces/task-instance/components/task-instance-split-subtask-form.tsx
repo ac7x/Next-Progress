@@ -121,7 +121,7 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label htmlFor="plannedStart" className="block text-sm text-gray-700 mb-1">
-                                預計開始時間
+                                預計開始時間 <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="date"
@@ -129,12 +129,16 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
                                 value={plannedStart}
                                 onChange={(e) => setPlannedStart(e.target.value)}
                                 className="w-full border rounded p-2 text-sm"
+                                required
                             />
+                            <p className="text-xs text-gray-500 mt-1">
+                                請設定子任務的預計開始時間
+                            </p>
                         </div>
 
                         <div>
                             <label htmlFor="plannedEnd" className="block text-sm text-gray-700 mb-1">
-                                預計結束時間
+                                預計結束時間 <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="date"
@@ -142,7 +146,11 @@ export function TaskInstanceSplitSubtaskForm({ taskInstance, onCloseAction }: Ta
                                 value={plannedEnd}
                                 onChange={(e) => setPlannedEnd(e.target.value)}
                                 className="w-full border rounded p-2 text-sm"
+                                required
                             />
+                            <p className="text-xs text-gray-500 mt-1">
+                                請設定子任務的預計結束時間
+                            </p>
                         </div>
                     </div>
 

@@ -12,21 +12,19 @@ export function TaskInstanceSummaryCard({ taskInstance, onSplitTask }: {
                     <span className="text-xs text-gray-500">
                         狀態: {taskInstance.status === 'TODO' ? '待處理' : taskInstance.status === 'IN_PROGRESS' ? '進行中' : '已完成'}
                     </span>
-                    {onSplitTask && (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onSplitTask(taskInstance);
-                            }}
-                            className="text-xs px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded border border-blue-200 flex items-center"
-                            title="分割子任務"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M5 11h14" />
-                            </svg>
-                            分割
-                        </button>
-                    )}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSplitTask?.(taskInstance);
+                        }}
+                        className="text-xs px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded border border-blue-200 flex items-center"
+                        title="分割子任務"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M5 11h14" />
+                        </svg>
+                        分割子任務
+                    </button>
                 </div>
             </div>
             <div className="flex gap-4 text-sm">

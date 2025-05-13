@@ -24,5 +24,6 @@ export type { SubTaskInstanceStatusType } from './value-objects/sub-task-instanc
 export * from './repositories/sub-task-instance-repository-interface';
 
 // 領域服務導出
+export * from './services/sub-task-instance-equipment.service';
 export * from './services/sub-task-instance-service';
 

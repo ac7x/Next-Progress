@@ -32,18 +32,24 @@ export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashbo
         return 'bg-red-500';
     };
 
+    // 處理顯示分割表單的函數
     const handleSplitTask = () => {
         setShowSplitForm(true);
     };
 
+    // 處理關閉分割表單的函數，完成後刷新數據
     const handleCloseSplitForm = () => {
         setShowSplitForm(false);
-        // 重新整理資料
+        // 重新整理子任務資料
         queryClient.invalidateQueries({
             queryKey: ['subTaskInstances', taskInstance.id]
         });
+        // 重新整理所有任務資料（包括父任務）
         queryClient.invalidateQueries({
             queryKey: ['taskInstances']
+        });
+        queryClient.invalidateQueries({
+            queryKey: ['allTasks']
         });
     };
 

@@ -1,5 +1,6 @@
 import { subTaskInstanceRepository } from '@/modules/c-hub/infrastructure/sub-task-instance/repositories/sub-task-instance-repository';
 import { SubTaskInstance } from '../../sub-task-instance/entities/sub-task-instance-entity';
+import { calculateEquipmentRelationship } from '../../sub-task-instance/services/sub-task-instance-equipment.service';
 import {
     CreateTaskInstanceProps,
     RichTaskInstance,
@@ -15,7 +16,7 @@ import {
 } from '../events';
 import { TaskInstanceRepository } from '../repositories';
 import { TaskInstanceStatusType } from '../value-objects';
-import { calculateEquipmentDistribution, calculateParentTaskProgress } from './task-split-service';
+import { calculateParentTaskProgress } from './task-split-service';
 
 /**
  * 任務實例領域服務
@@ -214,16 +215,26 @@ export class TaskInstanceService {
             return parentTask;
         }
 
-        // 計算設備分配情況
-        const equipmentDistribution = calculateEquipmentDistribution(parentTask, subTasks);
+        // 計算設備分配情況與父任務完成率
+        const equipmentRelationship = calculateEquipmentRelationship(parentTask, subTasks);
 
         // 計算進度和時間範圍
         const progressInfo = calculateParentTaskProgress(subTasks);
 
+        // 決定任務狀態
+        let status: TaskInstanceStatusType = (parentTask.status as TaskInstanceStatusType) || 'TODO';
+        if (equipmentRelationship.parentCompletionRate >= 100) {
+            status = 'DONE';
+        } else if (equipmentRelationship.parentCompletionRate > 0) {
+            status = 'IN_PROGRESS';
+        } else {
+            status = 'TODO';
+        }
+
         // 構建更新數據
         const updateData: UpdateTaskInstanceProps = {
             // 實際設備數量為子任務實際使用設備總和
-            actualEquipmentCount: equipmentDistribution.actualUsedEquipment,
+            actualEquipmentCount: equipmentRelationship.subtasksActual,
 
             // 更新計劃開始時間（如果有子任務設置了計劃時間）
             plannedStart: progressInfo.earliestPlannedStart || parentTask.plannedStart,
@@ -231,8 +242,11 @@ export class TaskInstanceService {
             // 更新計劃結束時間（如果有子任務設置了計劃時間）
             plannedEnd: progressInfo.latestPlannedEnd || parentTask.plannedEnd,
 
-            // 更新完成率為子任務加權平均完成率
-            completionRate: progressInfo.completionRate
+            // 更新完成率為子任務設備數量加權完成率
+            completionRate: equipmentRelationship.parentCompletionRate,
+
+            // 更新狀態
+            status
         };
 
         // 更新父任務
