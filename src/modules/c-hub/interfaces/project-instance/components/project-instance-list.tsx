@@ -1,39 +1,16 @@
 'use client';
 
 import { deleteProject, updateProject } from '@/modules/c-hub/application/project-instance/project-instance-actions';
-import { listTaskInstancesByProject } from '@/modules/c-hub/application/task-instance/task-instance-actions';
 import { ProjectInstance } from '@/modules/c-hub/domain/project-instance/entities/project-instance-entity';
 import { PriorityFormatter } from '@/modules/c-hub/domain/project-instance/value-objects/priority-formatter';
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useProjectInstanceTasksCountQuery } from '../hooks/use-project-instance-tasks-count-query';
+import { useProjectInstanceEquipmentStatsQuery } from '../hooks/use-project-instance-equipment-stats-query';
 import { ProjectInstanceDetails } from './Projects-Instance-Overview/project-instance-details';
 
 interface ProjectInstanceListProps {
   projectInstances: ProjectInstance[];
-}
-
-function useProjectInstancesTasksDetails(projectInstanceIds: string[]) {
-  return useQuery<Record<string, { equipmentCount: number; actualEquipmentCount: number }>>({
-    queryKey: ['projectInstancesTasksDetails', projectInstanceIds],
-    queryFn: async () => {
-      const result: Record<string, { equipmentCount: number; actualEquipmentCount: number }> = {};
-      for (const id of projectInstanceIds) {
-        const tasks = await listTaskInstancesByProject(id);
-        result[id] = {
-          equipmentCount: tasks.reduce((sum: number, t) => sum + (t.equipmentCount ?? 0), 0),
-          actualEquipmentCount: tasks.reduce((sum: number, t) => sum + (t.actualEquipmentCount ?? 0), 0)
-        };
-      }
-      return result;
-    },
-    enabled: projectInstanceIds.length > 0,
-    staleTime: 10 * 1000, // 10 秒後視為過期數據
-    refetchInterval: 30 * 1000, // 每 30 秒自動重新獲取
-    refetchOnMount: true,
-    refetchOnWindowFocus: true
-  });
 }
 
 // 調整元件名稱與 props
@@ -51,8 +28,8 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
 
   // 任務數量
   const { data: tasksCountMap } = useProjectInstanceTasksCountQuery(projectInstances.map(p => p.id));
-  // 查詢設備數量與實際完成數量
-  const { data: tasksDetailsMap } = useProjectInstancesTasksDetails(projectInstances.map(p => p.id));
+  // 查詢設備數量與實際完成數量 - 使用新的專屬 hook
+  const { data: equipmentStatsMap } = useProjectInstanceEquipmentStatsQuery(projectInstances.map(p => p.id));
 
   const handleDelete = async (id: string) => {
     if (!confirm('確定要刪除此專案嗎？此操作無法復原。')) {
@@ -213,7 +190,7 @@ export function ProjectInstanceList({ projectInstances }: ProjectInstanceListPro
           <tbody className="bg-white divide-y divide-gray-200">
             {sortedProjectInstances.map((projectInstance) => {
               // 取得設備數量與實際完成數量
-              const detail = tasksDetailsMap?.[projectInstance.id];
+              const detail = equipmentStatsMap?.[projectInstance.id];
               const equipmentCount = detail?.equipmentCount ?? 0;
               const actualEquipmentCount = detail?.actualEquipmentCount ?? 0;
               const percent = equipmentCount > 0 ? Math.round((actualEquipmentCount / equipmentCount) * 100) : 0;

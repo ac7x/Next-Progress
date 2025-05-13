@@ -44,9 +44,11 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
             if (parentTask?.projectId) {
                 revalidatePath(`/client/project/${parentTask.projectId}`);
                 revalidatePath(`/client/dashboard_management`);
+                // 確保實例管理頁面的所有相關路徑都重新驗證
                 revalidatePath(`/client/instance_management`);
-                // 確保實例管理頁面的所有相關查詢都重新驗證
                 revalidatePath(`/client/instance_management/page`);
+                // 使用通配符驗證所有客戶端實例相關頁面
+                revalidatePath('/client/instance_management/*');
             }
         }
         return subTaskInstance;
