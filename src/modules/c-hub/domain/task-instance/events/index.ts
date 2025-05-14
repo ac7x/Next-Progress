@@ -6,4 +6,6 @@
 export * from './task-instance-completed-event';
 export * from './task-instance-created-event';
 export * from './task-instance-deleted-event';
+export * from './task-instance-progress-updated-event';
 export * from './task-instance-updated-event';
+

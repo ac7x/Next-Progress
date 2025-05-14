@@ -96,6 +96,11 @@ export class SubTaskInstanceDomainService {
             }
         }
 
+        // 紀錄更新前的狀態
+        const previousStatus = existingSubTaskInstance.status;
+        const previousCompletionRate = existingSubTaskInstance.completionRate;
+        const previousActualEquipmentCount = existingSubTaskInstance.actualEquipmentCount;
+
         // 更新子任務
         let updatedSubTaskInstance = await this.repository.update(id, updateData);
 
@@ -126,12 +131,19 @@ export class SubTaskInstanceDomainService {
                 completionRate !== current.completionRate ||
                 status !== current.status
             ) {
+                console.log(`更新子任務狀態: ID=${id}, 新完成率=${completionRate}%, 新狀態=${status}, 實際設備數量=${actualEquipmentCount}`);
                 updatedSubTaskInstance = await this.repository.update(id, {
                     completionRate,
                     status
                 });
             }
         }
+
+        // 檢查是否有重大變動（實際設備數量、完成率或狀態變化）
+        const hasSignificantChanges =
+            updatedSubTaskInstance.actualEquipmentCount !== previousActualEquipmentCount ||
+            updatedSubTaskInstance.completionRate !== previousCompletionRate ||
+            updatedSubTaskInstance.status !== previousStatus;
 
         // 發布領域事件
         new SubTaskInstanceUpdatedEvent(updatedSubTaskInstance.id, updatedSubTaskInstance.name);
@@ -142,7 +154,11 @@ export class SubTaskInstanceDomainService {
         }
 
         // === 聚合根：同步父任務的 actualEquipmentCount、完成率與狀態 ===
-        await this.syncParentTaskState(updatedSubTaskInstance.taskId);
+        // 只有在有重大變動時才觸發父任務同步，減少不必要的數據庫操作
+        if (hasSignificantChanges) {
+            console.log(`子任務 ${id} 發生重大變更，將同步更新父任務 ${updatedSubTaskInstance.taskId}`);
+            await this.syncParentTaskState(updatedSubTaskInstance.taskId);
+        }
 
         return updatedSubTaskInstance;
     }
@@ -152,8 +168,21 @@ export class SubTaskInstanceDomainService {
      * 根據所有子任務的數據更新父任務的聚合狀態
      */
     private async syncParentTaskState(taskId: string): Promise<void> {
+        // 獲取父任務資訊
+        const parentTask = await this.taskInstanceService.getTaskInstanceById(taskId);
+        if (!parentTask) {
+            console.error(`無法同步父任務狀態：找不到ID為 ${taskId} 的父任務`);
+            return;
+        }
+
         // 查詢所有子任務
         const allSubTasks = await this.repository.findByTaskId(taskId);
+
+        // 如果沒有子任務，保持父任務原有資訊
+        if (allSubTasks.length === 0) {
+            console.log(`任務 ${taskId} 沒有子任務，保持原有狀態`);
+            return;
+        }
 
         // 彙總所有子任務的 actualEquipmentCount 與 equipmentCount
         const totalActualEquipmentCount = allSubTasks.reduce(
@@ -165,10 +194,14 @@ export class SubTaskInstanceDomainService {
             0
         );
 
-        // 父任務完成率：所有子任務設備數量總和為 0 則為 0，否則為所有子任務的 actualEquipmentCount / equipmentCount 百分比
+        // 父任務完成率計算
         let parentCompletionRate = 0;
-        if (totalEquipmentCount > 0) {
-            parentCompletionRate = Math.round((totalActualEquipmentCount / totalEquipmentCount) * 100);
+
+        // 使用父任務自己的 equipmentCount 作為分母，確保百分比計算正確
+        const parentEquipmentCount = parentTask.equipmentCount || totalEquipmentCount;
+
+        if (parentEquipmentCount > 0) {
+            parentCompletionRate = Math.round((totalActualEquipmentCount / parentEquipmentCount) * 100);
             if (parentCompletionRate > 100) parentCompletionRate = 100;
         }
 
@@ -183,12 +216,14 @@ export class SubTaskInstanceDomainService {
                     ? 'IN_PROGRESS'
                     : 'TODO';
 
-        console.log(`Syncing parent task ${taskId}, calculated actualEquipmentCount: ${totalActualEquipmentCount}`);
+        console.log(`同步父任務 ${taskId} 狀態：
+            - 所有子任務實際設備數量總和：${totalActualEquipmentCount}
+            - 父任務完成率：${parentCompletionRate}%
+            - 新狀態：${parentStatus}`);
 
         // 更新父任務
         await this.taskInstanceService.updateTaskInstance(taskId, {
             actualEquipmentCount: totalActualEquipmentCount,
-            equipmentCount: totalEquipmentCount > 0 ? totalEquipmentCount : undefined,
             completionRate: parentCompletionRate,
             status: parentStatus
         });
@@ -231,6 +266,39 @@ export class SubTaskInstanceDomainService {
         }
 
         return this.repository.findById(id);
+    }
+
+    /**
+     * 批量更新子任務實際數量並同步父任務
+     * @param updates 子任務ID與實際設備數量的映射
+     */
+    async batchUpdateActualEquipment(updates: { id: string, actualEquipmentCount: number }[]): Promise<void> {
+        if (!updates.length) return;
+
+        // 分組子任務更新，按父任務ID分組以減少數據庫操作次數
+        const taskGroups = new Map<string, string[]>();
+
+        // 逐個更新子任務
+        for (const update of updates) {
+            const subTask = await this.getSubTaskInstanceById(update.id);
+            if (!subTask) continue;
+
+            // 記錄子任務所屬父任務ID，用於後續批量更新父任務
+            if (!taskGroups.has(subTask.taskId)) {
+                taskGroups.set(subTask.taskId, []);
+            }
+            taskGroups.get(subTask.taskId)?.push(update.id);
+
+            // 更新子任務
+            await this.updateSubTaskInstance(update.id, {
+                actualEquipmentCount: update.actualEquipmentCount
+            });
+        }
+
+        // 批量同步父任務狀態
+        for (const [taskId, _] of taskGroups) {
+            await this.syncParentTaskState(taskId);
+        }
     }
 
     /**

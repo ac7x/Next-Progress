@@ -60,6 +60,10 @@ export class TaskInstanceService {
             throw new Error(`找不到 ID 為 ${id} 的任務實例`);
         }
 
+        // 保存原始值用於比較和事件發布
+        const previousCompletionRate = existingTaskInstance.completionRate;
+        const previousActualEquipmentCount = existingTaskInstance.actualEquipmentCount;
+
         // === 自動推導完成率與狀態 ===
         let updatedProps = { ...props };
 
@@ -96,6 +100,25 @@ export class TaskInstanceService {
 
         // 發布任務實例更新事件
         new TaskInstanceUpdatedEvent(updatedTaskInstance.id, updatedTaskInstance.name);
+
+        // 檢查並發布進度更新事件
+        if (
+            updatedTaskInstance.completionRate !== previousCompletionRate ||
+            updatedTaskInstance.actualEquipmentCount !== previousActualEquipmentCount
+        ) {
+            // 導入剛建立的進度更新事件
+            const { TaskInstanceProgressUpdatedEvent } = require('../events');
+
+            // 發布進度更新事件
+            new TaskInstanceProgressUpdatedEvent(
+                updatedTaskInstance.id,
+                updatedTaskInstance.name,
+                previousCompletionRate,
+                updatedTaskInstance.completionRate,
+                previousActualEquipmentCount,
+                updatedTaskInstance.actualEquipmentCount
+            );
+        }
 
         // 如果任務狀態為已完成或完成率達到100%，發布任務完成事件
         if (updatedTaskInstance.status === 'DONE' || updatedTaskInstance.completionRate === 100) {

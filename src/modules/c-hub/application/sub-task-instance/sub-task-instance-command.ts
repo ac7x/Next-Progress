@@ -34,14 +34,9 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
         const subTaskInstance = await subTaskInstanceService.updateSubTaskInstance(id, data);
         // 重新驗證專案頁面（聚合根同步後，父任務狀態已更新）
         if (subTaskInstance.taskId) {
-            const taskInstanceService = new TaskInstanceDomainService(taskInstanceRepository);
-
-            // 使用任務分割服務重新計算父任務狀態
-            // 這將自動更新父任務的設備數量、實際設備數量和完成率
-            await taskInstanceService.recalculateTaskStatus(subTaskInstance.taskId);
-
-            const parentTask = await taskInstanceService.getTaskInstanceById(subTaskInstance.taskId);
+            const parentTask = await (new TaskInstanceDomainService(taskInstanceRepository)).getTaskInstanceById(subTaskInstance.taskId);
             if (parentTask?.projectId) {
+                // 確保所有相關路徑都重新驗證，使客戶端數據保持最新
                 revalidatePath(`/client/project/${parentTask.projectId}`);
                 revalidatePath(`/client/dashboard_management`);
                 // 確保實例管理頁面的所有相關路徑都重新驗證
@@ -49,6 +44,7 @@ export async function updateSubTaskInstanceCommand(id: string, data: UpdateSubTa
                 revalidatePath(`/client/instance_management/page`);
                 // 使用通配符驗證所有客戶端實例相關頁面
                 revalidatePath('/client/instance_management/*');
+                console.log(`已重新驗證所有相關頁面路徑，包括儀表板與實例管理`);
             }
         }
         return subTaskInstance;
@@ -98,6 +94,25 @@ export async function updateSubTaskInstanceStatusCommand(id: string, status: Sub
 // Command: 更新完成率
 export async function updateSubTaskInstanceCompletionCommand(id: string, completionRate: number): Promise<SubTaskInstance> {
     return updateSubTaskInstanceCommand(id, { completionRate });
+}
+
+// Command: 批量更新子任務實際設備數量並同步父任務
+export async function batchUpdateSubTaskActualEquipmentCommand(
+    updates: { id: string, actualEquipmentCount: number }[]
+): Promise<void> {
+    try {
+        await subTaskInstanceService.batchUpdateActualEquipment(updates);
+
+        // 由於已經在域服務層級同步了父任務，只需重新驗證相關頁面
+        revalidatePath(`/client/dashboard_management`);
+        revalidatePath(`/client/instance_management`);
+        console.log(`已批量更新 ${updates.length} 個子任務的實際設備數量，並同步父任務狀態`);
+    } catch (error) {
+        console.error('批量更新子任務實際設備數量失敗:', error);
+        throw error instanceof Error
+            ? error
+            : new Error('批量更新子任務實際設備數量失敗: ' + String(error));
+    }
 }
 
 // Server Action: 處理表單提交（for Client Component）
