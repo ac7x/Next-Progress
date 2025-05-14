@@ -8,7 +8,6 @@ const progressBarVariants = cva(
             status: {
                 notStarted: 'bg-gray-400',
                 inProgress: 'bg-blue-500',
-                almostComplete: 'bg-yellow-500',
                 completed: 'bg-green-500'
             }
         },
@@ -37,10 +36,9 @@ export function EquipmentCompletionProgress({
     className = '',
     showDetails = true
 }: EquipmentCompletionProgressProps) {
-    // 根據完成率確定進度條狀態
+    // 根據完成率確定進度條狀態，保持與子任務狀態判斷邏輯一致
     const getProgressStatus = () => {
-        if (completionRate >= 100) return 'completed';
-        if (completionRate >= 75) return 'almostComplete';
+        if (completionRate === 100) return 'completed';
         if (completionRate > 0) return 'inProgress';
         return 'notStarted';
     };

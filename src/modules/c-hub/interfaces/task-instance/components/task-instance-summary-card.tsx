@@ -10,7 +10,11 @@ export function TaskInstanceSummaryCard({ taskInstance, onSplitTask }: {
                 <span className="font-medium text-base">{taskInstance.name}</span>
                 <div className="flex gap-2 items-center">
                     <span className="text-xs text-gray-500">
-                        狀態: {taskInstance.status === 'TODO' ? '待處理' : taskInstance.status === 'IN_PROGRESS' ? '進行中' : '已完成'}
+                        狀態: {
+                            taskInstance.completionRate === 0 ? '待處理' :
+                                taskInstance.completionRate === 100 ? '已完成' :
+                                    '進行中'
+                        }
                     </span>
                     <button
                         onClick={(e) => {

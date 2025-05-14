@@ -27,9 +27,9 @@ export function TaskInstanceDashboardDetail({ taskInstance }: TaskInstanceDashbo
     // 根據完成率計算進度條顏色樣式
     const getProgressColorClass = () => {
         const rate = taskInstance.completionRate || 0;
-        if (rate >= 70) return 'bg-green-500';
-        if (rate >= 30) return 'bg-yellow-500';
-        return 'bg-red-500';
+        if (rate === 100) return 'bg-green-500';
+        if (rate > 0) return 'bg-blue-500';
+        return 'bg-gray-400';
     };
 
     // 處理顯示分割表單的函數

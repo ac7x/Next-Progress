@@ -24,17 +24,23 @@ export function SubTaskInstanceList({ subTaskInstances }: { subTaskInstances: Su
         <div key={subTaskInstance.id} className="border rounded p-2 bg-white shadow-sm">
           <div className="flex items-center gap-2">
             <div
-              className={`w-2 h-2 rounded-full ${subTaskInstance.status === 'DONE'
-                  ? 'bg-green-500'
-                  : subTaskInstance.status === 'IN_PROGRESS'
-                    ? 'bg-blue-500'
-                    : 'bg-gray-400'
+              className={`w-2 h-2 rounded-full ${subTaskInstance.completionRate === 0
+                  ? 'bg-gray-400'
+                  : subTaskInstance.completionRate === 100
+                    ? 'bg-green-500'
+                    : 'bg-blue-500'
                 }`}
             />
             <div className="flex-1">
               <span className="font-medium text-sm">{subTaskInstance.name}</span>
               <span className="text-xs text-gray-500 ml-2">
-                狀態: {subTaskInstance.status === 'TODO' ? '待處理' : subTaskInstance.status === 'IN_PROGRESS' ? '進行中' : '已完成'}
+                狀態: {
+                  subTaskInstance.completionRate === 0
+                    ? '待處理'
+                    : subTaskInstance.completionRate === 100
+                      ? '已完成'
+                      : '進行中'
+                }
               </span>
             </div>
             <span className="text-xs text-gray-500">

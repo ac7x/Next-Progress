@@ -1,8 +1,7 @@
 'use client';
 
-import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand, updateSubTaskInstanceStatusCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
+import { deleteSubTaskInstanceCommand, updateSubTaskInstanceCompletionCommand } from '@/modules/c-hub/application/sub-task-instance/sub-task-instance-command';
 import { SubTaskInstance } from '@/modules/c-hub/domain/sub-task-instance/entities/sub-task-instance-entity';
-import { SubTaskInstanceStatusType } from '@/modules/c-hub/domain/sub-task-instance/value-objects/sub-task-instance-status.vo';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useSubTaskInstanceUpdate } from '../hooks/use-sub-task-instance-update';
@@ -20,19 +19,12 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
   const { updateSubTaskInstance, updateSubTaskInstanceField, isUpdating, error } = useSubTaskInstanceUpdate();
   const queryClient = useQueryClient();
 
-  const handleStatusChange = async (status: SubTaskInstanceStatusType) => {
-    try {
-      await updateSubTaskInstanceStatusCommand(subTaskInstance.id, status);
-      // React Query 自動同步
-    } catch (err) {
-      console.error('更新子任務狀態失敗:', err);
-    }
-  };
-
+  // 根據完成率自動判斷狀態，移除手動狀態更改
   const handleCompletionChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newRate = parseInt(e.target.value);
     setCompletionRate(newRate);
     try {
+      // 只需要更新完成率，狀態會在領域服務中自動推導
       await updateSubTaskInstanceCompletionCommand(subTaskInstance.id, newRate);
       // React Query 自動同步
     } catch (err) {
@@ -80,15 +72,14 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
 
   // 根據完成率生成顏色樣式
   const getProgressColorClass = () => {
-    if (subTaskInstance.completionRate >= 100) return 'bg-green-500';
-    if (subTaskInstance.completionRate >= 70) return 'bg-green-400';
-    if (subTaskInstance.completionRate >= 30) return 'bg-yellow-400';
-    return 'bg-red-400';
+    if (subTaskInstance.completionRate === 100) return 'bg-green-500';
+    if (subTaskInstance.completionRate > 0) return 'bg-blue-500';
+    return 'bg-gray-400';
   };
 
   return (
-    <div className={`p-2 rounded-md border ${subTaskInstance.status === 'DONE' ? 'bg-green-50 border-green-200' :
-      subTaskInstance.status === 'IN_PROGRESS' ? 'bg-blue-50 border-blue-200' :
+    <div className={`p-2 rounded-md border ${subTaskInstance.completionRate === 100 ? 'bg-green-50 border-green-200' :
+      subTaskInstance.completionRate > 0 ? 'bg-blue-50 border-blue-200' :
         'bg-gray-50 border-gray-200'
       }`}>
       <div className="flex justify-between items-center">
@@ -104,17 +95,15 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* 狀態按鈕或選擇器 */}
-          <select
-            value={subTaskInstance.status}
-            onChange={(e) => handleStatusChange(e.target.value as SubTaskInstanceStatusType)}
-            className="text-xs border rounded px-1 py-0.5"
-            disabled={isUpdating}
-          >
-            <option value="TODO">待處理</option>
-            <option value="IN_PROGRESS">進行中</option>
-            <option value="DONE">已完成</option>
-          </select>
+          {/* 顯示狀態指示標籤（根據完成率自動判斷） */}
+          <span className={`text-xs px-2 py-0.5 rounded ${subTaskInstance.completionRate === 0 ? 'bg-gray-200 text-gray-700' :
+            subTaskInstance.completionRate === 100 ? 'bg-green-200 text-green-800' :
+              'bg-yellow-200 text-yellow-800'
+            }`}>
+            {subTaskInstance.completionRate === 0 ? '待處理' :
+              subTaskInstance.completionRate === 100 ? '已完成' :
+                '進行中'}
+          </span>
           {/* 刪除按鈕 */}
           <button
             onClick={handleDelete}
@@ -140,7 +129,11 @@ export function SubTaskInstanceDetails({ subTaskInstance }: SubTaskInstanceDetai
               className="w-24 h-2"
               disabled={isUpdating}
             />
-            <span className="text-xs">{completionRate}%</span>
+            <span className="text-xs">{completionRate}%
+              {completionRate === 0 ? ' (待處理)' :
+                completionRate === 100 ? ' (已完成)' :
+                  ' (進行中)'}
+            </span>
           </div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-xs text-gray-500">實際完成數量:</span>
